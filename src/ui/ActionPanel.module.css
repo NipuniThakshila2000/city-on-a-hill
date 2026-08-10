@@ -2,6 +2,7 @@
   border-left: 2px solid var(--c-grid-2);
   padding-left: 16px;
   min-height: 320px;
+  min-width: 0;
 }
 
 .panel h2,
@@ -20,14 +21,53 @@
 .actions button,
 .threats button {
   min-height: 38px;
+  padding: 0 10px;
   border: 1px solid var(--c-grid-2);
   background: var(--c-panel-2);
   color: var(--c-grey-2);
   border-radius: 0;
   text-align: left;
+  overflow-wrap: anywhere;
 }
 
 .actions button:disabled,
 .threats button:disabled {
   color: var(--c-grid-2);
+}
+
+@media (max-width: 760px) {
+  .panel {
+    width: 100%;
+    border-left: 0;
+    border-top: 2px solid var(--c-grid-2);
+    padding: 12px 0 0;
+    min-height: 0;
+  }
+
+  .actions,
+  .threats {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 420px) {
+  .panel h2 {
+    font-size: 18px;
+  }
+
+  .panel h3,
+  .panel p {
+    font-size: 14px;
+  }
+
+  .actions,
+  .threats {
+    gap: 6px;
+  }
+
+  .actions button,
+  .threats button {
+    min-height: 34px;
+    font-size: 13px;
+  }
 }

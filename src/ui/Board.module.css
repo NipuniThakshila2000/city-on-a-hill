@@ -1,9 +1,24 @@
 .board {
-  width: min(100%, 620px);
+  width: min(100%, 620px, calc(100vh - 190px));
+  min-width: 0;
   aspect-ratio: 1;
   display: grid;
   grid-template-columns: repeat(7, 1fr);
   border: 2px solid var(--c-grid-2);
   background: var(--c-grid);
   box-shadow: 0 0 0 3px var(--c-shadow);
+}
+
+@media (max-width: 760px) {
+  .board {
+    width: min(100%, 620px, calc(100vh - 255px));
+  }
+}
+
+@media (max-width: 420px) {
+  .board {
+    width: min(100%, calc(100vh - 285px));
+    border-width: 1px;
+    box-shadow: 0 0 0 2px var(--c-shadow);
+  }
 }

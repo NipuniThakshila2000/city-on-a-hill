@@ -12,6 +12,7 @@
   align-items: start;
   max-width: 980px;
   margin: 0 auto;
+  min-width: 0;
 }
 
 .levels {
@@ -20,6 +21,7 @@
   display: flex;
   gap: 8px;
   align-items: center;
+  flex-wrap: wrap;
 }
 
 .levels button,
@@ -45,5 +47,38 @@
 
   .table {
     grid-template-columns: 1fr;
+    gap: 14px;
+    justify-items: center;
+    max-width: 620px;
+  }
+
+  .levels {
+    gap: 6px;
+  }
+
+  .levels button,
+  .levels select {
+    min-height: 34px;
+    padding: 0 10px;
+    font-size: 14px;
+  }
+}
+
+@media (max-width: 420px) {
+  .app {
+    padding: 8px;
+  }
+
+  .levels {
+    margin-bottom: 8px;
+  }
+
+  .levels button {
+    min-width: 34px;
+    padding: 0 8px;
+  }
+
+  .levels select {
+    width: 100%;
   }
 }

@@ -217,3 +217,59 @@
     transform: scale(1.45) rotate(10deg);
   }
 }
+
+@media (max-width: 520px) {
+  .coord {
+    top: 2px;
+    left: 2px;
+    font-size: 9px;
+  }
+
+  .marker,
+  .lock,
+  .corner,
+  .threat,
+  .forecast {
+    font-size: 18px;
+  }
+
+  .forecast {
+    inset: 7px;
+    border-width: 1px;
+  }
+
+  .soil {
+    right: 2px;
+    bottom: 2px;
+    font-size: 8px;
+  }
+
+  .effect {
+    inset: 6%;
+  }
+
+  .block,
+  .release,
+  .build,
+  .prepare {
+    border-width: 3px;
+  }
+}
+
+@media (max-width: 360px) {
+  .coord {
+    font-size: 8px;
+  }
+
+  .marker,
+  .lock,
+  .corner,
+  .threat,
+  .forecast {
+    font-size: 16px;
+  }
+
+  .soil {
+    display: none;
+  }
+}

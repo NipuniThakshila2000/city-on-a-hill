@@ -42,3 +42,18 @@
 .acted {
   opacity: 0.6;
 }
+
+@media (max-width: 520px) {
+  .image {
+    width: 112%;
+    height: 112%;
+  }
+
+  .label {
+    right: 1px;
+    bottom: 1px;
+    min-width: 13px;
+    height: 13px;
+    font-size: 8px;
+  }
+}

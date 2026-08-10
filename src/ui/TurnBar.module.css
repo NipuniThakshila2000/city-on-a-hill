@@ -27,8 +27,39 @@
 
 .actions button {
   min-height: 38px;
+  padding: 0 10px;
   border: 1px solid var(--c-grid-2);
   background: var(--c-panel-2);
   color: var(--c-grey-2);
   border-radius: 0;
+}
+
+@media (max-width: 760px) {
+  .bar {
+    margin-bottom: 10px;
+    padding: 8px 0;
+  }
+
+  .bar div:first-child,
+  .actions {
+    gap: 6px;
+  }
+
+  .bar span,
+  .bar p,
+  .actions button {
+    font-size: 14px;
+  }
+
+  .actions button {
+    min-height: 34px;
+  }
+}
+
+@media (max-width: 420px) {
+  .bar span,
+  .bar p,
+  .actions button {
+    font-size: 12px;
+  }
 }
