@@ -1,0 +1,9 @@
+.board {
+  width: min(100%, 620px);
+  aspect-ratio: 1;
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  border: 2px solid var(--c-grid-2);
+  background: var(--c-grid);
+  box-shadow: 0 0 0 3px var(--c-shadow);
+}

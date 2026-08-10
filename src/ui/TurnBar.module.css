@@ -1,0 +1,34 @@
+.bar {
+  max-width: 980px;
+  margin: 0 auto 14px;
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 8px;
+  border-block: 1px solid var(--c-grid-2);
+  padding: 10px 0;
+}
+
+.bar div:first-child,
+.actions {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  align-items: center;
+}
+
+.bar span {
+  color: var(--c-grey-2);
+}
+
+.bar p {
+  margin: 0;
+  color: var(--c-yellow);
+}
+
+.actions button {
+  min-height: 38px;
+  border: 1px solid var(--c-grid-2);
+  background: var(--c-panel-2);
+  color: var(--c-grey-2);
+  border-radius: 0;
+}

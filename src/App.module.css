@@ -1,0 +1,49 @@
+.app {
+  min-height: 100vh;
+  padding: 18px;
+  background:
+    linear-gradient(180deg, var(--c-panel), var(--c-ink));
+}
+
+.table {
+  display: grid;
+  grid-template-columns: minmax(320px, 620px) minmax(230px, 320px);
+  gap: 18px;
+  align-items: start;
+  max-width: 980px;
+  margin: 0 auto;
+}
+
+.levels {
+  max-width: 980px;
+  margin: 0 auto 12px;
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+.levels button,
+.levels select,
+.start {
+  border: 1px solid var(--c-grid-2);
+  background: var(--c-panel-2);
+  color: var(--c-grey-2);
+  min-height: 38px;
+  padding: 0 12px;
+  border-radius: 0;
+}
+
+.start {
+  display: block;
+  margin: 14px auto 0;
+}
+
+@media (max-width: 760px) {
+  .app {
+    padding: 10px;
+  }
+
+  .table {
+    grid-template-columns: 1fr;
+  }
+}

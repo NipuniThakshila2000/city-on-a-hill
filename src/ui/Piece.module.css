@@ -1,0 +1,36 @@
+.piece {
+  position: absolute;
+  inset: 18%;
+  display: grid;
+  place-items: center;
+  border: 2px solid var(--c-grey-2);
+  background: var(--c-stone);
+  color: var(--c-ink);
+  font-size: 24px;
+  font-weight: 700;
+  transition: transform 120ms linear;
+}
+
+.protector {
+  background: var(--c-bluegrey);
+}
+
+.destroyer {
+  background: var(--c-grey-2);
+}
+
+.binder {
+  background: var(--c-stone);
+}
+
+.looser {
+  background: var(--c-fish);
+}
+
+.selected {
+  border-color: var(--c-lamp);
+}
+
+.acted {
+  opacity: 0.6;
+}

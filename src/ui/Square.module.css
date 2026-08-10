@@ -1,0 +1,88 @@
+.square {
+  position: relative;
+  border: 1px solid var(--c-grid);
+  background: var(--c-void);
+  color: var(--c-grey);
+  min-width: 0;
+  min-height: 0;
+  padding: 0;
+  border-radius: 0;
+  overflow: hidden;
+}
+
+.lit {
+  background: var(--c-olive);
+  color: var(--c-grey-2);
+}
+
+.temple {
+  background: var(--c-panel-2);
+}
+
+.house {
+  background: var(--c-panel);
+}
+
+.legal {
+  box-shadow: inset 0 0 0 3px var(--c-yellow);
+}
+
+.buildable {
+  box-shadow: inset 0 0 0 3px var(--c-lamp);
+}
+
+.focused {
+  outline: 2px solid var(--c-focus);
+  outline-offset: -4px;
+}
+
+.coord {
+  position: absolute;
+  top: 3px;
+  left: 4px;
+  font-size: 11px;
+  color: var(--c-grey);
+}
+
+.marker,
+.lock,
+.corner,
+.threat,
+.forecast {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  font-size: 24px;
+  font-weight: 700;
+}
+
+.marker {
+  color: var(--c-lamp);
+}
+
+.lock {
+  color: var(--c-lock);
+}
+
+.corner {
+  color: var(--c-yellow);
+}
+
+.threat {
+  color: var(--c-red);
+}
+
+.forecast {
+  color: var(--c-rust-2);
+  border: 2px solid var(--c-rust);
+  inset: 12px;
+}
+
+.soil {
+  position: absolute;
+  bottom: 3px;
+  right: 3px;
+  font-size: 10px;
+  color: var(--c-soil);
+}

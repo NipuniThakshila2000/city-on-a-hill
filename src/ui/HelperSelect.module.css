@@ -1,0 +1,41 @@
+.panel {
+  max-width: 720px;
+  margin: 8vh auto 0;
+}
+
+.kicker {
+  color: var(--c-yellow);
+  margin: 0;
+}
+
+.panel h1 {
+  margin: 4px 0 22px;
+  color: var(--c-lamp);
+  font-size: 32px;
+}
+
+.helpers {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+  gap: 10px;
+}
+
+.helpers button {
+  min-height: 82px;
+  text-align: left;
+  border: 1px solid var(--c-grid-2);
+  background: var(--c-panel-2);
+  color: var(--c-grey-2);
+  border-radius: 0;
+  padding: 10px;
+}
+
+.helpers span,
+.helpers small {
+  display: block;
+}
+
+.helpers small {
+  margin-top: 8px;
+  color: var(--c-grey);
+}

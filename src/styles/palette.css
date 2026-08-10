@@ -1,0 +1,26 @@
+:root {
+  --c-ink: #080909;
+  --c-void: #111412;
+  --c-panel: #1b201b;
+  --c-panel-2: #252a24;
+  --c-grid: #3a4036;
+  --c-grid-2: #515848;
+  --c-olive: #596243;
+  --c-olive-2: #758060;
+  --c-grey: #8a9085;
+  --c-grey-2: #b8b9aa;
+  --c-rust: #8f4632;
+  --c-rust-2: #b65a3d;
+  --c-yellow: #d6bd57;
+  --c-lamp: #ffe36b;
+  --c-lamp-2: #fff0a0;
+  --c-red: #b33730;
+  --c-fish: #c54238;
+  --c-bluegrey: #607078;
+  --c-stone: #6d6b62;
+  --c-soil: #74614f;
+  --c-lock: #32352f;
+  --c-focus: #d2d6b8;
+  --c-shadow: #050505;
+  --c-clear: #00000000;
+}
