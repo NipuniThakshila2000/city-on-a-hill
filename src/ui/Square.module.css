@@ -95,30 +95,88 @@
 }
 
 .block {
-  border: 4px solid var(--c-lock);
-  background:
-    linear-gradient(45deg, transparent 42%, rgba(50, 53, 47, 0.92) 43%, rgba(50, 53, 47, 0.92) 57%, transparent 58%),
-    linear-gradient(-45deg, transparent 42%, rgba(50, 53, 47, 0.92) 43%, rgba(50, 53, 47, 0.92) 57%, transparent 58%);
-  animation: blockPulse 680ms ease-out both;
+  left: 50%;
+  top: 50%;
+  width: 12px;
+  height: 12px;
+  inset: auto;
+  background: var(--c-lock);
+  box-shadow:
+    -18px -18px 0 var(--c-lock),
+    0 -18px 0 var(--c-lock),
+    18px -18px 0 var(--c-lock),
+    -18px 0 0 var(--c-lock),
+    18px 0 0 var(--c-lock),
+    -18px 18px 0 var(--c-lock),
+    0 18px 0 var(--c-lock),
+    18px 18px 0 var(--c-lock),
+    -27px -27px 0 #151713,
+    27px -27px 0 #151713,
+    -27px 27px 0 #151713,
+    27px 27px 0 #151713;
+  image-rendering: pixelated;
+  transform: translate(-50%, -50%);
+  animation: blockPixel 680ms steps(4, end) both;
 }
 
 .release {
-  border: 4px solid var(--c-yellow);
-  animation: releaseBurst 680ms ease-out both;
+  left: 50%;
+  top: 50%;
+  width: 8px;
+  height: 8px;
+  inset: auto;
+  background: var(--c-yellow);
+  box-shadow:
+    -10px 0 0 var(--c-yellow),
+    10px 0 0 var(--c-yellow),
+    0 -10px 0 var(--c-yellow),
+    0 10px 0 var(--c-yellow),
+    -18px -18px 0 var(--c-lamp),
+    18px -18px 0 var(--c-lamp),
+    -18px 18px 0 var(--c-lamp),
+    18px 18px 0 var(--c-lamp);
+  image-rendering: pixelated;
+  transform: translate(-50%, -50%);
+  animation: releasePixels 680ms steps(5, end) both;
 }
 
 .build {
-  border: 4px solid var(--c-lamp);
-  background:
-    linear-gradient(to top, rgba(239, 194, 89, 0.72) 0 28%, transparent 29%),
-    linear-gradient(to right, transparent 0 28%, rgba(239, 194, 89, 0.72) 29% 71%, transparent 72%);
-  animation: buildRise 720ms ease-out both;
+  left: 50%;
+  bottom: 17%;
+  width: 14px;
+  height: 10px;
+  inset: auto;
+  background: var(--c-lamp);
+  box-shadow:
+    -16px 0 0 #d6aa46,
+    16px 0 0 #d6aa46,
+    -8px -12px 0 var(--c-yellow),
+    8px -12px 0 var(--c-yellow),
+    0 -24px 0 #fff0c2,
+    -16px -24px 0 var(--c-lamp),
+    16px -24px 0 var(--c-lamp);
+  image-rendering: pixelated;
+  transform: translateX(-50%);
+  animation: buildPixels 720ms steps(5, end) both;
 }
 
 .prepare {
-  border: 4px dashed var(--c-soil);
-  background: rgba(145, 104, 69, 0.3);
-  animation: prepareSoil 720ms ease-out both;
+  left: 50%;
+  top: 58%;
+  width: 10px;
+  height: 10px;
+  inset: auto;
+  background: var(--c-soil);
+  box-shadow:
+    -22px 6px 0 #5d3f2d,
+    -10px -8px 0 #916845,
+    8px 4px 0 #5d3f2d,
+    22px -6px 0 #916845,
+    -2px 16px 0 #3d2a20,
+    16px 16px 0 #6f4e36;
+  image-rendering: pixelated;
+  transform: translate(-50%, -50%);
+  animation: preparePixels 720ms steps(5, end) both;
 }
 
 .destroy {
@@ -170,63 +228,79 @@
     18px -12px 0 #a49b88;
 }
 
-@keyframes blockPulse {
+@keyframes blockPixel {
   0% {
     opacity: 0;
-    transform: scale(0.65);
+    transform: translate(-50%, -50%) scale(0.45);
   }
-  35% {
+  34% {
     opacity: 1;
-    transform: scale(1.04);
+    transform: translate(-50%, -50%) scale(1);
+  }
+  66% {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1.08);
   }
   100% {
     opacity: 0;
-    transform: scale(1);
+    transform: translate(-50%, -50%) scale(1.18);
   }
 }
 
-@keyframes releaseBurst {
+@keyframes releasePixels {
   0% {
-    opacity: 0.95;
-    transform: scale(0.7) rotate(0deg);
+    opacity: 0;
+    transform: translate(-50%, -50%) scale(0.4);
   }
-  65% {
-    opacity: 0.7;
-    transform: scale(1.18) rotate(35deg);
+  20% {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(0.8);
+  }
+  60% {
+    opacity: 0.9;
+    transform: translate(-50%, -50%) scale(1.25);
   }
   100% {
     opacity: 0;
-    transform: scale(1.38) rotate(45deg);
+    transform: translate(-50%, -50%) scale(1.65);
   }
 }
 
-@keyframes buildRise {
+@keyframes buildPixels {
   0% {
     opacity: 0;
-    transform: translateY(18%) scaleY(0.55);
+    transform: translateX(-50%) translateY(18px) scale(0.72);
   }
-  45% {
+  28% {
     opacity: 1;
-    transform: translateY(0) scaleY(1.08);
+    transform: translateX(-50%) translateY(8px) scale(0.9);
+  }
+  64% {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0) scale(1);
   }
   100% {
     opacity: 0;
-    transform: translateY(-5%) scaleY(1);
+    transform: translateX(-50%) translateY(-8px) scale(1.08);
   }
 }
 
-@keyframes prepareSoil {
+@keyframes preparePixels {
   0% {
     opacity: 0;
-    transform: scale(0.76) rotate(-8deg);
+    transform: translate(-50%, -50%) scale(0.55);
   }
-  45% {
+  30% {
     opacity: 1;
-    transform: scale(1.04) rotate(0deg);
+    transform: translate(-50%, -50%) scale(1);
+  }
+  60% {
+    opacity: 1;
+    transform: translate(-50%, -42%) scale(1.12);
   }
   100% {
     opacity: 0;
-    transform: scale(1.1) rotate(4deg);
+    transform: translate(-50%, -35%) scale(1.28);
   }
 }
 
