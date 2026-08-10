@@ -5,13 +5,15 @@ import { levels } from "./levels";
 import { availableHelpers, useGame } from "./store/useGame";
 import ActionPanel from "./ui/ActionPanel";
 import Board from "./ui/Board";
-import HelperSelect from "./ui/HelperSelect";
 import LevelEnd from "./ui/LevelEnd";
+import MainMenu from "./ui/MainMenu";
+import TutorialPanel from "./ui/TutorialPanel";
 import TurnBar from "./ui/TurnBar";
 import styles from "./App.module.css";
 
 export default function App() {
   const [ready, setReady] = useState(false);
+  const [showTutorial, setShowTutorial] = useState(false);
   const state = useGame();
 
   useEffect(() => {
@@ -46,16 +48,18 @@ export default function App() {
 
   if (!ready) {
     return (
-      <main className={styles.app}>
-        <HelperSelect />
-        <button className={styles.start} onClick={() => setReady(true)}>Begin</button>
-      </main>
+      <>
+        <MainMenu onStart={() => setReady(true)} onTutorial={() => setShowTutorial(true)} />
+        {showTutorial && <TutorialPanel onClose={() => setShowTutorial(false)} />}
+      </>
     );
   }
 
   return (
     <main className={styles.app} style={{ filter: `brightness(${1 - state.templeHits * 0.18}) saturate(${1 - state.templeHits * 0.22})` }}>
       <nav className={styles.levels} aria-label="Levels">
+        <button onClick={() => setReady(false)}>Menu</button>
+        <button onClick={() => setShowTutorial(true)}>Tutorial</button>
         {levels.map((level) => (
           <button key={level.id} onClick={() => state.startLevel(level.id, state.helper)} disabled={level.id > state.campaign.highestUnlockedLevel}>
             {level.id}
@@ -74,6 +78,7 @@ export default function App() {
         <Board />
         <ActionPanel />
       </section>
+      {showTutorial && <TutorialPanel compact onClose={() => setShowTutorial(false)} />}
       <LevelEnd />
     </main>
   );
