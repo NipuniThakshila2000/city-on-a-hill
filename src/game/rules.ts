@@ -1,6 +1,5 @@
 import { BOARD_SIZE, HOUSES, TEMPLE, TIE_BREAK } from "./constants";
 import { addPos, dist, inBounds, samePos } from "./distance";
-import { isLit } from "./light";
 import type { GameState, Piece, Pos } from "./types";
 
 export const occupiedByPiece = (state: GameState, pos: Pos, except?: string) =>
@@ -74,11 +73,11 @@ export const legalMoves = (state: GameState, pieceId: keyof GameState["pieces"])
 
 export const canBuild = (state: GameState, piece: Piece) =>
   piece.alive &&
+  !piece.moved &&
   !piece.acted &&
   state.phase === "player" &&
   !samePos(piece.pos, TEMPLE) &&
   !HOUSES.some((h) => samePos(h, piece.pos)) &&
-  !isLit(piece.pos, state) &&
   !state.cornerstones.some((c) => samePos(c.pos, piece.pos)) &&
   !occupiedByThreat(state, piece.pos);
 
