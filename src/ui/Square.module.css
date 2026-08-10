@@ -122,25 +122,52 @@
 }
 
 .destroy {
-  color: var(--c-red);
-  animation: destroyFlash 640ms ease-out both;
+  left: 50%;
+  top: 52%;
+  width: 10px;
+  height: 10px;
+  inset: auto;
+  background: #d8d3bf;
+  box-shadow:
+    -22px -6px 0 2px #f2e6c5,
+    -12px -18px 0 4px #c9c0a6,
+    2px -14px 0 5px #eee0bb,
+    18px -6px 0 3px #b9b09a,
+    -18px 10px 0 5px #a49b88,
+    0 12px 0 7px #dfd2b0,
+    20px 10px 0 5px #928b7c;
+  image-rendering: pixelated;
+  transform: translate(-50%, -50%);
+  animation: destroyCloud 720ms steps(5, end) both;
 }
 
 .destroy::before,
 .destroy::after {
   content: "";
   position: absolute;
-  inset: 46% 3%;
-  height: 4px;
-  background: currentColor;
+  width: 8px;
+  height: 8px;
+  background: #fff0c2;
+  image-rendering: pixelated;
 }
 
 .destroy::before {
-  transform: rotate(45deg);
+  left: -28px;
+  top: -24px;
+  box-shadow:
+    10px 8px 0 #c94535,
+    44px 4px 0 #c94535,
+    58px 20px 0 #f2e6c5;
 }
 
 .destroy::after {
-  transform: rotate(-45deg);
+  left: 18px;
+  top: 22px;
+  background: #7d7465;
+  box-shadow:
+    -42px -2px 0 #7d7465,
+    -30px 16px 0 #5e584f,
+    18px -12px 0 #a49b88;
 }
 
 @keyframes blockPulse {
@@ -203,18 +230,22 @@
   }
 }
 
-@keyframes destroyFlash {
+@keyframes destroyCloud {
   0% {
     opacity: 0;
-    transform: scale(0.55) rotate(-12deg);
+    transform: translate(-50%, -50%) scale(0.35);
   }
-  28% {
+  18% {
     opacity: 1;
-    transform: scale(1.18) rotate(0deg);
+    transform: translate(-50%, -50%) scale(0.85);
+  }
+  58% {
+    opacity: 0.9;
+    transform: translate(-50%, -58%) scale(1.18);
   }
   100% {
     opacity: 0;
-    transform: scale(1.45) rotate(10deg);
+    transform: translate(-50%, -70%) scale(1.42);
   }
 }
 

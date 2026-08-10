@@ -1,8 +1,8 @@
 import { PIECE_LABELS } from "../game/constants";
-import binderSrc from "../assets/characters/binder.webp";
-import destroyerSrc from "../assets/characters/destroyer.webp";
-import looserSrc from "../assets/characters/looser.webp";
-import protectorSrc from "../assets/characters/protector.webp";
+import binderSrc from "../assets/characters/binder-sprite.png";
+import destroyerSrc from "../assets/characters/destroyer-sprite.png";
+import looserSrc from "../assets/characters/looser-sprite.png";
+import protectorSrc from "../assets/characters/protector-sprite.png";
 import type { Piece as PieceType, PieceId } from "../game/types";
 import styles from "./Piece.module.css";
 
