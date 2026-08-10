@@ -22,6 +22,11 @@ export type Piece = {
 export type Threat = { id: string; pos: Pos };
 export type Spawn = { turn: number; pos: Pos; id: string };
 export type Cornerstone = { pos: Pos; turnsRemaining: number; complete: boolean };
+export type ActionEffect = {
+  id: number;
+  type: "block" | "release" | "build" | "prepare" | "destroy";
+  pos: Pos;
+};
 export type Level = {
   id: number;
   turns: number;
@@ -51,6 +56,7 @@ export type GameState = {
   mode: ViewMode;
   selectedPieceId: PieceId | null;
   selectedSquare: Pos;
+  actionEffect?: ActionEffect;
   message: string;
   destroyerAutonomous: boolean;
 };

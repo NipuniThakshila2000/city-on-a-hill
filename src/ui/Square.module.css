@@ -86,3 +86,134 @@
   font-size: 10px;
   color: var(--c-soil);
 }
+
+.effect {
+  position: absolute;
+  inset: 9%;
+  pointer-events: none;
+  z-index: 2;
+}
+
+.block {
+  border: 4px solid var(--c-lock);
+  background:
+    linear-gradient(45deg, transparent 42%, rgba(50, 53, 47, 0.92) 43%, rgba(50, 53, 47, 0.92) 57%, transparent 58%),
+    linear-gradient(-45deg, transparent 42%, rgba(50, 53, 47, 0.92) 43%, rgba(50, 53, 47, 0.92) 57%, transparent 58%);
+  animation: blockPulse 680ms ease-out both;
+}
+
+.release {
+  border: 4px solid var(--c-yellow);
+  animation: releaseBurst 680ms ease-out both;
+}
+
+.build {
+  border: 4px solid var(--c-lamp);
+  background:
+    linear-gradient(to top, rgba(239, 194, 89, 0.72) 0 28%, transparent 29%),
+    linear-gradient(to right, transparent 0 28%, rgba(239, 194, 89, 0.72) 29% 71%, transparent 72%);
+  animation: buildRise 720ms ease-out both;
+}
+
+.prepare {
+  border: 4px dashed var(--c-soil);
+  background: rgba(145, 104, 69, 0.3);
+  animation: prepareSoil 720ms ease-out both;
+}
+
+.destroy {
+  color: var(--c-red);
+  animation: destroyFlash 640ms ease-out both;
+}
+
+.destroy::before,
+.destroy::after {
+  content: "";
+  position: absolute;
+  inset: 46% 3%;
+  height: 4px;
+  background: currentColor;
+}
+
+.destroy::before {
+  transform: rotate(45deg);
+}
+
+.destroy::after {
+  transform: rotate(-45deg);
+}
+
+@keyframes blockPulse {
+  0% {
+    opacity: 0;
+    transform: scale(0.65);
+  }
+  35% {
+    opacity: 1;
+    transform: scale(1.04);
+  }
+  100% {
+    opacity: 0;
+    transform: scale(1);
+  }
+}
+
+@keyframes releaseBurst {
+  0% {
+    opacity: 0.95;
+    transform: scale(0.7) rotate(0deg);
+  }
+  65% {
+    opacity: 0.7;
+    transform: scale(1.18) rotate(35deg);
+  }
+  100% {
+    opacity: 0;
+    transform: scale(1.38) rotate(45deg);
+  }
+}
+
+@keyframes buildRise {
+  0% {
+    opacity: 0;
+    transform: translateY(18%) scaleY(0.55);
+  }
+  45% {
+    opacity: 1;
+    transform: translateY(0) scaleY(1.08);
+  }
+  100% {
+    opacity: 0;
+    transform: translateY(-5%) scaleY(1);
+  }
+}
+
+@keyframes prepareSoil {
+  0% {
+    opacity: 0;
+    transform: scale(0.76) rotate(-8deg);
+  }
+  45% {
+    opacity: 1;
+    transform: scale(1.04) rotate(0deg);
+  }
+  100% {
+    opacity: 0;
+    transform: scale(1.1) rotate(4deg);
+  }
+}
+
+@keyframes destroyFlash {
+  0% {
+    opacity: 0;
+    transform: scale(0.55) rotate(-12deg);
+  }
+  28% {
+    opacity: 1;
+    transform: scale(1.18) rotate(0deg);
+  }
+  100% {
+    opacity: 0;
+    transform: scale(1.45) rotate(10deg);
+  }
+}

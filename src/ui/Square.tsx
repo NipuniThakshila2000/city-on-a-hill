@@ -25,6 +25,7 @@ export default function Square({ pos }: { pos: Pos }) {
   const buildable = selected ? canBuild(state, selected) && samePos(selected.pos, pos) : false;
   const showSoil = state.helper === "knowledge" || state.preparedSoil.includes(keyOf(pos));
   const soil = state.level.soil[keyOf(pos)];
+  const actionEffect = state.actionEffect && samePos(state.actionEffect.pos, pos) ? state.actionEffect : null;
 
   const classes = [
     styles.square,
@@ -56,6 +57,7 @@ export default function Square({ pos }: { pos: Pos }) {
       {state.mode === "coming" && forecast.map((f) => <span className={styles.forecast} key={f.id}>{f.turn}</span>)}
       {state.mode === "now" && threat && <span className={styles.threat}>X</span>}
       {showSoil && soil === "poor" && !cornerstone && <span className={styles.soil}>poor</span>}
+      {actionEffect && <span key={actionEffect.id} className={`${styles.effect} ${styles[actionEffect.type]}`} />}
       {piece && <Piece piece={piece} selected={state.selectedPieceId === piece.id} />}
     </button>
   );

@@ -8,6 +8,8 @@ import type { GameState, HelperId, Level, PieceId, Pos } from "../game/types";
 import { levels } from "../levels";
 import { loadCampaign, saveCampaign } from "./persist";
 
+let actionEffectId = 0;
+
 type GameStore = GameState & {
   startLevel: (levelId: number, helper: HelperId) => void;
   selectPiece: (pieceId: PieceId | null) => void;
@@ -20,6 +22,22 @@ type GameStore = GameState & {
   destroyThreat: (threatId: string) => void;
   endPlayerTurn: () => void;
   toggleMode: () => void;
+};
+
+const nextActionEffect = (type: NonNullable<GameState["actionEffect"]>["type"], pos: Pos) => ({
+  id: actionEffectId += 1,
+  type,
+  pos
+});
+
+const clearActionEffectSoon = (
+  effectId: number,
+  set: (partial: Partial<GameState>) => void,
+  get: () => GameStore
+) => {
+  globalThis.setTimeout(() => {
+    if (get().actionEffect?.id === effectId) set({ actionEffect: undefined });
+  }, 720);
 };
 
 const helpers: HelperId[] = ["counsel", "might", "knowledge", "understanding", "fear", "wisdom", "spirit"];
@@ -73,25 +91,32 @@ export const useGame = create<GameStore>((set, get) => ({
     const state = get();
     const binder = state.pieces.binder;
     if (state.phase !== "player" || binder.acted || binder.locked) return;
+    const actionEffect = nextActionEffect("block", binder.pos);
     set({
       pieces: { ...state.pieces, binder: { ...binder, locked: true, acted: true } },
+      actionEffect,
       message: `B${keyOf(binder.pos)} locked.`
     });
+    clearActionEffectSoon(actionEffect.id, set, get);
   },
   unlockBinder: () => {
     const state = get();
     const binder = state.pieces.binder;
     if (state.phase !== "player" || binder.acted || !binder.locked) return;
+    const actionEffect = nextActionEffect("release", binder.pos);
     set({
       pieces: { ...state.pieces, binder: { ...binder, locked: false, acted: true } },
+      actionEffect,
       message: `B${keyOf(binder.pos)} unlocked.`
     });
+    clearActionEffectSoon(actionEffect.id, set, get);
   },
   releaseLock: () => {
     const state = get();
     const looser = state.pieces.looser;
     if (!canRelease(state, looser)) return;
     const locked = lockedSquares(state)[0];
+    const actionEffect = nextActionEffect("release", locked);
     set({
       pieces: {
         ...state.pieces,
@@ -100,8 +125,10 @@ export const useGame = create<GameStore>((set, get) => ({
           : state.pieces.binder,
         looser: { ...looser, acted: true }
       },
+      actionEffect,
       message: `Lock at ${keyOf(locked)} released.`
     });
+    clearActionEffectSoon(actionEffect.id, set, get);
   },
   buildHere: () => {
     const state = get();
@@ -112,18 +139,24 @@ export const useGame = create<GameStore>((set, get) => ({
     const key = keyOf(piece.pos);
     const soil = state.preparedSoil.includes(key) ? "good" : state.level.soil[key] ?? "good";
     if (soil === "poor") {
+      const actionEffect = nextActionEffect("prepare", piece.pos);
       set({
         preparedSoil: [...state.preparedSoil, key],
         pieces: { ...state.pieces, [id]: { ...piece, acted: true } },
+        actionEffect,
         message: `${key} was poor soil. It is prepared now.`
       });
+      clearActionEffectSoon(actionEffect.id, set, get);
       return;
     }
+    const actionEffect = nextActionEffect("build", piece.pos);
     set({
       cornerstones: [...state.cornerstones, { pos: piece.pos, turnsRemaining: 2, complete: false }],
       pieces: { ...state.pieces, [id]: { ...piece, acted: true } },
+      actionEffect,
       message: `Cornerstone planted at ${key}.`
     });
+    clearActionEffectSoon(actionEffect.id, set, get);
   },
   destroyThreat: (threatId) => {
     const state = get();
@@ -136,13 +169,16 @@ export const useGame = create<GameStore>((set, get) => ({
       avoidableDestroys: state.campaign.avoidableDestroys + (avoidable ? 1 : 0)
     };
     saveCampaign(campaign);
+    const actionEffect = nextActionEffect("destroy", target.pos);
     set({
       campaign,
       threats: state.threats.filter((t) => t.id !== threatId),
       destroyerCharges: state.destroyerCharges - 1,
       pieces: { ...state.pieces, destroyer: { ...destroyer, acted: true } },
+      actionEffect,
       message: `Threat ${target.id} destroyed.`
     });
+    clearActionEffectSoon(actionEffect.id, set, get);
   },
   endPlayerTurn: () => {
     const next = endTurn(get());
