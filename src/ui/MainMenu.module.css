@@ -57,8 +57,8 @@
   inset: 0;
   background:
     linear-gradient(90deg, var(--c-shadow), var(--c-clear) 22%, var(--c-clear) 76%, var(--c-shadow)),
-    radial-gradient(circle at 62% 42%, var(--c-yellow), var(--c-clear) 14%);
-  opacity: 0.55;
+    radial-gradient(circle at 55% 46%, var(--c-yellow), var(--c-clear) 16%);
+  opacity: 0.5;
   pointer-events: none;
 }
 
@@ -77,6 +77,20 @@
   inset: auto 0 105px;
   height: 190px;
   opacity: 0.58;
+}
+
+.heroCharacter {
+  position: absolute;
+  z-index: 1;
+  left: 50%;
+  bottom: -42px;
+  width: min(48vw, 520px);
+  max-height: 88%;
+  object-fit: contain;
+  transform: translateX(-50%);
+  opacity: 0.5;
+  filter: saturate(0.75) brightness(0.72);
+  pointer-events: none;
 }
 
 .tower,
@@ -134,7 +148,7 @@
   position: relative;
   width: min(42vw, 360px);
   aspect-ratio: 1;
-  margin: 118px 0 0 56px;
+  margin: 150px 0 0 56px;
   border: 2px solid var(--c-grid-2);
   background:
     linear-gradient(var(--c-grid) 1px, var(--c-clear) 1px),
@@ -143,7 +157,7 @@
   background-size: calc(100% / 7) calc(100% / 7);
   box-shadow: 0 0 0 4px var(--c-shadow), 0 18px 40px var(--c-shadow);
   transform: rotate(-3deg);
-  opacity: 0.86;
+  opacity: 0.58;
 }
 
 .lightBox {
@@ -292,12 +306,75 @@
 
 .setup {
   max-width: 1040px;
-  margin: 28px auto 0;
+  margin: 24px auto 0;
   display: grid;
   grid-template-columns: 240px 1fr;
   gap: 24px;
   border-top: 1px solid var(--c-grid-2);
   padding-top: 18px;
+}
+
+.roster {
+  max-width: 1040px;
+  margin: 26px auto 0;
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.characterCard {
+  min-height: 290px;
+  display: grid;
+  grid-template-rows: 1fr auto;
+  border: 2px solid var(--c-grid-2);
+  background:
+    linear-gradient(180deg, var(--c-panel-2), var(--c-void));
+  box-shadow: 0 0 0 3px var(--c-shadow);
+  overflow: hidden;
+}
+
+.characterCard img {
+  width: 100%;
+  height: 214px;
+  object-fit: cover;
+  object-position: center 30%;
+  filter: saturate(0.9) brightness(0.82);
+}
+
+.characterCard div {
+  display: grid;
+  grid-template-columns: 34px 1fr;
+  column-gap: 8px;
+  padding: 10px;
+  border-top: 1px solid var(--c-grid-2);
+}
+
+.characterCard span {
+  grid-row: span 2;
+  width: 34px;
+  height: 34px;
+  display: grid;
+  place-items: center;
+  border: 1px solid var(--c-grid-2);
+  color: var(--c-lamp);
+  background: var(--c-lock);
+}
+
+.characterCard h2,
+.characterCard p {
+  margin: 0;
+}
+
+.characterCard h2 {
+  color: var(--c-grey-2);
+  font-size: 16px;
+}
+
+.characterCard p {
+  margin-top: 4px;
+  color: var(--c-grey);
+  font-size: 12px;
+  line-height: 1.35;
 }
 
 .setup h2 {
@@ -364,7 +441,31 @@ button:disabled {
     opacity: 0.58;
   }
 
+  .heroCharacter {
+    width: 440px;
+    max-width: 96vw;
+    opacity: 0.36;
+  }
+
+  .roster {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .characterCard {
+    min-height: 230px;
+  }
+
+  .characterCard img {
+    height: 160px;
+  }
+
   .setup {
     margin-top: 18px;
+  }
+}
+
+@media (max-width: 460px) {
+  .roster {
+    grid-template-columns: 1fr;
   }
 }

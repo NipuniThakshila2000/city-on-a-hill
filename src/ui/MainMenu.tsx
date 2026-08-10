@@ -1,6 +1,10 @@
 import type { HelperId } from "../game/types";
 import { levels } from "../levels";
 import { availableHelpers, useGame } from "../store/useGame";
+import binderImage from "../assets/characters/binder.webp";
+import destroyerImage from "../assets/characters/destroyer.webp";
+import looserImage from "../assets/characters/looser.webp";
+import protectorImage from "../assets/characters/protector.webp";
 import styles from "./MainMenu.module.css";
 
 const helperNames: Record<HelperId, string> = {
@@ -22,6 +26,37 @@ const helperEffects: Record<HelperId, string> = {
   wisdom: "Coming soon.",
   spirit: "Coming soon."
 };
+
+const characters = [
+  {
+    id: "protector",
+    name: "The Protector",
+    image: protectorImage,
+    mark: "P",
+    summary: "Holds ground and turns paths aside."
+  },
+  {
+    id: "destroyer",
+    name: "The Destroyer",
+    image: destroyerImage,
+    mark: "D",
+    summary: "Answers any threat, at a cost."
+  },
+  {
+    id: "binder",
+    name: "The Binder",
+    image: binderImage,
+    mark: "B",
+    summary: "Locks a square and gives up freedom."
+  },
+  {
+    id: "looser",
+    name: "The Looser",
+    image: looserImage,
+    mark: "L",
+    summary: "Fast, fragile, and useful in the way."
+  }
+];
 
 type MainMenuProps = {
   onStart: () => void;
@@ -46,6 +81,7 @@ export default function MainMenu({ onStart, onTutorial }: MainMenuProps) {
             <span className={styles.roof} />
             <span className={styles.wall} />
           </div>
+          <img className={styles.heroCharacter} src={protectorImage} alt="" />
           <div className={styles.map}>
             <div className={styles.lightBox} />
             <div className={styles.lamp}>⌂</div>
@@ -65,6 +101,19 @@ export default function MainMenu({ onStart, onTutorial }: MainMenuProps) {
             </nav>
           </div>
         </div>
+      </section>
+
+      <section className={styles.roster} aria-label="Pieces">
+        {characters.map((character) => (
+          <article key={character.id} className={styles.characterCard}>
+            <img src={character.image} alt="" />
+            <div>
+              <span>{character.mark}</span>
+              <h2>{character.name}</h2>
+              <p>{character.summary}</p>
+            </div>
+          </article>
+        ))}
       </section>
 
       <section className={styles.setup} aria-label="Level and helper setup">
