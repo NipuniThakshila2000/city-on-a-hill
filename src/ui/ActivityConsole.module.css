@@ -4,7 +4,7 @@
   border: 1px solid var(--c-grid-2);
   background: #10120e;
   color: var(--c-grey-2);
-  font-family: ui-monospace, SFMono-Regular, Consolas, "Liberation Mono", monospace;
+  font-family: var(--font-console);
 }
 
 .console header {

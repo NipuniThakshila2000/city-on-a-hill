@@ -2,6 +2,12 @@
   box-sizing: border-box;
 }
 
+:root {
+  --font-title: "Cinzel", "Palatino Linotype", "Book Antiqua", Palatino, Georgia, serif;
+  --font-body: "Aptos", "Segoe UI", Candara, Calibri, Arial, sans-serif;
+  --font-console: "Cascadia Mono", "SFMono-Regular", Consolas, "Liberation Mono", monospace;
+}
+
 html,
 body,
 #root {
@@ -12,15 +18,26 @@ body {
   margin: 0;
   background: var(--c-ink);
   color: var(--c-grey-2);
-  font-family: "Courier New", monospace;
+  font-family: var(--font-body);
   font-size: 16px;
   image-rendering: pixelated;
-  -webkit-font-smoothing: none;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: geometricPrecision;
 }
 
 button,
 select {
   font: inherit;
+}
+
+h1,
+h2,
+h3,
+button,
+select,
+.game-label {
+  font-family: var(--font-title);
+  letter-spacing: 0;
 }
 
 button:focus-visible,

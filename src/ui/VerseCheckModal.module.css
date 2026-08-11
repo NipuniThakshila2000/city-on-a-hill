@@ -20,7 +20,7 @@
 .panel header p {
   margin: 0;
   color: var(--c-yellow);
-  font-family: ui-monospace, SFMono-Regular, Consolas, "Liberation Mono", monospace;
+  font-family: var(--font-console);
 }
 
 .panel h2 {
