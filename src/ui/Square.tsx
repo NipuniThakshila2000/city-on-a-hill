@@ -1,4 +1,4 @@
-import { HOUSES, TEMPLE } from "../game/constants";
+import { HOUSES, PIECE_LABELS, TEMPLE } from "../game/constants";
 import { dist, keyOf, samePos } from "../game/distance";
 import { isLit } from "../game/light";
 import { canBuild, legalMoves, lockedSquares } from "../game/rules";
@@ -23,6 +23,7 @@ export default function Square({ pos, tutorialSquares = [], tutorialPrimarySquar
   const displayMode = viewMode ?? state.mode;
   const squareKey = keyOf(pos);
   const piece = Object.values(state.pieces).find((p) => p.alive && samePos(p.pos, pos));
+  const moveTrail = Object.values(state.moveTrails).find((trail) => trail && samePos(trail.from, pos));
   const threat = state.threats.find((t) => samePos(t.pos, pos));
   const house = HOUSES.some((h) => samePos(h, pos));
   const temple = samePos(TEMPLE, pos);
@@ -95,6 +96,11 @@ export default function Square({ pos, tutorialSquares = [], tutorialPrimarySquar
       {tutorialPrimary && <span className={styles.tutorialArrow}>{"->"}</span>}
       {tutorialHighlight && !tutorialPrimary && <span className={styles.tutorialDot} />}
       {coord && <span className={styles.coord}>{coord}</span>}
+      {moveTrail && (
+        <span className={`${styles.moveTrail} ${styles[moveTrail.pieceId]}`} aria-label={`${moveTrail.pieceId} moved from here`}>
+          <span>{PIECE_LABELS[moveTrail.pieceId]}</span>
+        </span>
+      )}
       {temple && <span className={styles.templeLamp} />}
       {house && <img className={styles.houseImage} src={houseSrc} alt="" draggable={false} />}
       {locked && <span className={styles.lock} />}

@@ -21,6 +21,7 @@ export type Piece = {
   acted: boolean;
   locked?: boolean;
 };
+export type MoveTrail = { pieceId: PieceId; from: Pos; to: Pos; turn: number };
 export type ThreatTier = 1 | 2 | 3 | 4;
 export type Threat = { id: string; pos: Pos; tier: ThreatTier; hp: number; maxHp: number };
 export type Spawn = { turn: number; pos: Pos; id: string; tier?: ThreatTier };
@@ -70,6 +71,7 @@ export type GameState = {
   phase: Phase;
   helper: HelperId;
   pieces: Record<PieceId, Piece>;
+  moveTrails: Partial<Record<PieceId, MoveTrail>>;
   threats: Threat[];
   cornerstones: Cornerstone[];
   preparedSoil: string[];

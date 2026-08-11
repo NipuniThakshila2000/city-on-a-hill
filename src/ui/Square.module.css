@@ -118,6 +118,56 @@
   color: var(--c-grey);
 }
 
+.moveTrail {
+  position: absolute;
+  inset: 18%;
+  z-index: 1;
+  display: grid;
+  place-items: center;
+  border: 1px dashed rgba(214, 196, 136, 0.72);
+  background:
+    linear-gradient(135deg, rgba(214, 196, 136, 0.13), rgba(14, 17, 13, 0.24)),
+    repeating-linear-gradient(45deg, transparent 0 6px, rgba(214, 196, 136, 0.08) 6px 8px);
+  color: rgba(238, 206, 105, 0.9);
+  pointer-events: none;
+  animation: trailSettle 420ms ease-out both;
+}
+
+.moveTrail::before {
+  content: "";
+  position: absolute;
+  inset: -7px;
+  border: 1px solid rgba(214, 196, 136, 0.18);
+}
+
+.moveTrail span {
+  min-width: 18px;
+  height: 18px;
+  display: grid;
+  place-items: center;
+  border: 1px solid currentColor;
+  background: rgba(8, 10, 8, 0.78);
+  font-size: 11px;
+  font-weight: 700;
+  line-height: 1;
+}
+
+.protector {
+  color: #eed06a;
+}
+
+.binder {
+  color: #d6c488;
+}
+
+.destroyer {
+  color: #e05a45;
+}
+
+.looser {
+  color: #f0a65a;
+}
+
 .lock,
 .cornerScaffold,
 .cornerComplete,
@@ -548,11 +598,36 @@
   }
 }
 
+@keyframes trailSettle {
+  0% {
+    opacity: 0;
+    transform: scale(0.75) rotate(-3deg);
+  }
+  70% {
+    opacity: 0.86;
+    transform: scale(1.05) rotate(0deg);
+  }
+  100% {
+    opacity: 0.72;
+    transform: scale(1) rotate(0deg);
+  }
+}
+
 @media (max-width: 520px) {
   .coord {
     top: 2px;
     left: 2px;
     font-size: 9px;
+  }
+
+  .moveTrail {
+    inset: 20%;
+  }
+
+  .moveTrail span {
+    min-width: 14px;
+    height: 14px;
+    font-size: 8px;
   }
 
   .lock,

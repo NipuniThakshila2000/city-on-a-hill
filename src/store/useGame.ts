@@ -74,6 +74,7 @@ const makeState = (level: Level, helper: HelperId, campaign = loadCampaign()): G
     binder: { id: "binder", pos: level.startPositions.binder, alive: true, hp: PIECE_STATS.binder.maxHp, maxHp: PIECE_STATS.binder.maxHp, moved: false, acted: false, locked: false },
     looser: { id: "looser", pos: level.startPositions.looser, alive: true, hp: PIECE_STATS.looser.maxHp, maxHp: PIECE_STATS.looser.maxHp, moved: false, acted: false }
   },
+  moveTrails: {},
   threats: [],
   cornerstones: [],
   preparedSoil: [],
@@ -173,8 +174,10 @@ export const useGame = create<GameStore>((set, get) => ({
     const state = get();
     const id = state.selectedPieceId;
     if (!id || !legalMoves(state, id).some((p) => samePos(p, pos))) return;
+    const from = state.pieces[id].pos;
     set({
       pieces: { ...state.pieces, [id]: { ...state.pieces[id], pos, moved: true } },
+      moveTrails: { ...state.moveTrails, [id]: { pieceId: id, from, to: pos, turn: state.turn } },
       selectedSquare: pos,
       ...withLog(state, `${pieceName(state.pieces[id].id)} moved to ${keyOf(pos)}.`)
     });

@@ -56,6 +56,7 @@ const stateAtD6 = (overrides: Partial<GameState> = {}): GameState => {
         acted: false
       }
     },
+    moveTrails: {},
     threats: [],
     cornerstones: [],
     preparedSoil: ["D6"],
