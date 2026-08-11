@@ -80,7 +80,7 @@ const teachingLinks = [
   },
   {
     title: "YESOD and MALKUT",
-    body: "MALKUT shows the before/current state. YESOD shows the after/forecast state. The lesson connection is discernment: seeing what is present and what is approaching."
+    body: "YESOD shows the before/current state. MALKUT shows the after/forecast state. The lesson connection is discernment: seeing what is present and what is approaching."
   },
   {
     title: "Verse checks",

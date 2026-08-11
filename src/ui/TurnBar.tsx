@@ -4,7 +4,12 @@ import { isLit } from "../game/light";
 import ForecastToggle from "./ForecastToggle";
 import styles from "./TurnBar.module.css";
 
-export default function TurnBar() {
+type TurnBarProps = {
+  tutorialView?: boolean;
+  tutorialEndTurn?: boolean;
+};
+
+export default function TurnBar({ tutorialView = false, tutorialEndTurn = false }: TurnBarProps) {
   const { turn, level, templeHits, destroyerCharges, message, endPlayerTurn, phase } = useGame();
   const housesLit = useGame((state) => HOUSES.filter((house) => isLit(house, state)).length);
   return (
@@ -17,8 +22,11 @@ export default function TurnBar() {
       </div>
       <p>{message}</p>
       <div className={styles.actions}>
-        <ForecastToggle />
-        <button onClick={endPlayerTurn} disabled={phase !== "player"}>End turn</button>
+        <ForecastToggle tutorialHighlight={tutorialView} />
+        <button className={tutorialEndTurn ? styles.tutorialAction : ""} onClick={endPlayerTurn} disabled={phase !== "player"}>
+          {tutorialEndTurn && <span className={styles.actionArrow}>{"->"}</span>}
+          End turn
+        </button>
       </div>
     </header>
   );

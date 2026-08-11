@@ -46,6 +46,22 @@
   color: var(--c-yellow);
 }
 
+.tutorialAction,
+.tutorialHint {
+  position: relative;
+  border-color: var(--c-lamp) !important;
+  color: var(--c-lamp) !important;
+  box-shadow: 0 0 0 2px rgba(238, 206, 105, 0.18), 0 0 16px rgba(238, 206, 105, 0.32);
+}
+
+.actionArrow {
+  display: inline-block;
+  margin-right: 7px;
+  color: var(--c-lamp);
+  font-weight: 700;
+  animation: actionNudge 900ms ease-in-out infinite;
+}
+
 .actions button,
 .threats button {
   min-height: 38px;
@@ -66,6 +82,16 @@
 
 .actions button.unavailable {
   border-style: dashed;
+}
+
+@keyframes actionNudge {
+  0%,
+  100% {
+    transform: translateX(0);
+  }
+  50% {
+    transform: translateX(5px);
+  }
 }
 
 @media (max-width: 760px) {

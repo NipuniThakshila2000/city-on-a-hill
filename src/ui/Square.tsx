@@ -10,8 +10,14 @@ import Darkness from "./Darkness";
 import Piece from "./Piece";
 import styles from "./Square.module.css";
 
-export default function Square({ pos }: { pos: Pos }) {
+type SquareProps = {
+  pos: Pos;
+  tutorialSquares?: string[];
+};
+
+export default function Square({ pos, tutorialSquares = [] }: SquareProps) {
   const state = useGame();
+  const squareKey = keyOf(pos);
   const piece = Object.values(state.pieces).find((p) => p.alive && samePos(p.pos, pos));
   const threat = state.threats.find((t) => samePos(t.pos, pos));
   const house = HOUSES.some((h) => samePos(h, pos));
@@ -44,6 +50,7 @@ export default function Square({ pos }: { pos: Pos }) {
     state.actionEffect?.type === "build" &&
     dist(pos, state.actionEffect.pos) <= 2;
   const coord = pos.y === 0 ? String.fromCharCode(65 + pos.x) : pos.x === 0 ? String(pos.y + 1) : "";
+  const tutorialHighlight = tutorialSquares.includes(squareKey);
 
   const classes = [
     styles.square,
@@ -58,7 +65,8 @@ export default function Square({ pos }: { pos: Pos }) {
     destroyTarget ? styles.destroyTarget : "",
     buildable ? styles.buildable : "",
     houseGlow ? styles.houseGlow : "",
-    state.selectedSquare.x === pos.x && state.selectedSquare.y === pos.y ? styles.focused : ""
+    state.selectedSquare.x === pos.x && state.selectedSquare.y === pos.y ? styles.focused : "",
+    tutorialHighlight ? styles.tutorialHighlight : ""
   ]
     .filter(Boolean)
     .join(" ");
@@ -74,6 +82,7 @@ export default function Square({ pos }: { pos: Pos }) {
       }}
       aria-label={keyOf(pos)}
     >
+      {tutorialHighlight && <span className={styles.tutorialArrow}>{"->"}</span>}
       {coord && <span className={styles.coord}>{coord}</span>}
       {temple && <span className={styles.templeLamp} />}
       {house && <img className={styles.houseImage} src={houseSrc} alt="" draggable={false} />}

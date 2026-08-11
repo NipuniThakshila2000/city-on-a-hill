@@ -11,7 +11,16 @@ const names = {
   looser: "Looser"
 } as const;
 
-export default function ActionPanel() {
+type ActionPanelProps = {
+  tutorialActions?: string[];
+};
+
+const actionClass = (active: boolean, unavailable: boolean) =>
+  [unavailable ? styles.unavailable : "", active ? styles.tutorialAction : ""].filter(Boolean).join(" ");
+
+const tutorialArrow = <span className={styles.actionArrow}>{"->"}</span>;
+
+export default function ActionPanel({ tutorialActions = [] }: ActionPanelProps) {
   const state = useGame();
   const selected = state.selectedPieceId ? state.pieces[state.selectedPieceId] : null;
   const stats = selected ? PIECE_STATS[selected.id] : null;
@@ -29,13 +38,28 @@ export default function ActionPanel() {
             <div><dt>Passage</dt><dd>{stats.passage}</dd></div>
           </dl>
           <div className={styles.actions}>
-            <button className={selected.id !== "binder" || selected.acted || selected.locked ? styles.unavailable : ""} onClick={state.lockBinder}>Lock</button>
-            <button className={selected.id !== "binder" || selected.acted || !selected.locked ? styles.unavailable : ""} onClick={state.unlockBinder}>Unlock</button>
-            <button className={!canRelease(state, selected) ? styles.unavailable : ""} onClick={state.releaseLock}>Release</button>
-            <button className={!canBuild(state, selected) ? styles.unavailable : ""} onClick={state.buildHere}>Build</button>
+            <button className={actionClass(tutorialActions.includes("lock"), selected.id !== "binder" || selected.acted || !!selected.locked)} onClick={state.lockBinder}>
+              {tutorialActions.includes("lock") && tutorialArrow}
+              Lock
+            </button>
+            <button className={actionClass(tutorialActions.includes("unlock"), selected.id !== "binder" || selected.acted || !selected.locked)} onClick={state.unlockBinder}>
+              {tutorialActions.includes("unlock") && tutorialArrow}
+              Unlock
+            </button>
+            <button className={actionClass(tutorialActions.includes("release"), !canRelease(state, selected))} onClick={state.releaseLock}>
+              {tutorialActions.includes("release") && tutorialArrow}
+              Release
+            </button>
+            <button className={actionClass(tutorialActions.includes("build"), !canBuild(state, selected))} onClick={state.buildHere}>
+              {tutorialActions.includes("build") && tutorialArrow}
+              Build
+            </button>
           </div>
           {selected.id === "destroyer" && (
-            <p className={styles.targetHint}>Select a highlighted darkness tile on the board to attack.</p>
+            <p className={`${styles.targetHint} ${tutorialActions.includes("attack") ? styles.tutorialHint : ""}`}>
+              {tutorialActions.includes("attack") && <span className={styles.actionArrow}>{"->"}</span>}
+              Select a highlighted darkness tile on the board to attack.
+            </p>
           )}
         </>
       )}

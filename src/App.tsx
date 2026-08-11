@@ -8,6 +8,7 @@ import ActivityConsole from "./ui/ActivityConsole";
 import Board from "./ui/Board";
 import LevelEnd from "./ui/LevelEnd";
 import MainMenu from "./ui/MainMenu";
+import PlayableTutorial, { tutorialSteps } from "./ui/PlayableTutorial";
 import TutorialPanel from "./ui/TutorialPanel";
 import TurnBar from "./ui/TurnBar";
 import VerseCheckModal from "./ui/VerseCheckModal";
@@ -16,7 +17,15 @@ import styles from "./App.module.css";
 export default function App() {
   const [ready, setReady] = useState(false);
   const [showTutorial, setShowTutorial] = useState(false);
+  const [tutorialStep, setTutorialStep] = useState<number | null>(null);
   const state = useGame();
+  const activeTutorial = tutorialStep === null ? null : tutorialSteps[tutorialStep];
+  const startPlayableTutorial = () => {
+    state.startLevel(1, state.helper);
+    setReady(true);
+    setShowTutorial(false);
+    setTutorialStep(0);
+  };
 
   useEffect(() => {
     const onKey = (event: KeyboardEvent) => {
@@ -51,7 +60,7 @@ export default function App() {
   if (!ready) {
     return (
       <>
-        <MainMenu onStart={() => setReady(true)} onTutorial={() => setShowTutorial(true)} />
+        <MainMenu onStart={() => setReady(true)} onTutorial={startPlayableTutorial} />
         {showTutorial && <TutorialPanel onClose={() => setShowTutorial(false)} />}
       </>
     );
@@ -61,7 +70,7 @@ export default function App() {
     <main className={styles.app} style={{ filter: `brightness(${1 - state.templeHits * 0.18}) saturate(${1 - state.templeHits * 0.22})` }}>
       <nav className={styles.levels} aria-label="Levels">
         <button onClick={() => setReady(false)}>Menu</button>
-        <button onClick={() => setShowTutorial(true)}>Tutorial</button>
+        <button onClick={startPlayableTutorial}>Tutorial</button>
         {levels.map((level) => (
           <button key={level.id} onClick={() => state.startLevel(level.id, state.helper)} disabled={level.id > state.campaign.highestUnlockedLevel}>
             {level.id}
@@ -75,13 +84,20 @@ export default function App() {
           ))}
         </select>
       </nav>
-      <TurnBar />
+      <TurnBar tutorialView={!!activeTutorial?.view} tutorialEndTurn={!!activeTutorial?.endTurn} />
       <section className={styles.table}>
-        <Board />
-        <ActionPanel />
+        <Board tutorialSquares={activeTutorial?.boardSquares ?? []} />
+        <ActionPanel tutorialActions={activeTutorial?.actions ?? []} />
       </section>
       <ActivityConsole />
       {showTutorial && <TutorialPanel compact onClose={() => setShowTutorial(false)} />}
+      {tutorialStep !== null && (
+        <PlayableTutorial
+          step={tutorialStep}
+          onStep={setTutorialStep}
+          onClose={() => setTutorialStep(null)}
+        />
+      )}
       <VerseCheckModal />
       <LevelEnd />
     </main>

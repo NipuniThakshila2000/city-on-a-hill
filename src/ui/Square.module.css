@@ -61,6 +61,28 @@
   outline-offset: -4px;
 }
 
+.tutorialHighlight {
+  outline: 3px solid var(--c-lamp);
+  outline-offset: -5px;
+  box-shadow: inset 0 0 0 4px rgba(238, 206, 105, 0.72), 0 0 18px rgba(238, 206, 105, 0.56);
+  z-index: 3;
+}
+
+.tutorialArrow {
+  position: absolute;
+  top: 4px;
+  right: 4px;
+  z-index: 8;
+  min-width: 24px;
+  padding: 1px 4px;
+  border: 1px solid var(--c-lamp);
+  background: rgba(12, 14, 11, 0.88);
+  color: var(--c-lamp);
+  font-weight: 700;
+  font-size: 12px;
+  animation: tutorialNudge 900ms ease-in-out infinite;
+}
+
 .coord {
   position: absolute;
   top: 3px;
@@ -449,6 +471,16 @@
   }
 }
 
+@keyframes tutorialNudge {
+  0%,
+  100% {
+    transform: translateX(0);
+  }
+  50% {
+    transform: translateX(-5px);
+  }
+}
+
 @media (max-width: 520px) {
   .coord {
     top: 2px;
@@ -476,6 +508,13 @@
 
   .effect {
     inset: 6%;
+  }
+
+  .tutorialArrow {
+    top: 2px;
+    right: 2px;
+    min-width: 20px;
+    font-size: 10px;
   }
 
   .block,

@@ -17,7 +17,7 @@ export default function TutorialPanel({ compact = false, onClose }: TutorialPane
           <article>
             <span className={styles.arrow}>{"->"}</span>
             <strong>1. Choose YESOD or MALKUT</strong>
-            <p>Press MALKUT for the current before board. Press YESOD to preview the after view and incoming attacks.</p>
+            <p>Press YESOD for the current before board. Press MALKUT to preview the after view and incoming attacks.</p>
           </article>
           <article>
             <span className={styles.arrow}>{"->"}</span>
@@ -45,7 +45,7 @@ export default function TutorialPanel({ compact = false, onClose }: TutorialPane
         <div className={styles.keys}>
           <span>Arrows: focus square</span>
           <span>Enter: select or move</span>
-          <span>Tab: MALKUT / YESOD</span>
+          <span>Tab: YESOD / MALKUT</span>
         </div>
         <button onClick={onClose}>{compact ? "Hide tutorial" : "Back"}</button>
       </div>

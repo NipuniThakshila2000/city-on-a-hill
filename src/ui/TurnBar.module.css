@@ -34,6 +34,28 @@
   border-radius: 0;
 }
 
+.tutorialAction {
+  border-color: var(--c-lamp) !important;
+  color: var(--c-lamp) !important;
+  box-shadow: 0 0 0 2px rgba(238, 206, 105, 0.18), 0 0 16px rgba(238, 206, 105, 0.32);
+}
+
+.actionArrow {
+  display: inline-block;
+  margin-right: 7px;
+  animation: endTurnNudge 900ms ease-in-out infinite;
+}
+
+@keyframes endTurnNudge {
+  0%,
+  100% {
+    transform: translateX(0);
+  }
+  50% {
+    transform: translateX(5px);
+  }
+}
+
 @media (max-width: 760px) {
   .bar {
     margin-bottom: 10px;

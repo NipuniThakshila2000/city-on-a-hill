@@ -35,3 +35,30 @@
   padding: 0 8px;
   max-width: 72px;
 }
+
+.tutorialTabs {
+  position: relative;
+  border-color: var(--c-lamp);
+  box-shadow: 0 0 0 2px rgba(238, 206, 105, 0.18), 0 0 16px rgba(238, 206, 105, 0.32);
+}
+
+.tutorialTabs::before {
+  content: "->";
+  position: absolute;
+  left: -34px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--c-lamp);
+  font-weight: 700;
+  animation: toggleNudge 900ms ease-in-out infinite;
+}
+
+@keyframes toggleNudge {
+  0%,
+  100% {
+    transform: translateY(-50%) translateX(0);
+  }
+  50% {
+    transform: translateY(-50%) translateX(5px);
+  }
+}
