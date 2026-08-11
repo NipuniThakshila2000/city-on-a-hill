@@ -6,6 +6,7 @@ import binderImage from "../assets/characters/binder.webp";
 import destroyerImage from "../assets/characters/destroyer.webp";
 import looserImage from "../assets/characters/looser.webp";
 import protectorImage from "../assets/characters/protector.webp";
+import cmsLogoImage from "../assets/structures/cms-redux-logo.webp";
 import houseImage from "../assets/structures/house.webp";
 import styles from "./MainMenu.module.css";
 
@@ -135,9 +136,7 @@ export default function MainMenu({ onStart, onTutorial }: MainMenuProps) {
       <main className={styles.menu}>
         <section className={styles.teachingPage} aria-label="Teaching">
           <div className={styles.cmsHeader}>
-            <div className={styles.cmsLogo} aria-label="CMS logo">
-              <span>CMS</span>
-            </div>
+            <img className={styles.cmsLogo} src={cmsLogoImage} alt="CMS Redux" />
             <div>
               <p>Deep Dive teaching companion</p>
               <h1>Teaching</h1>
@@ -216,9 +215,7 @@ export default function MainMenu({ onStart, onTutorial }: MainMenuProps) {
             <span className={styles.edgeThree}>?</span>
           </div>
           <div className={styles.copy}>
-            <div className={styles.cmsLogo} aria-label="CMS logo">
-              <span>CMS</span>
-            </div>
+            <img className={styles.cmsLogo} src={cmsLogoImage} alt="CMS Redux" />
             <h1>City on a Hill</h1>
             <p className={styles.logLine}>A scripture strategy game about keeping the lamp lit and carrying light to the houses.</p>
             <p className={styles.disclaimer}>Exclusively for Deep Dive participants. Do not share with others.</p>

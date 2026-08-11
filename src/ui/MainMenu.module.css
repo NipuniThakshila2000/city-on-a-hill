@@ -237,26 +237,14 @@
 }
 
 .cmsLogo {
-  width: 72px;
-  height: 72px;
-  display: grid;
-  place-items: center;
-  border: 2px solid var(--c-lamp);
-  background:
-    linear-gradient(135deg, rgba(255, 227, 107, 0.18), rgba(8, 9, 9, 0.62)),
-    var(--c-lock);
-  color: var(--c-lamp);
-  box-shadow: 0 0 0 3px var(--c-shadow), 0 0 20px rgba(255, 227, 107, 0.22);
-}
-
-.cmsLogo span {
-  font-family: var(--font-title);
-  font-size: 20px;
-  font-weight: 700;
+  width: 92px;
+  height: 122px;
+  object-fit: contain;
+  filter: brightness(1.08) drop-shadow(0 0 12px rgba(255, 227, 107, 0.22));
 }
 
 .copy .cmsLogo {
-  margin-bottom: 14px;
+  margin-bottom: 10px;
 }
 
 .copy h1 {
@@ -654,12 +642,8 @@ button:disabled {
   }
 
   .cmsLogo {
-    width: 58px;
-    height: 58px;
-  }
-
-  .cmsLogo span {
-    font-size: 16px;
+    width: 68px;
+    height: 92px;
   }
 
   .characterBreakdown article {
