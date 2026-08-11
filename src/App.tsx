@@ -28,6 +28,13 @@ export default function App() {
   };
 
   useEffect(() => {
+    if (tutorialStep === null) return;
+    const tutorial = tutorialSteps[tutorialStep];
+    state.setMode(tutorial.view ?? "now");
+    state.selectPiece(tutorial.selectedPiece ?? null);
+  }, [tutorialStep]);
+
+  useEffect(() => {
     const onKey = (event: KeyboardEvent) => {
       if (event.key === "Tab") {
         event.preventDefault();
@@ -84,9 +91,9 @@ export default function App() {
           ))}
         </select>
       </nav>
-      <TurnBar tutorialView={!!activeTutorial?.view} tutorialEndTurn={!!activeTutorial?.endTurn} />
+      <TurnBar tutorialView={!!activeTutorial?.viewTarget} tutorialEndTurn={!!activeTutorial?.endTurn} />
       <section className={styles.table}>
-        <Board tutorialSquares={activeTutorial?.boardSquares ?? []} />
+        <Board tutorialSquares={activeTutorial?.boardSquares ?? []} tutorialPrimarySquare={activeTutorial?.primarySquare} />
         <ActionPanel tutorialActions={activeTutorial?.actions ?? []} />
       </section>
       <ActivityConsole />

@@ -64,23 +64,42 @@
 .tutorialHighlight {
   outline: 3px solid var(--c-lamp);
   outline-offset: -5px;
-  box-shadow: inset 0 0 0 4px rgba(238, 206, 105, 0.72), 0 0 18px rgba(238, 206, 105, 0.56);
+  box-shadow: inset 0 0 0 3px rgba(238, 206, 105, 0.54), 0 0 14px rgba(238, 206, 105, 0.36);
   z-index: 3;
+}
+
+.tutorialPrimary {
+  outline-width: 4px;
+  box-shadow: inset 0 0 0 5px rgba(238, 206, 105, 0.86), 0 0 22px rgba(238, 206, 105, 0.72);
+  animation: tutorialPulse 1.05s ease-in-out infinite;
 }
 
 .tutorialArrow {
   position: absolute;
-  top: 4px;
+  top: 50%;
   right: 4px;
   z-index: 8;
-  min-width: 24px;
-  padding: 1px 4px;
+  min-width: 34px;
+  padding: 2px 5px;
   border: 1px solid var(--c-lamp);
   background: rgba(12, 14, 11, 0.88);
   color: var(--c-lamp);
   font-weight: 700;
-  font-size: 12px;
+  font-size: 16px;
+  transform: translateY(-50%);
   animation: tutorialNudge 900ms ease-in-out infinite;
+}
+
+.tutorialDot {
+  position: absolute;
+  top: 5px;
+  right: 5px;
+  z-index: 7;
+  width: 11px;
+  height: 11px;
+  border: 1px solid var(--c-lamp);
+  background: var(--c-yellow);
+  box-shadow: 0 0 10px rgba(238, 206, 105, 0.7);
 }
 
 .coord {
@@ -474,10 +493,20 @@
 @keyframes tutorialNudge {
   0%,
   100% {
-    transform: translateX(0);
+    transform: translateY(-50%) translateX(0);
   }
   50% {
-    transform: translateX(-5px);
+    transform: translateY(-50%) translateX(-7px);
+  }
+}
+
+@keyframes tutorialPulse {
+  0%,
+  100% {
+    filter: brightness(1);
+  }
+  50% {
+    filter: brightness(1.28);
   }
 }
 
@@ -511,10 +540,17 @@
   }
 
   .tutorialArrow {
-    top: 2px;
     right: 2px;
-    min-width: 20px;
-    font-size: 10px;
+    min-width: 24px;
+    font-size: 12px;
+    padding: 1px 3px;
+  }
+
+  .tutorialDot {
+    top: 3px;
+    right: 3px;
+    width: 8px;
+    height: 8px;
   }
 
   .block,

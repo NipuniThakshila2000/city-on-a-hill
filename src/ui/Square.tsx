@@ -13,9 +13,10 @@ import styles from "./Square.module.css";
 type SquareProps = {
   pos: Pos;
   tutorialSquares?: string[];
+  tutorialPrimarySquare?: string;
 };
 
-export default function Square({ pos, tutorialSquares = [] }: SquareProps) {
+export default function Square({ pos, tutorialSquares = [], tutorialPrimarySquare }: SquareProps) {
   const state = useGame();
   const squareKey = keyOf(pos);
   const piece = Object.values(state.pieces).find((p) => p.alive && samePos(p.pos, pos));
@@ -51,6 +52,7 @@ export default function Square({ pos, tutorialSquares = [] }: SquareProps) {
     dist(pos, state.actionEffect.pos) <= 2;
   const coord = pos.y === 0 ? String.fromCharCode(65 + pos.x) : pos.x === 0 ? String(pos.y + 1) : "";
   const tutorialHighlight = tutorialSquares.includes(squareKey);
+  const tutorialPrimary = tutorialPrimarySquare === squareKey;
 
   const classes = [
     styles.square,
@@ -66,7 +68,8 @@ export default function Square({ pos, tutorialSquares = [] }: SquareProps) {
     buildable ? styles.buildable : "",
     houseGlow ? styles.houseGlow : "",
     state.selectedSquare.x === pos.x && state.selectedSquare.y === pos.y ? styles.focused : "",
-    tutorialHighlight ? styles.tutorialHighlight : ""
+    tutorialHighlight ? styles.tutorialHighlight : "",
+    tutorialPrimary ? styles.tutorialPrimary : ""
   ]
     .filter(Boolean)
     .join(" ");
@@ -82,7 +85,8 @@ export default function Square({ pos, tutorialSquares = [] }: SquareProps) {
       }}
       aria-label={keyOf(pos)}
     >
-      {tutorialHighlight && <span className={styles.tutorialArrow}>{"->"}</span>}
+      {tutorialPrimary && <span className={styles.tutorialArrow}>{"->"}</span>}
+      {tutorialHighlight && !tutorialPrimary && <span className={styles.tutorialDot} />}
       {coord && <span className={styles.coord}>{coord}</span>}
       {temple && <span className={styles.templeLamp} />}
       {house && <img className={styles.houseImage} src={houseSrc} alt="" draggable={false} />}

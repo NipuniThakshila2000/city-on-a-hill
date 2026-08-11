@@ -47,6 +47,29 @@
   font-size: 12px;
 }
 
+.target {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 9px;
+  align-items: center;
+  border: 1px solid rgba(238, 206, 105, 0.5);
+  background: rgba(238, 206, 105, 0.1);
+  padding: 9px 10px;
+}
+
+.target span {
+  color: var(--c-lamp);
+  font-size: 24px;
+  font-weight: 700;
+  animation: panelArrow 900ms ease-in-out infinite;
+}
+
+.target p {
+  margin: 0;
+  color: var(--c-yellow);
+  line-height: 1.35;
+}
+
 .textBoxes {
   display: grid;
   gap: 8px;
@@ -92,6 +115,16 @@
 .panel button:disabled {
   color: var(--c-grid-2);
   border-style: dashed;
+}
+
+@keyframes panelArrow {
+  0%,
+  100% {
+    transform: translateX(0);
+  }
+  50% {
+    transform: translateX(6px);
+  }
 }
 
 @media (max-width: 760px) {
