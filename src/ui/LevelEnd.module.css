@@ -5,6 +5,7 @@
   place-items: center;
   background: var(--c-shadow);
   z-index: 30;
+  animation: overlayFade 180ms ease-out both;
 }
 
 .panel {
@@ -50,6 +51,12 @@
   border-radius: 0;
 }
 
+.panel button:not(:disabled):hover {
+  border-color: var(--c-lamp);
+  color: var(--c-lamp);
+  box-shadow: 0 0 14px rgba(238, 206, 105, 0.2);
+}
+
 .panel p {
   margin-bottom: 0;
   color: var(--c-yellow);
@@ -78,5 +85,14 @@
 @keyframes burstSpin {
   to {
     transform: rotate(360deg);
+  }
+}
+
+@keyframes overlayFade {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
   }
 }

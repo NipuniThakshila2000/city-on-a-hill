@@ -5,6 +5,7 @@
   display: grid;
   place-items: center;
   pointer-events: none;
+  animation: darknessEnter 260ms ease-out both;
 }
 
 .body {
@@ -13,6 +14,7 @@
   background: #20131a;
   filter: drop-shadow(0 0 5px rgba(224, 90, 69, 0.42));
   clip-path: polygon(50% 0, 70% 18%, 100% 30%, 79% 54%, 87% 91%, 51% 78%, 16% 100%, 24% 59%, 0 38%, 31% 20%);
+  animation: darknessPulse 1.6s ease-in-out infinite;
 }
 
 .tier2 .body {
@@ -39,6 +41,7 @@
 
 .targeted {
   filter: drop-shadow(0 0 8px var(--c-yellow));
+  animation: targetThreat 840ms ease-in-out infinite;
 }
 
 .hp {
@@ -55,6 +58,7 @@
   display: block;
   height: 100%;
   background: linear-gradient(90deg, #7c2431, #e05a45);
+  transition: width 220ms ease-out;
 }
 
 .badge {
@@ -70,6 +74,37 @@
   color: #fff;
   font-size: 10px;
   line-height: 1;
+}
+
+@keyframes darknessEnter {
+  0% {
+    opacity: 0;
+    transform: scale(0.78);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes darknessPulse {
+  0%,
+  100% {
+    transform: scale(1) rotate(0deg);
+  }
+  50% {
+    transform: scale(1.04) rotate(1deg);
+  }
+}
+
+@keyframes targetThreat {
+  0%,
+  100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.08);
+  }
 }
 
 @media (max-width: 520px) {

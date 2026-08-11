@@ -6,6 +6,7 @@
   place-items: center;
   padding: 14px;
   background: rgba(8, 9, 7, 0.78);
+  animation: overlayFade 180ms ease-out both;
 }
 
 .panel {
@@ -15,6 +16,7 @@
   color: var(--c-grey-2);
   padding: 18px;
   box-shadow: 0 0 0 4px var(--c-shadow);
+  animation: modalRise 260ms ease-out both;
 }
 
 .panel header p {
@@ -76,6 +78,13 @@
   padding: 0 10px;
   border-radius: 0;
   font: inherit;
+  transition: border-color 150ms ease-out, box-shadow 150ms ease-out;
+}
+
+.panel input:focus {
+  border-color: var(--c-lamp);
+  box-shadow: 0 0 0 2px rgba(238, 206, 105, 0.18);
+  outline: none;
 }
 
 .meta {
@@ -104,6 +113,12 @@
 .actions button[type="submit"] {
   border-color: var(--c-lamp);
   color: var(--c-lamp);
+}
+
+.actions button:not(:disabled):hover {
+  border-color: var(--c-lamp);
+  color: var(--c-lamp);
+  box-shadow: 0 0 14px rgba(238, 206, 105, 0.2);
 }
 
 @media (max-width: 420px) {
@@ -135,5 +150,25 @@
   }
   100% {
     filter: brightness(1);
+  }
+}
+
+@keyframes overlayFade {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+@keyframes modalRise {
+  0% {
+    opacity: 0;
+    transform: translateY(14px) scale(0.98);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0) scale(1);
   }
 }

@@ -7,6 +7,7 @@
   border: 1px solid var(--c-grid-2);
   background: var(--c-ink);
   min-width: 188px;
+  animation: tabsReady 220ms ease-out both;
 }
 
 .tabs button {
@@ -22,11 +23,17 @@
   line-height: 1.1;
 }
 
+.tabs button:not(.active):hover {
+  border-color: rgba(238, 206, 105, 0.38);
+  color: var(--c-grey-2);
+}
+
 .tabs button.active {
   border-color: var(--c-yellow);
   background: var(--c-panel-2);
   color: var(--c-lamp);
   box-shadow: inset 0 0 0 2px rgba(238, 206, 105, 0.24);
+  animation: activeTabGlow 1.8s ease-in-out infinite;
 }
 
 .tabs small {
@@ -75,5 +82,26 @@
   }
   50% {
     transform: translateY(-50%) translateX(5px);
+  }
+}
+
+@keyframes tabsReady {
+  0% {
+    opacity: 0;
+    transform: translateY(4px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes activeTabGlow {
+  0%,
+  100% {
+    filter: brightness(1);
+  }
+  50% {
+    filter: brightness(1.14);
   }
 }

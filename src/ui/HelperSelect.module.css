@@ -1,6 +1,7 @@
 .panel {
   max-width: 720px;
   margin: 8vh auto 0;
+  animation: helperPanelIn 260ms ease-out both;
 }
 
 .kicker {
@@ -28,6 +29,18 @@
   color: var(--c-grey-2);
   border-radius: 0;
   padding: 10px;
+  animation: helperButtonIn 220ms ease-out both;
+}
+
+.helpers button:nth-child(2n) {
+  animation-delay: 45ms;
+}
+
+.helpers button:not(:disabled):hover {
+  border-color: var(--c-lamp);
+  color: var(--c-lamp);
+  transform: translateY(-2px);
+  box-shadow: 0 10px 18px rgba(0, 0, 0, 0.22);
 }
 
 .helpers span,
@@ -38,4 +51,26 @@
 .helpers small {
   margin-top: 8px;
   color: var(--c-grey);
+}
+
+@keyframes helperPanelIn {
+  0% {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes helperButtonIn {
+  0% {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }

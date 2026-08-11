@@ -3,6 +3,7 @@
   padding: 18px 22px;
   background:
     linear-gradient(180deg, var(--c-panel), var(--c-ink));
+  animation: gameFadeIn 320ms ease-out both;
 }
 
 .table {
@@ -31,6 +32,11 @@
   background:
     linear-gradient(180deg, rgba(22, 27, 19, 0.72), rgba(10, 12, 9, 0.5));
   box-shadow: 0 12px 28px rgba(0, 0, 0, 0.28);
+  animation: frameRise 340ms ease-out both;
+}
+
+.boardFrame:nth-child(2) {
+  animation-delay: 80ms;
 }
 
 .boardFrame h2 {
@@ -76,6 +82,13 @@
   min-height: 38px;
   padding: 0 12px;
   border-radius: 0;
+}
+
+.levels button:not(:disabled):hover,
+.levels select:hover {
+  border-color: var(--c-lamp);
+  color: var(--c-lamp);
+  box-shadow: 0 0 12px rgba(238, 206, 105, 0.18);
 }
 
 .start {
@@ -144,5 +157,25 @@
 
   .table {
     gap: 10px;
+  }
+}
+
+@keyframes gameFadeIn {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+@keyframes frameRise {
+  0% {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
   }
 }
