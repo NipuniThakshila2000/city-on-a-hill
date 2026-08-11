@@ -7,11 +7,11 @@ export default function ForecastToggle() {
   return (
     <div className={styles.tabs} aria-label="Before and after view">
       <button className={mode === "now" ? styles.active : ""} onClick={() => setMode("now")} aria-pressed={mode === "now"}>
-        YESOD
+        MALKUT
         <small>before</small>
       </button>
       <button className={mode === "coming" ? styles.active : ""} onClick={() => setMode("coming")} aria-pressed={mode === "coming"}>
-        MALKUT
+        YESOD
         <small>after</small>
       </button>
       <small>{window} turn forecast</small>

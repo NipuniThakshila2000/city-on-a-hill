@@ -1,6 +1,6 @@
 import { create } from "zustand";
 import { HOUSES, TEMPLE } from "../game/constants";
-import { PIECE_STATS, THREAT_STATS } from "../game/combat";
+import { checkVerseAnswer, createCombatCheck, PIECE_STATS, THREAT_STATS } from "../game/combat";
 import { isAvoidableDestroy } from "../game/destroyer";
 import { keyOf, samePos } from "../game/distance";
 import { canBuild, canRelease, legalMoves, lockedSquares, occupiedByPiece } from "../game/rules";
@@ -22,10 +22,15 @@ type GameStore = GameState & {
   releaseLock: () => void;
   buildHere: () => void;
   destroyThreat: (threatId: string) => void;
+  submitVerseGuess: (guess: string) => void;
+  cancelVerseCheck: () => void;
   endPlayerTurn: () => void;
   toggleMode: () => void;
   setMode: (mode: ViewMode) => void;
 };
+
+const helpers: HelperId[] = ["counsel", "might", "knowledge", "understanding", "fear", "wisdom", "spirit"];
+const blankCampaign = loadCampaign();
 
 const pieceName = (id: PieceId) => id === "looser" ? "Looser" : id[0].toUpperCase() + id.slice(1);
 
@@ -45,10 +50,6 @@ const clearActionEffectSoon = (
     if (get().actionEffect?.id === effectId) set({ actionEffect: undefined });
   }, 720);
 };
-
-const helpers: HelperId[] = ["counsel", "might", "knowledge", "understanding", "fear", "wisdom", "spirit"];
-
-const blankCampaign = loadCampaign();
 
 const logEntry = (turn: number, text: string, tone: ActivityLogEntry["tone"] = "info") => ({
   id: activityLogId += 1,
@@ -88,6 +89,77 @@ const makeState = (level: Level, helper: HelperId, campaign = loadCampaign()): G
   destroyerAutonomous: campaign.avoidableDestroys >= 3
 });
 
+const destroyerBlockedMessage = (state: GameState) => {
+  if (state.pieces.destroyer.acted) return "Destroyer already acted this turn.";
+  if (state.destroyerCharges <= 0) return "Destroyer has no charges left.";
+  return "Destroyer cannot attack right now.";
+};
+
+const resolveDestroyerAttack = (
+  state: GameState,
+  set: (partial: Partial<GameState>) => void,
+  get: () => GameStore,
+  threatId: string,
+  passed: boolean
+) => {
+  const destroyer = state.pieces.destroyer;
+  const target = state.threats.find((t) => t.id === threatId);
+  if (!target) {
+    set({ combatCheck: undefined });
+    return;
+  }
+
+  const avoidable = isAvoidableDestroy(target);
+  const campaign = {
+    ...state.campaign,
+    avoidableDestroys: state.campaign.avoidableDestroys + (avoidable ? 1 : 0)
+  };
+  saveCampaign(campaign);
+  const stats = THREAT_STATS[target.tier];
+
+  if (!passed) {
+    const counter = stats.attack;
+    const hp = Math.max(0, destroyer.hp - counter);
+    const actionEffect = nextActionEffect("damage", destroyer.pos, `-${counter}`);
+    set({
+      campaign,
+      combatCheck: undefined,
+      destroyerCharges: state.destroyerCharges - 1,
+      pieces: {
+        ...state.pieces,
+        destroyer: { ...destroyer, hp, alive: hp > 0, acted: true }
+      },
+      actionEffect,
+      ...withLog(state, `${stats.name} countered for ${counter} damage.`, "attack")
+    });
+    clearActionEffectSoon(actionEffect.id, set, get);
+    return;
+  }
+
+  const damage = PIECE_STATS.destroyer.offense ?? 0;
+  const hp = target.hp - damage;
+  const removed = hp <= 0;
+  const actionEffect = nextActionEffect(removed ? "destroy" : "damage", target.pos, `-${damage}`);
+  set({
+    campaign,
+    combatCheck: undefined,
+    threats: removed
+      ? state.threats.filter((t) => t.id !== threatId)
+      : state.threats.map((t) => t.id === threatId ? { ...t, hp } : t),
+    destroyerCharges: state.destroyerCharges - 1,
+    pieces: { ...state.pieces, destroyer: { ...destroyer, acted: true } },
+    actionEffect,
+    ...withLog(
+      state,
+      removed
+        ? `Destroyer dealt ${damage} damage and removed ${stats.name} ${target.id} at ${keyOf(target.pos)}.`
+        : `Destroyer dealt ${damage} damage to ${stats.name} ${target.id} at ${keyOf(target.pos)}.`,
+      "attack"
+    )
+  });
+  clearActionEffectSoon(actionEffect.id, set, get);
+};
+
 export const useGame = create<GameStore>((set, get) => ({
   ...makeState(levels[0], "counsel", blankCampaign),
   startLevel: (levelId, helper) => {
@@ -109,7 +181,14 @@ export const useGame = create<GameStore>((set, get) => ({
   lockBinder: () => {
     const state = get();
     const binder = state.pieces.binder;
-    if (state.phase !== "player" || binder.acted || binder.locked) return;
+    if (state.selectedPieceId !== "binder") {
+      set(withLog(state, "Select Binder before using Lock."));
+      return;
+    }
+    if (state.phase !== "player" || binder.acted || binder.locked) {
+      set(withLog(state, binder.locked ? "Binder is already locked." : "Binder cannot lock again this turn."));
+      return;
+    }
     const actionEffect = nextActionEffect("block", binder.pos);
     set({
       pieces: { ...state.pieces, binder: { ...binder, locked: true, acted: true } },
@@ -121,7 +200,14 @@ export const useGame = create<GameStore>((set, get) => ({
   unlockBinder: () => {
     const state = get();
     const binder = state.pieces.binder;
-    if (state.phase !== "player" || binder.acted || !binder.locked) return;
+    if (state.selectedPieceId !== "binder") {
+      set(withLog(state, "Select Binder before using Unlock."));
+      return;
+    }
+    if (state.phase !== "player" || binder.acted || !binder.locked) {
+      set(withLog(state, !binder.locked ? "Binder has no lock to release." : "Binder cannot unlock again this turn."));
+      return;
+    }
     const actionEffect = nextActionEffect("release", binder.pos);
     set({
       pieces: { ...state.pieces, binder: { ...binder, locked: false, acted: true } },
@@ -133,7 +219,14 @@ export const useGame = create<GameStore>((set, get) => ({
   releaseLock: () => {
     const state = get();
     const looser = state.pieces.looser;
-    if (!canRelease(state, looser)) return;
+    if (state.selectedPieceId !== "looser") {
+      set(withLog(state, "Select Looser before using Release."));
+      return;
+    }
+    if (!canRelease(state, looser)) {
+      set(withLog(state, "Looser must stand next to a lock to release it."));
+      return;
+    }
     const locked = lockedSquares(state)[0];
     const actionEffect = nextActionEffect("release", locked);
     set({
@@ -152,9 +245,15 @@ export const useGame = create<GameStore>((set, get) => ({
   buildHere: () => {
     const state = get();
     const id = state.selectedPieceId;
-    if (!id) return;
+    if (!id) {
+      set(withLog(state, "Select a player before using Build."));
+      return;
+    }
     const piece = state.pieces[id];
-    if (!canBuild(state, piece)) return;
+    if (!canBuild(state, piece)) {
+      set(withLog(state, piece.moved ? "A player that moved cannot build until next turn." : "Build is only available on an open, safe square."));
+      return;
+    }
     const key = keyOf(piece.pos);
     const soil = state.preparedSoil.includes(key) ? "good" : state.level.soil[key] ?? "good";
     if (soil === "poor") {
@@ -181,38 +280,39 @@ export const useGame = create<GameStore>((set, get) => ({
     const state = get();
     const destroyer = state.pieces.destroyer;
     const target = state.threats.find((t) => t.id === threatId);
-    if (!target || state.phase !== "player" || destroyer.acted || state.destroyerCharges <= 0) return;
-    const avoidable = isAvoidableDestroy(target);
-    const stats = THREAT_STATS[target.tier];
-    const damage = PIECE_STATS.destroyer.offense ?? 0;
-    const hp = target.hp - damage;
-    const removed = hp <= 0;
-    const campaign = {
-      ...state.campaign,
-      avoidableDestroys: state.campaign.avoidableDestroys + (avoidable ? 1 : 0)
-    };
-    saveCampaign(campaign);
-    const actionEffect = nextActionEffect(removed ? "destroy" : "damage", target.pos, `-${damage}`);
-    set({
-      campaign,
-      threats: removed
-        ? state.threats.filter((t) => t.id !== threatId)
-        : state.threats.map((t) => t.id === threatId ? { ...t, hp } : t),
-      destroyerCharges: state.destroyerCharges - 1,
-      pieces: { ...state.pieces, destroyer: { ...destroyer, acted: true } },
-      actionEffect,
-      ...withLog(
-        state,
-        removed
-          ? `Destroyer dealt ${damage} damage and removed ${stats.name} ${target.id} at ${keyOf(target.pos)}.`
-          : `Destroyer dealt ${damage} damage to ${stats.name} ${target.id} at ${keyOf(target.pos)}.`,
-        "attack"
-      )
-    });
-    clearActionEffectSoon(actionEffect.id, set, get);
+    if (!target) return;
+    if (state.selectedPieceId !== "destroyer") {
+      set(withLog(state, "Select Destroyer before attacking a darkness tile."));
+      return;
+    }
+    if (state.phase !== "player" || destroyer.acted || state.destroyerCharges <= 0) {
+      set(withLog(state, destroyerBlockedMessage(state)));
+      return;
+    }
+    set({ combatCheck: createCombatCheck("destroyer", target) });
   },
+  submitVerseGuess: (guess) => {
+    const state = get();
+    const check = state.combatCheck;
+    if (!check) return;
+    if (checkVerseAnswer(guess, check.answers)) {
+      resolveDestroyerAttack(state, set, get, check.defenderThreatId, true);
+      return;
+    }
+    if (check.triesRemaining > 1) {
+      const triesRemaining = check.triesRemaining - 1;
+      set({
+        combatCheck: { ...check, triesRemaining },
+        ...withLog(state, `${check.passage} hint: ${check.hint}. ${triesRemaining} ${triesRemaining === 1 ? "try" : "tries"} remain.`)
+      });
+      return;
+    }
+    resolveDestroyerAttack(state, set, get, check.defenderThreatId, false);
+  },
+  cancelVerseCheck: () => set({ combatCheck: undefined }),
   endPlayerTurn: () => {
     const state = get();
+    if (state.combatCheck) return;
     const next = endTurn(state);
     let campaign = next.campaign;
     const log = [...state.activityLog];
@@ -252,7 +352,7 @@ export const useGame = create<GameStore>((set, get) => ({
       saveCampaign(campaign);
       add("YESOD and MALKUT are aligned. The level is complete.", "success");
     }
-    set({ ...next, campaign, selectedPieceId: null, activityLog: log.slice(0, 10) });
+    set({ ...next, campaign, selectedPieceId: null, activityLog: log.slice(0, 10), combatCheck: undefined });
   },
   toggleMode: () => set({ mode: get().mode === "now" ? "coming" : "now" }),
   setMode: (mode) => set({ mode })

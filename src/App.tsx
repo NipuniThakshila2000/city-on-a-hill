@@ -10,6 +10,7 @@ import LevelEnd from "./ui/LevelEnd";
 import MainMenu from "./ui/MainMenu";
 import TutorialPanel from "./ui/TutorialPanel";
 import TurnBar from "./ui/TurnBar";
+import VerseCheckModal from "./ui/VerseCheckModal";
 import styles from "./App.module.css";
 
 export default function App() {
@@ -81,6 +82,7 @@ export default function App() {
       </section>
       <ActivityConsole />
       {showTutorial && <TutorialPanel compact onClose={() => setShowTutorial(false)} />}
+      <VerseCheckModal />
       <LevelEnd />
     </main>
   );

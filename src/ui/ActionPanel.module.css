@@ -59,8 +59,13 @@
 }
 
 .actions button:disabled,
-.threats button:disabled {
+.threats button:disabled,
+.actions button.unavailable {
   color: var(--c-grid-2);
+}
+
+.actions button.unavailable {
+  border-style: dashed;
 }
 
 @media (max-width: 760px) {

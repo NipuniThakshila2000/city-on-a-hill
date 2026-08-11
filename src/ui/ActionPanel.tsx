@@ -29,10 +29,10 @@ export default function ActionPanel() {
             <div><dt>Passage</dt><dd>{stats.passage}</dd></div>
           </dl>
           <div className={styles.actions}>
-            <button onClick={state.lockBinder} disabled={selected.id !== "binder" || selected.acted || selected.locked}>Lock</button>
-            <button onClick={state.unlockBinder} disabled={selected.id !== "binder" || selected.acted || !selected.locked}>Unlock</button>
-            <button onClick={state.releaseLock} disabled={!canRelease(state, selected)}>Release</button>
-            <button onClick={state.buildHere} disabled={!canBuild(state, selected)}>Build</button>
+            <button className={selected.id !== "binder" || selected.acted || selected.locked ? styles.unavailable : ""} onClick={state.lockBinder}>Lock</button>
+            <button className={selected.id !== "binder" || selected.acted || !selected.locked ? styles.unavailable : ""} onClick={state.unlockBinder}>Unlock</button>
+            <button className={!canRelease(state, selected) ? styles.unavailable : ""} onClick={state.releaseLock}>Release</button>
+            <button className={!canBuild(state, selected) ? styles.unavailable : ""} onClick={state.buildHere}>Build</button>
           </div>
           {selected.id === "destroyer" && (
             <p className={styles.targetHint}>Select a highlighted darkness tile on the board to attack.</p>

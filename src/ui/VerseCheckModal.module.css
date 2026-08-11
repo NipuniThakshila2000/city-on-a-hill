@@ -1,0 +1,104 @@
+.overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 40;
+  display: grid;
+  place-items: center;
+  padding: 14px;
+  background: rgba(8, 9, 7, 0.78);
+}
+
+.panel {
+  width: min(520px, 100%);
+  border: 2px solid var(--c-grid-2);
+  background: var(--c-panel);
+  color: var(--c-grey-2);
+  padding: 18px;
+  box-shadow: 0 0 0 4px var(--c-shadow);
+}
+
+.panel header p {
+  margin: 0;
+  color: var(--c-yellow);
+  font-family: ui-monospace, SFMono-Regular, Consolas, "Liberation Mono", monospace;
+}
+
+.panel h2 {
+  margin: 6px 0 14px;
+  color: var(--c-lamp);
+}
+
+.prompt {
+  margin: 0 0 14px;
+  padding: 12px;
+  border: 1px solid var(--c-grid-2);
+  background: var(--c-ink);
+  line-height: 1.55;
+}
+
+.panel label {
+  display: grid;
+  gap: 7px;
+  color: var(--c-grey-2);
+}
+
+.panel input {
+  min-height: 42px;
+  border: 1px solid var(--c-grid-2);
+  background: #10120e;
+  color: var(--c-grey-2);
+  padding: 0 10px;
+  border-radius: 0;
+  font: inherit;
+}
+
+.meta {
+  display: grid;
+  gap: 4px;
+  margin-top: 12px;
+  color: var(--c-yellow);
+  font-size: 13px;
+}
+
+.actions {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+  margin-top: 16px;
+}
+
+.actions button {
+  min-height: 42px;
+  border: 1px solid var(--c-grid-2);
+  background: var(--c-panel-2);
+  color: var(--c-grey-2);
+  border-radius: 0;
+}
+
+.actions button[type="submit"] {
+  border-color: var(--c-lamp);
+  color: var(--c-lamp);
+}
+
+@media (max-width: 420px) {
+  .panel {
+    padding: 14px;
+  }
+
+  .panel h2 {
+    font-size: 20px;
+  }
+
+  .panel header p,
+  .prompt,
+  .meta,
+  .panel label,
+  .panel input,
+  .actions button {
+    font-size: 13px;
+  }
+
+  .actions {
+    grid-template-columns: 1fr;
+  }
+}

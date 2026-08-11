@@ -67,7 +67,7 @@ export default function Square({ pos }: { pos: Pos }) {
       className={classes}
       onClick={() => {
         state.selectSquare(pos);
-        if (destroyTarget && threat) state.destroyThreat(threat.id);
+        if (threat) state.destroyThreat(threat.id);
         else if (piece) state.selectPiece(piece.id);
         else if (legal) state.moveSelected(pos);
       }}

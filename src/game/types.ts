@@ -37,6 +37,17 @@ export type ActivityLogEntry = {
   text: string;
   tone: "info" | "attack" | "success";
 };
+export type CombatCheck = {
+  attackerId: Exclude<PieceId, "protector">;
+  defenderThreatId: string;
+  header: string;
+  passage: string;
+  prompt: string;
+  answers: string[];
+  blanks: number;
+  triesRemaining: number;
+  hint: string;
+};
 export type Level = {
   id: number;
   turns: number;
@@ -67,6 +78,7 @@ export type GameState = {
   selectedPieceId: PieceId | null;
   selectedSquare: Pos;
   actionEffect?: ActionEffect;
+  combatCheck?: CombatCheck;
   message: string;
   activityLog: ActivityLogEntry[];
   destroyerAutonomous: boolean;
