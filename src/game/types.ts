@@ -38,6 +38,10 @@ export type ActivityLogEntry = {
   text: string;
   tone: "info" | "attack" | "success";
 };
+export type WarningNotice = {
+  id: number;
+  text: string;
+};
 export type CombatCheck = {
   attackerId: Exclude<PieceId, "protector">;
   defenderThreatId: string;
@@ -84,6 +88,7 @@ export type GameState = {
   selectedSquare: Pos;
   actionEffect?: ActionEffect;
   combatCheck?: CombatCheck;
+  warningNotice?: WarningNotice;
   message: string;
   activityLog: ActivityLogEntry[];
   destroyerAutonomous: boolean;

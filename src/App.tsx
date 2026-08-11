@@ -20,6 +20,8 @@ export default function App() {
   const [tutorialStep, setTutorialStep] = useState<number | null>(null);
   const state = useGame();
   const activeTutorial = tutorialStep === null ? null : tutorialSteps[tutorialStep];
+  const warningNotice = useGame((store) => store.warningNotice);
+  const clearWarningNotice = useGame((store) => store.clearWarningNotice);
   const startPlayableTutorial = () => {
     state.startLevel(1, state.helper);
     setReady(true);
@@ -74,7 +76,15 @@ export default function App() {
   }
 
   return (
-    <main className={styles.app} style={{ filter: `brightness(${1 - state.templeHits * 0.18}) saturate(${1 - state.templeHits * 0.22})` }}>
+    <main
+      className={styles.app}
+      style={{ filter: `brightness(${1 - state.templeHits * 0.18}) saturate(${1 - state.templeHits * 0.22})` }}
+      onPointerDownCapture={(event) => {
+        if (!warningNotice) return;
+        const target = event.target as HTMLElement;
+        if (!target.closest("[data-warning-lightbox]")) clearWarningNotice();
+      }}
+    >
       <nav className={styles.levels} aria-label="Levels">
         <button onClick={() => setReady(false)}>Menu</button>
         <button onClick={startPlayableTutorial}>Tutorial</button>
@@ -119,6 +129,12 @@ export default function App() {
       </section>
       <ActivityConsole />
       {showTutorial && <TutorialPanel compact onClose={() => setShowTutorial(false)} />}
+      {warningNotice && (
+        <aside className={styles.warningLightbox} data-warning-lightbox role="alert" aria-live="assertive">
+          <strong>Warning</strong>
+          <p>{warningNotice.text}</p>
+        </aside>
+      )}
       {tutorialStep !== null && (
         <PlayableTutorial
           step={tutorialStep}

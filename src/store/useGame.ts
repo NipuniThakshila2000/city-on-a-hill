@@ -11,6 +11,7 @@ import { loadCampaign, saveCampaign } from "./persist";
 
 let actionEffectId = 0;
 let activityLogId = 0;
+let warningNoticeId = 0;
 
 type GameStore = GameState & {
   startLevel: (levelId: number, helper: HelperId) => void;
@@ -24,6 +25,7 @@ type GameStore = GameState & {
   destroyThreat: (threatId: string) => void;
   submitVerseGuess: (guess: string) => void;
   cancelVerseCheck: () => void;
+  clearWarningNotice: () => void;
   endPlayerTurn: () => void;
   toggleMode: () => void;
   setMode: (mode: ViewMode) => void;
@@ -56,6 +58,11 @@ const logEntry = (turn: number, text: string, tone: ActivityLogEntry["tone"] = "
   turn,
   text,
   tone
+});
+
+const warningNotice = (text: string) => ({
+  id: warningNoticeId += 1,
+  text
 });
 
 const withLog = (state: GameState, text: string, tone: ActivityLogEntry["tone"] = "info") => ({
@@ -123,6 +130,7 @@ const resolveDestroyerAttack = (
     const counter = stats.attack;
     const hp = Math.max(0, destroyer.hp - counter);
     const actionEffect = nextActionEffect("damage", destroyer.pos, `-${counter}`);
+    const warningText = `${warning ? `${warning} ` : ""}${stats.name} countered for ${counter} damage.`;
     set({
       campaign,
       combatCheck: undefined,
@@ -132,7 +140,8 @@ const resolveDestroyerAttack = (
         destroyer: { ...destroyer, hp, alive: hp > 0, acted: true }
       },
       actionEffect,
-      ...withLog(state, `${warning ? `${warning} ` : ""}${stats.name} countered for ${counter} damage.`, "attack")
+      warningNotice: warningNotice(warningText),
+      ...withLog(state, warningText, "attack")
     });
     clearActionEffectSoon(actionEffect.id, set, get);
     return;
@@ -309,6 +318,7 @@ export const useGame = create<GameStore>((set, get) => ({
       const announcement = `Warning: mistake ${mistakesMade} of ${check.totalTries}. Use the next hint and try again. ${triesRemaining} ${triesRemaining === 1 ? "try" : "tries"} remain.`;
       set({
         combatCheck: { ...check, mistakesMade, triesRemaining, announcement },
+        warningNotice: warningNotice(announcement),
         ...withLog(state, `${announcement} ${check.passage} hint: ${check.hint}.`)
       });
       return;
@@ -318,6 +328,7 @@ export const useGame = create<GameStore>((set, get) => ({
     resolveDestroyerAttack(state, set, get, check.defenderThreatId, false, warning);
   },
   cancelVerseCheck: () => set({ combatCheck: undefined }),
+  clearWarningNotice: () => set({ warningNotice: undefined }),
   endPlayerTurn: () => {
     const state = get();
     if (state.combatCheck) return;
