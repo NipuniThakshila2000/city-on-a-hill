@@ -176,11 +176,8 @@
   top: calc(3 * 100% / 7);
   width: calc(100% / 7);
   height: calc(100% / 7);
-  display: grid;
-  place-items: center;
-  color: var(--c-lamp);
-  font-size: 32px;
-  text-shadow: 0 0 18px var(--c-lamp);
+  background: radial-gradient(circle, #fff4bf 0 20%, var(--c-lamp) 21% 48%, transparent 49%);
+  filter: drop-shadow(0 0 14px var(--c-lamp));
 }
 
 .houses {
@@ -190,10 +187,26 @@
   width: calc(3 * 100% / 7);
   height: calc(100% / 7);
   display: grid;
-  place-items: center;
-  color: var(--c-yellow);
-  font-size: 24px;
-  letter-spacing: 0;
+  grid-template-columns: repeat(3, 1fr);
+}
+
+.houses span {
+  position: relative;
+  margin: 17% 22% 14%;
+  border: 2px solid var(--c-yellow);
+  border-top: 0;
+}
+
+.houses span::before {
+  content: "";
+  position: absolute;
+  left: 9%;
+  right: 9%;
+  top: -42%;
+  height: 60%;
+  border-left: 2px solid var(--c-yellow);
+  border-top: 2px solid var(--c-yellow);
+  transform: rotate(45deg);
 }
 
 .edgeOne,

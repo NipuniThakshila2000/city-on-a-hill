@@ -84,8 +84,12 @@ export default function MainMenu({ onStart, onTutorial }: MainMenuProps) {
           <img className={styles.heroCharacter} src={protectorImage} alt="" />
           <div className={styles.map}>
             <div className={styles.lightBox} />
-            <div className={styles.lamp}>⌂</div>
-            <div className={styles.houses}>▯ ▯ ▯</div>
+            <div className={styles.lamp} />
+            <div className={styles.houses}>
+              <span />
+              <span />
+              <span />
+            </div>
             <span className={styles.edgeOne}>X</span>
             <span className={styles.edgeTwo}>X</span>
             <span className={styles.edgeThree}>?</span>

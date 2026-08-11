@@ -1,5 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { level01 } from "../levels/level01";
+import { PIECE_STATS } from "./combat";
 import { canBuild } from "./rules";
 import type { CampaignSave, GameState, HelperId } from "./types";
 
@@ -21,6 +22,8 @@ const stateAtD6 = (overrides: Partial<GameState> = {}): GameState => {
         id: "protector",
         pos: { x: 3, y: 5 },
         alive: true,
+        hp: PIECE_STATS.protector.maxHp,
+        maxHp: PIECE_STATS.protector.maxHp,
         moved: false,
         acted: false
       },
@@ -28,6 +31,8 @@ const stateAtD6 = (overrides: Partial<GameState> = {}): GameState => {
         id: "destroyer",
         pos: { x: 3, y: 2 },
         alive: true,
+        hp: PIECE_STATS.destroyer.maxHp,
+        maxHp: PIECE_STATS.destroyer.maxHp,
         moved: false,
         acted: false
       },
@@ -35,6 +40,8 @@ const stateAtD6 = (overrides: Partial<GameState> = {}): GameState => {
         id: "binder",
         pos: { x: 2, y: 3 },
         alive: true,
+        hp: PIECE_STATS.binder.maxHp,
+        maxHp: PIECE_STATS.binder.maxHp,
         moved: false,
         acted: false,
         locked: false
@@ -43,6 +50,8 @@ const stateAtD6 = (overrides: Partial<GameState> = {}): GameState => {
         id: "looser",
         pos: { x: 4, y: 3 },
         alive: true,
+        hp: PIECE_STATS.looser.maxHp,
+        maxHp: PIECE_STATS.looser.maxHp,
         moved: false,
         acted: false
       }
@@ -58,6 +67,7 @@ const stateAtD6 = (overrides: Partial<GameState> = {}): GameState => {
     selectedPieceId: "protector",
     selectedSquare: { x: 3, y: 5 },
     message: "",
+    activityLog: [],
     destroyerAutonomous: false
   };
   return { ...state, ...overrides };

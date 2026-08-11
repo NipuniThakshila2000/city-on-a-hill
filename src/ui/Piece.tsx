@@ -21,6 +21,9 @@ export default function Piece({ piece, selected }: { piece: PieceType; selected:
   return (
     <span className={classes} aria-label={`${piece.id} ${PIECE_LABELS[piece.id]}`}>
       <img className={styles.image} src={PIECE_IMAGES[piece.id]} alt="" draggable={false} />
+      <span className={styles.hp} aria-hidden="true">
+        <span style={{ width: `${(piece.hp / piece.maxHp) * 100}%` }} />
+      </span>
       <span className={styles.label}>{PIECE_LABELS[piece.id]}</span>
     </span>
   );

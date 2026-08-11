@@ -18,6 +18,34 @@
   margin-top: 12px;
 }
 
+.stats {
+  display: grid;
+  gap: 7px;
+  margin: 12px 0;
+}
+
+.stats div {
+  display: grid;
+  grid-template-columns: 84px 1fr;
+  gap: 8px;
+  align-items: baseline;
+  border-bottom: 1px solid rgba(214, 196, 136, 0.18);
+  padding-bottom: 5px;
+}
+
+.stats dt {
+  color: var(--c-yellow);
+}
+
+.stats dd {
+  margin: 0;
+  color: var(--c-grey-2);
+}
+
+.targetHint {
+  color: var(--c-yellow);
+}
+
 .actions button,
 .threats button {
   min-height: 38px;

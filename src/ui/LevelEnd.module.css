@@ -4,13 +4,34 @@
   display: grid;
   place-items: center;
   background: var(--c-shadow);
+  z-index: 30;
 }
 
 .panel {
+  position: relative;
+  overflow: hidden;
   width: min(92vw, 420px);
   border: 2px solid var(--c-grid-2);
   background: var(--c-panel);
   padding: 20px;
+}
+
+.won {
+  animation: winRise 480ms ease-out, winGlow 1.2s ease-in-out infinite alternate;
+}
+
+.burst {
+  position: absolute;
+  inset: -35%;
+  pointer-events: none;
+  background:
+    radial-gradient(circle, rgba(238, 206, 105, 0.38) 0 12%, transparent 13%),
+    conic-gradient(from 0deg, transparent 0 12deg, rgba(238, 206, 105, 0.22) 13deg 20deg, transparent 21deg 45deg);
+  animation: burstSpin 2.8s linear infinite;
+}
+
+.panel > *:not(.burst) {
+  position: relative;
 }
 
 .panel h2 {
@@ -32,4 +53,30 @@
 .panel p {
   margin-bottom: 0;
   color: var(--c-yellow);
+}
+
+@keyframes winRise {
+  from {
+    opacity: 0;
+    transform: translateY(18px) scale(0.96);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@keyframes winGlow {
+  from {
+    box-shadow: 0 0 0 rgba(238, 206, 105, 0);
+  }
+  to {
+    box-shadow: 0 0 34px rgba(238, 206, 105, 0.35);
+  }
+}
+
+@keyframes burstSpin {
+  to {
+    transform: rotate(360deg);
+  }
 }

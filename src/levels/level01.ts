@@ -11,9 +11,9 @@ export const level01: Level = {
     protector: { x: 3, y: 4 }
   },
   spawns: [
-    { turn: 3, pos: { x: 0, y: 3 }, id: "L1-A4" },
-    { turn: 3, pos: { x: 6, y: 1 }, id: "L1-G2" },
-    { turn: 4, pos: { x: 3, y: 0 }, id: "L1-D1" }
+    { turn: 3, pos: { x: 0, y: 3 }, id: "L1-A4", tier: 1 },
+    { turn: 3, pos: { x: 6, y: 1 }, id: "L1-G2", tier: 1 },
+    { turn: 4, pos: { x: 3, y: 0 }, id: "L1-D1", tier: 1 }
   ],
   soil: { D6: "poor" }
 };

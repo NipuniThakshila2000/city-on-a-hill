@@ -15,17 +15,27 @@ export type Piece = {
   id: PieceId;
   pos: Pos;
   alive: boolean;
+  hp: number;
+  maxHp: number;
   moved: boolean;
   acted: boolean;
   locked?: boolean;
 };
-export type Threat = { id: string; pos: Pos };
-export type Spawn = { turn: number; pos: Pos; id: string };
+export type ThreatTier = 1 | 2 | 3 | 4;
+export type Threat = { id: string; pos: Pos; tier: ThreatTier; hp: number; maxHp: number };
+export type Spawn = { turn: number; pos: Pos; id: string; tier?: ThreatTier };
 export type Cornerstone = { pos: Pos; turnsRemaining: number; complete: boolean };
 export type ActionEffect = {
   id: number;
-  type: "block" | "release" | "build" | "prepare" | "destroy";
+  type: "block" | "release" | "build" | "prepare" | "destroy" | "damage" | "heal";
   pos: Pos;
+  text?: string;
+};
+export type ActivityLogEntry = {
+  id: number;
+  turn: number;
+  text: string;
+  tone: "info" | "attack" | "success";
 };
 export type Level = {
   id: number;
@@ -58,6 +68,7 @@ export type GameState = {
   selectedSquare: Pos;
   actionEffect?: ActionEffect;
   message: string;
+  activityLog: ActivityLogEntry[];
   destroyerAutonomous: boolean;
 };
 export type ThreatBoard = {
@@ -71,5 +82,5 @@ export type ThreatBoard = {
 export type ThreatStepResult = {
   threats: Threat[];
   templeHits: number;
-  looserKilled: boolean;
+  pieceHits: { pieceId: PieceId; threatId: string; damage: number }[];
 };

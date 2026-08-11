@@ -1,4 +1,5 @@
 import { TEMPLE, TIE_BREAK } from "./constants";
+import { THREAT_STATS } from "./combat";
 import { addPos, dist, inBounds, samePos } from "./distance";
 import type { Pos, ThreatBoard, ThreatStepResult } from "./types";
 
@@ -27,7 +28,7 @@ export const stepThreats = (board: ThreatBoard): ThreatStepResult => {
   const ordered = [...board.threats].sort((a, b) => a.id.localeCompare(b.id));
   const nextThreats = ordered.map((t) => ({ ...t, pos: { ...t.pos } }));
   let templeHits = 0;
-  let looserKilled = false;
+  const pieceHits: ThreatStepResult["pieceHits"] = [];
 
   for (const threat of nextThreats) {
     const occupied = nextThreats.filter((t) => t.id !== threat.id).map((t) => t.pos);
@@ -39,7 +40,11 @@ export const stepThreats = (board: ThreatBoard): ThreatStepResult => {
 
     if (chosen) {
       if (board.looser && samePos(chosen, board.looser)) {
-        looserKilled = true;
+        pieceHits.push({
+          pieceId: "looser",
+          threatId: threat.id,
+          damage: THREAT_STATS[threat.tier].attack
+        });
       } else {
         threat.pos = chosen;
       }
@@ -54,5 +59,5 @@ export const stepThreats = (board: ThreatBoard): ThreatStepResult => {
     return true;
   });
 
-  return { threats: survivors, templeHits, looserKilled };
+  return { threats: survivors, templeHits, pieceHits };
 };

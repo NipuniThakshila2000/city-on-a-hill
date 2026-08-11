@@ -22,6 +22,8 @@
   color: var(--c-grey-2);
   padding: 18px;
   box-shadow: 0 0 0 4px var(--c-shadow);
+  max-height: calc(100vh - 32px);
+  overflow: auto;
 }
 
 .panel header p {
@@ -36,14 +38,48 @@
   font-size: 32px;
 }
 
-.panel ol {
-  margin: 0;
-  padding-left: 22px;
-  line-height: 1.45;
+.walkthrough {
+  display: grid;
+  gap: 10px;
 }
 
-.panel li + li {
-  margin-top: 8px;
+.walkthrough article {
+  position: relative;
+  border: 1px solid var(--c-grid-2);
+  background: var(--c-panel-2);
+  padding: 10px 10px 10px 42px;
+}
+
+.walkthrough strong {
+  display: block;
+  color: var(--c-lamp);
+}
+
+.walkthrough p,
+.roles p {
+  margin: 4px 0 0;
+  line-height: 1.4;
+}
+
+.arrow {
+  position: absolute;
+  left: 10px;
+  top: 11px;
+  color: var(--c-yellow);
+  font-weight: 700;
+  animation: pointPulse 950ms ease-in-out infinite;
+}
+
+.roles {
+  margin-top: 14px;
+  padding-top: 12px;
+  border-top: 1px solid var(--c-grid-2);
+}
+
+.roles h3 {
+  margin: 0 0 8px;
+  color: var(--c-yellow);
+  font-size: 16px;
 }
 
 .keys {
@@ -60,4 +96,28 @@
   color: var(--c-grey-2);
   border-radius: 0;
   padding: 0 12px;
+}
+
+@keyframes pointPulse {
+  0%,
+  100% {
+    transform: translateX(0);
+  }
+  50% {
+    transform: translateX(6px);
+  }
+}
+
+@media (max-width: 420px) {
+  .panel {
+    padding: 14px;
+  }
+
+  .panel h2 {
+    font-size: 24px;
+  }
+
+  .walkthrough article {
+    padding-left: 36px;
+  }
 }

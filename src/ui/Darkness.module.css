@@ -1,0 +1,88 @@
+.darkness {
+  position: absolute;
+  inset: -4%;
+  z-index: 3;
+  display: grid;
+  place-items: center;
+  pointer-events: none;
+}
+
+.body {
+  width: 74%;
+  height: 74%;
+  background: #20131a;
+  filter: drop-shadow(0 0 5px rgba(224, 90, 69, 0.42));
+  clip-path: polygon(50% 0, 70% 18%, 100% 30%, 79% 54%, 87% 91%, 51% 78%, 16% 100%, 24% 59%, 0 38%, 31% 20%);
+}
+
+.tier2 .body {
+  width: 82%;
+  height: 82%;
+  background: #2c1821;
+  clip-path: polygon(48% 0, 78% 13%, 94% 39%, 83% 74%, 55% 100%, 20% 89%, 0 55%, 13% 21%);
+}
+
+.tier3 .body {
+  width: 92%;
+  height: 92%;
+  background: #331423;
+  clip-path: polygon(50% 0, 67% 18%, 96% 8%, 88% 41%, 100% 47%, 78% 62%, 90% 92%, 59% 81%, 42% 100%, 31% 76%, 2% 88%, 17% 59%, 0 39%, 25% 27%, 19% 5%, 39% 18%);
+}
+
+.tier4 .body {
+  width: 104%;
+  height: 104%;
+  background: #3f101f;
+  filter: drop-shadow(0 0 8px rgba(224, 90, 69, 0.62));
+  clip-path: polygon(50% 0, 62% 19%, 88% 4%, 81% 31%, 100% 47%, 78% 62%, 90% 92%, 59% 81%, 42% 100%, 31% 76%, 2% 88%, 17% 59%, 0 39%, 25% 27%, 19% 5%, 39% 18%);
+}
+
+.targeted {
+  filter: drop-shadow(0 0 8px var(--c-yellow));
+}
+
+.hp {
+  position: absolute;
+  left: 8px;
+  right: 20px;
+  top: 5px;
+  height: 5px;
+  border: 1px solid rgba(255, 255, 255, 0.65);
+  background: rgba(8, 10, 8, 0.78);
+}
+
+.hp span {
+  display: block;
+  height: 100%;
+  background: linear-gradient(90deg, #7c2431, #e05a45);
+}
+
+.badge {
+  position: absolute;
+  right: 2px;
+  bottom: 2px;
+  min-width: 16px;
+  height: 16px;
+  display: grid;
+  place-items: center;
+  border: 1px solid rgba(255, 255, 255, 0.65);
+  background: rgba(20, 20, 18, 0.78);
+  color: #fff;
+  font-size: 10px;
+  line-height: 1;
+}
+
+@media (max-width: 520px) {
+  .badge {
+    min-width: 13px;
+    height: 13px;
+    font-size: 8px;
+  }
+
+  .hp {
+    left: 4px;
+    right: 16px;
+    top: 4px;
+    height: 4px;
+  }
+}

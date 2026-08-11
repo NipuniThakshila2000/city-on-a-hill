@@ -35,6 +35,22 @@
   line-height: 1;
 }
 
+.hp {
+  position: absolute;
+  left: 7px;
+  right: 20px;
+  top: 5px;
+  height: 5px;
+  border: 1px solid rgba(255, 255, 255, 0.65);
+  background: rgba(8, 10, 8, 0.78);
+}
+
+.hp span {
+  display: block;
+  height: 100%;
+  background: linear-gradient(90deg, #b94a3c, var(--c-lamp));
+}
+
 .selected {
   filter: drop-shadow(0 0 5px var(--c-lamp));
 }
@@ -55,5 +71,12 @@
     min-width: 13px;
     height: 13px;
     font-size: 8px;
+  }
+
+  .hp {
+    left: 4px;
+    right: 16px;
+    top: 4px;
+    height: 4px;
   }
 }

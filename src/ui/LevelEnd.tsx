@@ -11,7 +11,8 @@ export default function LevelEnd() {
   const next = Math.min(state.level.id + 1, levels.length);
   return (
     <section className={styles.overlay} role="dialog" aria-modal="true">
-      <div className={styles.panel}>
+      <div className={`${styles.panel} ${state.phase === "won" ? styles.won : ""}`}>
+        {state.phase === "won" && <div className={styles.burst} aria-hidden="true" />}
         <h2>{state.phase === "won" ? "Level complete" : state.phase === "lost" ? "The lamp went out" : "The houses stayed dark"}</h2>
         <button onClick={() => state.startLevel(state.level.id, state.helper)}>Retry</button>
         {state.phase === "won" && state.level.id < levels.length && (

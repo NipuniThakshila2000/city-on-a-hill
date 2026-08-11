@@ -1,0 +1,82 @@
+.console {
+  max-width: 980px;
+  margin: 16px auto 0;
+  border: 1px solid var(--c-grid-2);
+  background: #10120e;
+  color: var(--c-grey-2);
+  font-family: ui-monospace, SFMono-Regular, Consolas, "Liberation Mono", monospace;
+}
+
+.console header {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 8px 10px;
+  border-bottom: 1px solid var(--c-grid-2);
+  background: var(--c-panel-2);
+  color: var(--c-lamp);
+  text-transform: uppercase;
+  font-size: 12px;
+}
+
+.console header small {
+  color: var(--c-grey);
+  text-transform: none;
+}
+
+.log {
+  display: grid;
+  gap: 4px;
+  max-height: 154px;
+  overflow: auto;
+  padding: 8px;
+}
+
+.entry {
+  margin: 0;
+  padding: 7px 8px;
+  border-left: 3px solid var(--c-grid-2);
+  background: rgba(255, 255, 255, 0.03);
+  line-height: 1.35;
+}
+
+.entry span {
+  color: var(--c-yellow);
+  margin-right: 8px;
+}
+
+.latest {
+  animation: consolePulse 900ms ease-out;
+}
+
+.attack {
+  border-left-color: #e05a45;
+  background: rgba(224, 90, 69, 0.16);
+}
+
+.success {
+  border-left-color: var(--c-lamp);
+  background: rgba(224, 190, 96, 0.16);
+}
+
+@keyframes consolePulse {
+  0% {
+    outline: 2px solid var(--c-yellow);
+    filter: brightness(1.35);
+  }
+  100% {
+    outline: 0 solid transparent;
+    filter: brightness(1);
+  }
+}
+
+@media (max-width: 760px) {
+  .console {
+    margin-top: 12px;
+  }
+
+  .console header,
+  .entry {
+    font-size: 12px;
+  }
+}
