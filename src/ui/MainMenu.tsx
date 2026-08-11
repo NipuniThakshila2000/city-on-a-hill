@@ -125,6 +125,10 @@ export default function MainMenu({ onStart, onTutorial }: MainMenuProps) {
         !!piece.locked
       );
     });
+  const startNewGame = () => {
+    startLevel(1, helper);
+    onStart();
+  };
 
   if (showTeaching) {
     return (
@@ -227,10 +231,10 @@ export default function MainMenu({ onStart, onTutorial }: MainMenuProps) {
               >
                 Continue
               </button>
-              <button onClick={() => startLevel(1, helper)}>New Game</button>
+              <button onClick={startNewGame}>New Game</button>
               <button onClick={onTutorial}>Tutorial</button>
               <button onClick={() => setShowTeaching(true)}>Teaching</button>
-              <button onClick={onStart}>Level {level.id}</button>
+              <button onClick={onStart} disabled={!hasRunningGame}>Level {level.id}</button>
             </nav>
           </div>
         </div>
