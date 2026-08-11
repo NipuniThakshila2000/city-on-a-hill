@@ -8,7 +8,8 @@
   color: var(--c-ink);
   font-size: 24px;
   font-weight: 700;
-  transition: transform 120ms linear;
+  transition: transform 140ms ease-out, filter 140ms ease-out, opacity 140ms ease-out;
+  animation: pieceReady 360ms ease-out both;
 }
 
 .image {
@@ -53,10 +54,32 @@
 
 .selected {
   filter: drop-shadow(0 0 5px var(--c-lamp));
+  animation: selectedPiece 1.25s ease-in-out infinite;
 }
 
 .acted {
   opacity: 0.6;
+}
+
+@keyframes pieceReady {
+  0% {
+    opacity: 0;
+    transform: translateY(4px) scale(0.96);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@keyframes selectedPiece {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-2px);
+  }
 }
 
 @media (max-width: 520px) {

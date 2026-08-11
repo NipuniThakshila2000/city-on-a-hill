@@ -5,6 +5,7 @@
   background: #10120e;
   color: var(--c-grey-2);
   font-family: var(--font-console);
+  animation: consoleEnter 260ms ease-out both;
 }
 
 .console header {
@@ -38,6 +39,7 @@
   border-left: 3px solid var(--c-grid-2);
   background: rgba(255, 255, 255, 0.03);
   line-height: 1.35;
+  animation: logLineIn 180ms ease-out both;
 }
 
 .entry span {
@@ -67,6 +69,28 @@
   100% {
     outline: 0 solid transparent;
     filter: brightness(1);
+  }
+}
+
+@keyframes consoleEnter {
+  0% {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes logLineIn {
+  0% {
+    opacity: 0;
+    transform: translateX(-5px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateX(0);
   }
 }
 

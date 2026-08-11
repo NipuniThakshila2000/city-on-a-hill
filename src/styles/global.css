@@ -28,6 +28,15 @@ body {
 button,
 select {
   font: inherit;
+  transition: border-color 150ms ease-out, color 150ms ease-out, background-color 150ms ease-out, filter 150ms ease-out, transform 150ms ease-out;
+}
+
+button:not(:disabled):hover {
+  filter: brightness(1.12);
+}
+
+button:not(:disabled):active {
+  transform: translateY(1px);
 }
 
 h1,

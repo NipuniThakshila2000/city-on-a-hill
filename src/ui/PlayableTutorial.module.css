@@ -12,6 +12,7 @@
   background: rgba(14, 17, 13, 0.96);
   box-shadow: 0 18px 40px rgba(0, 0, 0, 0.45), 0 0 0 2px rgba(238, 206, 105, 0.16);
   overflow: auto;
+  animation: tutorialEnter 240ms ease-out both;
 }
 
 .panel header {
@@ -52,9 +53,11 @@
   grid-template-columns: auto 1fr;
   gap: 9px;
   align-items: center;
+  margin: 2px;
   border: 1px solid rgba(238, 206, 105, 0.5);
   background: rgba(238, 206, 105, 0.1);
-  padding: 9px 10px;
+  padding: 11px 12px;
+  overflow-wrap: anywhere;
 }
 
 .target span {
@@ -73,12 +76,32 @@
 .textBoxes {
   display: grid;
   gap: 8px;
+  padding: 2px;
 }
 
 .textBoxes section {
+  margin: 2px;
   border: 1px solid rgba(214, 196, 136, 0.22);
   background: rgba(30, 36, 27, 0.76);
-  padding: 9px 10px;
+  padding: 11px 12px;
+  overflow-wrap: anywhere;
+  animation: textBoxEnter 220ms ease-out both;
+}
+
+.textBoxes section:nth-child(2) {
+  animation-delay: 40ms;
+}
+
+.textBoxes section:nth-child(3) {
+  animation-delay: 80ms;
+}
+
+.textBoxes section:nth-child(4) {
+  animation-delay: 120ms;
+}
+
+.textBoxes section:nth-child(5) {
+  animation-delay: 160ms;
 }
 
 .textBoxes h3,
@@ -124,6 +147,28 @@
   }
   50% {
     transform: translateX(6px);
+  }
+}
+
+@keyframes tutorialEnter {
+  0% {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes textBoxEnter {
+  0% {
+    opacity: 0;
+    transform: translateY(5px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
   }
 }
 

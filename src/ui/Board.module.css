@@ -7,6 +7,18 @@
   border: 2px solid var(--c-grid-2);
   background: var(--c-grid);
   box-shadow: 0 0 0 3px var(--c-shadow);
+  animation: boardSettle 320ms ease-out both;
+}
+
+@keyframes boardSettle {
+  0% {
+    opacity: 0;
+    transform: translateY(8px) scale(0.992);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
 }
 
 @media (max-width: 760px) {
