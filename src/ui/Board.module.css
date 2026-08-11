@@ -1,5 +1,5 @@
 .board {
-  width: min(100%, 620px, calc(100vh - 190px));
+  width: min(100%, 680px, calc(100vh - 190px));
   min-width: 0;
   aspect-ratio: 1;
   display: grid;
@@ -11,7 +11,8 @@
 }
 
 .preview {
-  opacity: 0.88;
+  opacity: 0.9;
+  filter: saturate(0.92);
 }
 
 @keyframes boardSettle {

@@ -1,16 +1,16 @@
 .app {
   min-height: 100vh;
-  padding: 18px;
+  padding: 18px 22px;
   background:
     linear-gradient(180deg, var(--c-panel), var(--c-ink));
 }
 
 .table {
   display: grid;
-  grid-template-columns: minmax(650px, 1fr) minmax(230px, 320px);
-  gap: 18px;
+  grid-template-columns: minmax(760px, 1fr) minmax(240px, 300px);
+  gap: 20px;
   align-items: start;
-  max-width: 1340px;
+  max-width: 1680px;
   margin: 0 auto;
   min-width: 0;
 }
@@ -18,14 +18,19 @@
 .desktopBoards {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 14px;
+  gap: 18px;
   min-width: 0;
 }
 
 .boardFrame {
   display: grid;
-  gap: 8px;
+  gap: 10px;
   min-width: 0;
+  padding: 10px;
+  border: 1px solid rgba(214, 196, 136, 0.22);
+  background:
+    linear-gradient(180deg, rgba(22, 27, 19, 0.72), rgba(10, 12, 9, 0.5));
+  box-shadow: 0 12px 28px rgba(0, 0, 0, 0.28);
 }
 
 .boardFrame h2 {
@@ -34,11 +39,11 @@
   justify-content: space-between;
   gap: 10px;
   align-items: center;
-  border: 1px solid var(--c-grid-2);
-  background: rgba(20, 24, 18, 0.72);
+  border-bottom: 1px solid rgba(238, 206, 105, 0.3);
+  background: transparent;
   color: var(--c-lamp);
-  padding: 8px 10px;
-  font-size: 16px;
+  padding: 0 0 8px;
+  font-size: 18px;
   line-height: 1.1;
 }
 
@@ -54,7 +59,7 @@
 }
 
 .levels {
-  max-width: 980px;
+  max-width: 1680px;
   margin: 0 auto 12px;
   display: flex;
   gap: 8px;
@@ -89,6 +94,13 @@
     justify-items: center;
     max-width: 620px;
     width: 100%;
+  }
+
+  .boardFrame {
+    padding: 0;
+    border: 0;
+    background: transparent;
+    box-shadow: none;
   }
 
   .desktopBoards {

@@ -22,7 +22,9 @@ export default function TurnBar({ tutorialView = false, tutorialEndTurn = false 
       </div>
       <p>{message}</p>
       <div className={styles.actions}>
-        <ForecastToggle tutorialHighlight={tutorialView} />
+        <div className={styles.viewToggle}>
+          <ForecastToggle tutorialHighlight={tutorialView} />
+        </div>
         <button className={tutorialEndTurn ? styles.tutorialAction : ""} onClick={endPlayerTurn} disabled={phase !== "player"}>
           {tutorialEndTurn && <span className={styles.actionArrow}>{"->"}</span>}
           End turn
