@@ -47,6 +47,7 @@ export type CombatCheck = {
   blanks: number;
   triesRemaining: number;
   hint: string;
+  announcement?: string;
 };
 export type Level = {
   id: number;

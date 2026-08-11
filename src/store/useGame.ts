@@ -301,9 +301,10 @@ export const useGame = create<GameStore>((set, get) => ({
     }
     if (check.triesRemaining > 1) {
       const triesRemaining = check.triesRemaining - 1;
+      const announcement = `Mistake noticed. Use the next hint and try again. ${triesRemaining} ${triesRemaining === 1 ? "try" : "tries"} remain.`;
       set({
-        combatCheck: { ...check, triesRemaining },
-        ...withLog(state, `${check.passage} hint: ${check.hint}. ${triesRemaining} ${triesRemaining === 1 ? "try" : "tries"} remain.`)
+        combatCheck: { ...check, triesRemaining, announcement },
+        ...withLog(state, `${announcement} ${check.passage} hint: ${check.hint}.`)
       });
       return;
     }

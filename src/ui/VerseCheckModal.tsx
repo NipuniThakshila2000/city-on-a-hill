@@ -24,6 +24,11 @@ export default function VerseCheckModal() {
           <h2>{check.passage}</h2>
         </header>
         <p className={styles.prompt}>{check.prompt}</p>
+        {check.announcement && (
+          <p className={styles.announcement} role="status" aria-live="polite">
+            {check.announcement}
+          </p>
+        )}
         <label>
           Fill the blank word{check.blanks === 1 ? "" : "s"}
           <input
