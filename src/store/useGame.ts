@@ -100,7 +100,8 @@ const resolveDestroyerAttack = (
   set: (partial: Partial<GameState>) => void,
   get: () => GameStore,
   threatId: string,
-  passed: boolean
+  passed: boolean,
+  warning?: string
 ) => {
   const destroyer = state.pieces.destroyer;
   const target = state.threats.find((t) => t.id === threatId);
@@ -130,7 +131,7 @@ const resolveDestroyerAttack = (
         destroyer: { ...destroyer, hp, alive: hp > 0, acted: true }
       },
       actionEffect,
-      ...withLog(state, `${stats.name} countered for ${counter} damage.`, "attack")
+      ...withLog(state, `${warning ? `${warning} ` : ""}${stats.name} countered for ${counter} damage.`, "attack")
     });
     clearActionEffectSoon(actionEffect.id, set, get);
     return;
@@ -301,14 +302,17 @@ export const useGame = create<GameStore>((set, get) => ({
     }
     if (check.triesRemaining > 1) {
       const triesRemaining = check.triesRemaining - 1;
-      const announcement = `Mistake noticed. Use the next hint and try again. ${triesRemaining} ${triesRemaining === 1 ? "try" : "tries"} remain.`;
+      const mistakesMade = check.mistakesMade + 1;
+      const announcement = `Warning: mistake ${mistakesMade} of ${check.totalTries}. Use the next hint and try again. ${triesRemaining} ${triesRemaining === 1 ? "try" : "tries"} remain.`;
       set({
-        combatCheck: { ...check, triesRemaining, announcement },
+        combatCheck: { ...check, mistakesMade, triesRemaining, announcement },
         ...withLog(state, `${announcement} ${check.passage} hint: ${check.hint}.`)
       });
       return;
     }
-    resolveDestroyerAttack(state, set, get, check.defenderThreatId, false);
+    const finalMistake = check.mistakesMade + 1;
+    const warning = `Warning: mistake ${finalMistake} of ${check.totalTries}. The check is spent.`;
+    resolveDestroyerAttack(state, set, get, check.defenderThreatId, false, warning);
   },
   cancelVerseCheck: () => set({ combatCheck: undefined }),
   endPlayerTurn: () => {

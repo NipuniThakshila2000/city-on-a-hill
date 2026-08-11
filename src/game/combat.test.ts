@@ -16,6 +16,8 @@ describe("combat checks", () => {
     expect(second).toEqual(first);
     expect(first.header).toContain("Attack 8 vs Defense 7");
     expect(first.passage).toBe("Psalm 109");
+    expect(first.mistakesMade).toBe(0);
+    expect(first.totalTries).toBe(first.triesRemaining);
   });
 
   it("accepts answers containing all blanked words without punctuation sensitivity", () => {

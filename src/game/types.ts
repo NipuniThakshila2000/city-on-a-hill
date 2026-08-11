@@ -45,6 +45,8 @@ export type CombatCheck = {
   prompt: string;
   answers: string[];
   blanks: number;
+  mistakesMade: number;
+  totalTries: number;
   triesRemaining: number;
   hint: string;
   announcement?: string;

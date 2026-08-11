@@ -29,6 +29,10 @@ export default function VerseCheckModal() {
             {check.announcement}
           </p>
         )}
+        <div className={styles.warningMeter} aria-label={`${check.mistakesMade} of ${check.totalTries} mistakes used`}>
+          <span>Mistakes</span>
+          <strong>{check.mistakesMade} / {check.totalTries}</strong>
+        </div>
         <label>
           Fill the blank word{check.blanks === 1 ? "" : "s"}
           <input

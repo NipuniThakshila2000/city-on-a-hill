@@ -105,6 +105,8 @@ export const createCombatCheck = (
     prompt,
     answers: answers.map((answer) => normalize(answer)[0] ?? answer.toLowerCase()),
     blanks: difficulty.blanks,
+    mistakesMade: 0,
+    totalTries: difficulty.tries,
     triesRemaining: difficulty.tries,
     hint: answers.map((answer) => `${answer[0]}...`).join(", ")
   };
