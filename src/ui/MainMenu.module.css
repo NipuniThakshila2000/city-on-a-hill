@@ -190,23 +190,11 @@
   grid-template-columns: repeat(3, 1fr);
 }
 
-.houses span {
-  position: relative;
-  margin: 17% 22% 14%;
-  border: 2px solid var(--c-yellow);
-  border-top: 0;
-}
-
-.houses span::before {
-  content: "";
-  position: absolute;
-  left: 9%;
-  right: 9%;
-  top: -42%;
-  height: 60%;
-  border-left: 2px solid var(--c-yellow);
-  border-top: 2px solid var(--c-yellow);
-  transform: rotate(45deg);
+.houses img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  filter: saturate(1.08) brightness(1.12) drop-shadow(0 0 7px rgba(238, 206, 105, 0.7));
 }
 
 .edgeOne,

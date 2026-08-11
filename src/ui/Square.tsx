@@ -5,6 +5,7 @@ import { canBuild, legalMoves, lockedSquares } from "../game/rules";
 import { protectorCoveredSquares } from "../game/threatAI";
 import type { Pos } from "../game/types";
 import { useGame } from "../store/useGame";
+import houseSrc from "../assets/structures/house.webp";
 import Darkness from "./Darkness";
 import Piece from "./Piece";
 import styles from "./Square.module.css";
@@ -75,7 +76,7 @@ export default function Square({ pos }: { pos: Pos }) {
     >
       {coord && <span className={styles.coord}>{coord}</span>}
       {temple && <span className={styles.templeLamp} />}
-      {house && <span className={styles.houseSprite} />}
+      {house && <img className={styles.houseImage} src={houseSrc} alt="" draggable={false} />}
       {locked && <span className={styles.lock} />}
       {cornerstone && (
         <span className={cornerstone.complete ? styles.cornerComplete : styles.cornerScaffold}>

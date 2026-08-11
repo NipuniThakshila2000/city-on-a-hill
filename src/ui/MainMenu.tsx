@@ -5,6 +5,7 @@ import binderImage from "../assets/characters/binder.webp";
 import destroyerImage from "../assets/characters/destroyer.webp";
 import looserImage from "../assets/characters/looser.webp";
 import protectorImage from "../assets/characters/protector.webp";
+import houseImage from "../assets/structures/house.webp";
 import styles from "./MainMenu.module.css";
 
 const helperNames: Record<HelperId, string> = {
@@ -86,9 +87,9 @@ export default function MainMenu({ onStart, onTutorial }: MainMenuProps) {
             <div className={styles.lightBox} />
             <div className={styles.lamp} />
             <div className={styles.houses}>
-              <span />
-              <span />
-              <span />
+              <img src={houseImage} alt="" />
+              <img src={houseImage} alt="" />
+              <img src={houseImage} alt="" />
             </div>
             <span className={styles.edgeOne}>X</span>
             <span className={styles.edgeTwo}>X</span>

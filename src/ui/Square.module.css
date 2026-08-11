@@ -117,34 +117,19 @@
   clip-path: polygon(50% 0, 100% 45%, 72% 100%, 28% 100%, 0 45%);
 }
 
-.houseSprite {
+.houseImage {
   position: absolute;
-  left: 22%;
-  right: 22%;
-  bottom: 18%;
-  height: 43%;
-  border: 2px solid currentColor;
-  border-top: 0;
-  color: var(--c-grey);
-  background:
-    linear-gradient(90deg, transparent 38%, currentColor 39% 61%, transparent 62%) 50% 70% / 40% 36% no-repeat;
+  inset: 2%;
+  width: 96%;
+  height: 96%;
+  object-fit: contain;
+  pointer-events: none;
+  user-select: none;
+  filter: saturate(0.55) brightness(0.58) drop-shadow(0 2px 2px rgba(0, 0, 0, 0.42));
 }
 
-.houseSprite::before {
-  content: "";
-  position: absolute;
-  left: 9%;
-  right: 9%;
-  top: -38%;
-  height: 58%;
-  border-left: 2px solid currentColor;
-  border-top: 2px solid currentColor;
-  transform: rotate(45deg);
-}
-
-.houseLit .houseSprite {
-  color: var(--c-lamp);
-  box-shadow: 0 0 12px rgba(238, 206, 105, 0.55);
+.houseLit .houseImage {
+  filter: saturate(1.08) brightness(1.1) drop-shadow(0 0 7px rgba(238, 206, 105, 0.72));
 }
 
 .forecast {
