@@ -3,7 +3,7 @@ import { dist, keyOf, samePos } from "../game/distance";
 import { isLit } from "../game/light";
 import { canBuild, legalMoves, lockedSquares } from "../game/rules";
 import { protectorCoveredSquares } from "../game/threatAI";
-import type { Pos } from "../game/types";
+import type { Pos, ViewMode } from "../game/types";
 import { useGame } from "../store/useGame";
 import houseSrc from "../assets/structures/house.webp";
 import Darkness from "./Darkness";
@@ -14,10 +14,13 @@ type SquareProps = {
   pos: Pos;
   tutorialSquares?: string[];
   tutorialPrimarySquare?: string;
+  viewMode?: ViewMode;
+  interactive?: boolean;
 };
 
-export default function Square({ pos, tutorialSquares = [], tutorialPrimarySquare }: SquareProps) {
+export default function Square({ pos, tutorialSquares = [], tutorialPrimarySquare, viewMode, interactive = true }: SquareProps) {
   const state = useGame();
+  const displayMode = viewMode ?? state.mode;
   const squareKey = keyOf(pos);
   const piece = Object.values(state.pieces).find((p) => p.alive && samePos(p.pos, pos));
   const threat = state.threats.find((t) => samePos(t.pos, pos));
@@ -26,7 +29,7 @@ export default function Square({ pos, tutorialSquares = [], tutorialPrimarySquar
   const locked = lockedSquares(state).some((p) => samePos(p, pos));
   const cornerstone = state.cornerstones.find((c) => samePos(c.pos, pos));
   const selected = state.selectedPieceId ? state.pieces[state.selectedPieceId] : null;
-  const legal = selected ? legalMoves(state, selected.id).some((p) => samePos(p, pos)) : false;
+  const legal = interactive && selected ? legalMoves(state, selected.id).some((p) => samePos(p, pos)) : false;
   const forecastWindow = state.helper === "counsel" ? state.level.forecastWindow + 1 : state.level.forecastWindow;
   const forecast = state.level.spawns.filter(
     (s) => s.turn > state.turn && s.turn <= state.turn + forecastWindow && samePos(s.pos, pos)
@@ -41,6 +44,7 @@ export default function Square({ pos, tutorialSquares = [], tutorialPrimarySquar
     samePos(p, pos)
   );
   const destroyTarget =
+    interactive &&
     selected?.id === "destroyer" &&
     state.phase === "player" &&
     !selected.acted &&
@@ -78,11 +82,14 @@ export default function Square({ pos, tutorialSquares = [], tutorialPrimarySquar
     <button
       className={classes}
       onClick={() => {
+        if (!interactive) return;
         state.selectSquare(pos);
         if (threat) state.destroyThreat(threat.id);
         else if (piece) state.selectPiece(piece.id);
         else if (legal) state.moveSelected(pos);
       }}
+      tabIndex={interactive ? 0 : -1}
+      aria-disabled={!interactive}
       aria-label={keyOf(pos)}
     >
       {tutorialPrimary && <span className={styles.tutorialArrow}>{"->"}</span>}
@@ -96,7 +103,7 @@ export default function Square({ pos, tutorialSquares = [], tutorialPrimarySquar
           {cornerstone.complete ? "" : cornerstone.turnsRemaining}
         </span>
       )}
-      {state.mode === "coming" && forecast.map((f) => <span className={styles.forecast} key={f.id}>{f.turn}</span>)}
+      {displayMode === "coming" && forecast.map((f) => <span className={styles.forecast} key={f.id}>{f.turn}</span>)}
       {threat && <Darkness threat={threat} targeted={destroyTarget} />}
       {showSoil && soil === "poor" && !cornerstone && <span className={styles.soil}>poor</span>}
       {actionEffect && <span key={actionEffect.id} className={`${styles.effect} ${styles[actionEffect.type]}`}>{actionEffect.text}</span>}

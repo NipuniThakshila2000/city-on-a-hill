@@ -10,6 +10,10 @@
   animation: boardSettle 320ms ease-out both;
 }
 
+.preview {
+  opacity: 0.88;
+}
+
 @keyframes boardSettle {
   0% {
     opacity: 0;

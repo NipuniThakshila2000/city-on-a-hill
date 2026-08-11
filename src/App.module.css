@@ -7,12 +7,50 @@
 
 .table {
   display: grid;
-  grid-template-columns: minmax(320px, 620px) minmax(230px, 320px);
+  grid-template-columns: minmax(650px, 1fr) minmax(230px, 320px);
   gap: 18px;
   align-items: start;
-  max-width: 980px;
+  max-width: 1340px;
   margin: 0 auto;
   min-width: 0;
+}
+
+.desktopBoards {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 14px;
+  min-width: 0;
+}
+
+.boardFrame {
+  display: grid;
+  gap: 8px;
+  min-width: 0;
+}
+
+.boardFrame h2 {
+  margin: 0;
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+  align-items: center;
+  border: 1px solid var(--c-grid-2);
+  background: rgba(20, 24, 18, 0.72);
+  color: var(--c-lamp);
+  padding: 8px 10px;
+  font-size: 16px;
+  line-height: 1.1;
+}
+
+.boardFrame h2 span {
+  color: var(--c-grey);
+  font-family: var(--font-body);
+  font-size: 12px;
+  text-transform: uppercase;
+}
+
+.mobileBoard {
+  display: none;
 }
 
 .levels {
@@ -50,6 +88,15 @@
     gap: 14px;
     justify-items: center;
     max-width: 620px;
+    width: 100%;
+  }
+
+  .desktopBoards {
+    display: none;
+  }
+
+  .mobileBoard {
+    display: block;
     width: 100%;
   }
 

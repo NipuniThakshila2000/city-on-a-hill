@@ -93,7 +93,28 @@ export default function App() {
       </nav>
       <TurnBar tutorialView={!!activeTutorial?.viewTarget} tutorialEndTurn={!!activeTutorial?.endTurn} />
       <section className={styles.table}>
-        <Board tutorialSquares={activeTutorial?.boardSquares ?? []} tutorialPrimarySquare={activeTutorial?.primarySquare} />
+        <div className={styles.desktopBoards} aria-label="Before and after board views">
+          <section className={styles.boardFrame} aria-label="YESOD before board">
+            <h2>YESOD <span>Before</span></h2>
+            <Board
+              viewMode="now"
+              tutorialSquares={activeTutorial?.view === "now" ? activeTutorial?.boardSquares ?? [] : []}
+              tutorialPrimarySquare={activeTutorial?.view === "now" ? activeTutorial?.primarySquare : undefined}
+            />
+          </section>
+          <section className={styles.boardFrame} aria-label="MALKUT after board">
+            <h2>MALKUT <span>After</span></h2>
+            <Board
+              viewMode="coming"
+              interactive={false}
+              tutorialSquares={activeTutorial?.view === "coming" ? activeTutorial?.boardSquares ?? [] : []}
+              tutorialPrimarySquare={activeTutorial?.view === "coming" ? activeTutorial?.primarySquare : undefined}
+            />
+          </section>
+        </div>
+        <div className={styles.mobileBoard}>
+          <Board tutorialSquares={activeTutorial?.boardSquares ?? []} tutorialPrimarySquare={activeTutorial?.primarySquare} />
+        </div>
         <ActionPanel tutorialActions={activeTutorial?.actions ?? []} />
       </section>
       <ActivityConsole />
