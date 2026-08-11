@@ -92,6 +92,11 @@
   box-shadow: inset 3px 0 0 rgba(238, 206, 105, 0.34);
 }
 
+.actions button:not(.unavailable):active,
+.threats button:not(:disabled):active {
+  animation: actionButtonClick 190ms ease-out both;
+}
+
 .actions button:disabled,
 .threats button:disabled,
 .actions button.unavailable {
@@ -131,6 +136,20 @@
   100% {
     opacity: 1;
     transform: translateX(0);
+  }
+}
+
+@keyframes actionButtonClick {
+  0% {
+    transform: translateX(2px) scale(1);
+  }
+  45% {
+    transform: translateX(2px) scale(0.96);
+    background: rgba(238, 206, 105, 0.16);
+    box-shadow: inset 5px 0 0 var(--c-lamp), 0 0 18px rgba(238, 206, 105, 0.3);
+  }
+  100% {
+    transform: translateX(2px) scale(0.99);
   }
 }
 

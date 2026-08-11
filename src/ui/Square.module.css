@@ -15,6 +15,10 @@
   filter: brightness(1.12);
 }
 
+.square:active {
+  animation: squareClick 180ms ease-out both;
+}
+
 .lit {
   background: var(--c-olive);
   color: var(--c-grey-2);
@@ -610,6 +614,19 @@
   100% {
     opacity: 0.72;
     transform: scale(1) rotate(0deg);
+  }
+}
+
+@keyframes squareClick {
+  0% {
+    transform: scale(1);
+  }
+  45% {
+    transform: scale(0.94);
+    filter: brightness(1.38);
+  }
+  100% {
+    transform: scale(0.99);
   }
 }
 
