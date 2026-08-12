@@ -4,7 +4,6 @@ import { inBounds } from "./game/distance";
 import { levels } from "./levels";
 import { availableHelpers, useGame } from "./store/useGame";
 import ActionPanel from "./ui/ActionPanel";
-import ActivityConsole from "./ui/ActivityConsole";
 import Board from "./ui/Board";
 import LevelEnd from "./ui/LevelEnd";
 import MainMenu from "./ui/MainMenu";
@@ -102,7 +101,6 @@ export default function App() {
         </div>
         <ActionPanel />
       </section>
-      <ActivityConsole />
       {showTutorial && <TutorialPanel compact onClose={() => setShowTutorial(false)} />}
       {warningNotice && (
         <aside className={styles.warningLightbox} data-warning-lightbox role="alert" aria-live="assertive">

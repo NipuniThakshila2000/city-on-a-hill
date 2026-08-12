@@ -1,6 +1,5 @@
 .console {
-  max-width: 1680px;
-  margin: 16px auto 0;
+  width: 100%;
   border: 1px solid var(--c-grid-2);
   background: #10120e;
   color: var(--c-grey-2);
@@ -28,7 +27,7 @@
 .log {
   display: grid;
   gap: 4px;
-  max-height: 154px;
+  max-height: 78px;
   overflow: auto;
   padding: 8px;
 }
@@ -95,12 +94,12 @@
 }
 
 @media (max-width: 760px) {
-  .console {
-    margin-top: 12px;
-  }
-
   .console header,
   .entry {
     font-size: 12px;
+  }
+
+  .log {
+    max-height: 118px;
   }
 }

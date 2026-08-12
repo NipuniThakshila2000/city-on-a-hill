@@ -2,14 +2,21 @@
   max-width: 1680px;
   margin: 0 auto 14px;
   display: grid;
-  grid-template-columns: 1fr;
-  gap: 8px;
+  grid-template-columns: minmax(0, 1fr) minmax(340px, 520px);
+  gap: 16px;
+  align-items: start;
   border-block: 1px solid var(--c-grid-2);
   padding: 10px 0;
   animation: barDrop 260ms ease-out both;
 }
 
-.bar div:first-child,
+.turnControls {
+  display: grid;
+  gap: 8px;
+  min-width: 0;
+}
+
+.status,
 .actions {
   display: flex;
   gap: 10px;
@@ -52,6 +59,10 @@
 
 .viewToggle {
   display: none;
+}
+
+.consoleSlot {
+  min-width: 0;
 }
 
 .tutorialAction {
@@ -103,11 +114,13 @@
 
 @media (max-width: 760px) {
   .bar {
+    grid-template-columns: 1fr;
+    gap: 10px;
     margin-bottom: 10px;
     padding: 8px 0;
   }
 
-  .bar div:first-child,
+  .status,
   .actions {
     gap: 6px;
   }
