@@ -1,5 +1,6 @@
 import { THREAT_STATS } from "../game/combat";
 import type { Threat } from "../game/types";
+import enemyImage from "../assets/enemies/enemy.png";
 import styles from "./Darkness.module.css";
 
 export default function Darkness({ threat, targeted }: { threat: Threat; targeted: boolean }) {
@@ -10,7 +11,7 @@ export default function Darkness({ threat, targeted }: { threat: Threat; targete
 
   return (
     <span className={classes} aria-label={`${stat.name} tier ${threat.tier}`}>
-      <span className={styles.body} />
+      <img className={styles.body} src={enemyImage} alt="" aria-hidden="true" />
       <span className={styles.hp} aria-hidden="true">
         <span style={{ width: `${(threat.hp / threat.maxHp) * 100}%` }} />
       </span>

@@ -9,34 +9,30 @@
 }
 
 .body {
-  width: 74%;
-  height: 74%;
-  background: #20131a;
-  filter: drop-shadow(0 0 5px rgba(224, 90, 69, 0.42));
-  clip-path: polygon(50% 0, 70% 18%, 100% 30%, 79% 54%, 87% 91%, 51% 78%, 16% 100%, 24% 59%, 0 38%, 31% 20%);
+  width: 112%;
+  height: 112%;
+  object-fit: cover;
+  object-position: 50% 36%;
+  filter: saturate(1.08) contrast(1.15) drop-shadow(0 0 7px rgba(97, 64, 153, 0.72));
   animation: darknessPulse 1.6s ease-in-out infinite;
 }
 
 .tier2 .body {
-  width: 82%;
-  height: 82%;
-  background: #2c1821;
-  clip-path: polygon(48% 0, 78% 13%, 94% 39%, 83% 74%, 55% 100%, 20% 89%, 0 55%, 13% 21%);
+  width: 122%;
+  height: 122%;
+  filter: saturate(1.16) contrast(1.18) drop-shadow(0 0 8px rgba(110, 70, 172, 0.8));
 }
 
 .tier3 .body {
-  width: 92%;
-  height: 92%;
-  background: #331423;
-  clip-path: polygon(50% 0, 67% 18%, 96% 8%, 88% 41%, 100% 47%, 78% 62%, 90% 92%, 59% 81%, 42% 100%, 31% 76%, 2% 88%, 17% 59%, 0 39%, 25% 27%, 19% 5%, 39% 18%);
+  width: 132%;
+  height: 132%;
+  filter: saturate(1.24) contrast(1.22) drop-shadow(0 0 10px rgba(129, 76, 202, 0.86));
 }
 
 .tier4 .body {
-  width: 104%;
-  height: 104%;
-  background: #3f101f;
-  filter: drop-shadow(0 0 8px rgba(224, 90, 69, 0.62));
-  clip-path: polygon(50% 0, 62% 19%, 88% 4%, 81% 31%, 100% 47%, 78% 62%, 90% 92%, 59% 81%, 42% 100%, 31% 76%, 2% 88%, 17% 59%, 0 39%, 25% 27%, 19% 5%, 39% 18%);
+  width: 142%;
+  height: 142%;
+  filter: saturate(1.34) contrast(1.26) drop-shadow(0 0 12px rgba(155, 84, 230, 0.94));
 }
 
 .targeted {
