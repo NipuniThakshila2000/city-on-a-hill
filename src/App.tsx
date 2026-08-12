@@ -86,8 +86,8 @@ export default function App() {
         </select>
       </nav>
       <TurnBar />
-      <ActivityToast />
       <section className={styles.table}>
+        <ActivityToast />
         <div className={styles.desktopBoards} aria-label="Before and after board views">
           <section className={styles.boardFrame} aria-label="YESOD before board">
             <h2>YESOD <span>Before</span></h2>
