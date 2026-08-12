@@ -4,6 +4,7 @@ import { inBounds } from "./game/distance";
 import { levels } from "./levels";
 import { availableHelpers, useGame } from "./store/useGame";
 import ActionPanel from "./ui/ActionPanel";
+import ActivityToast from "./ui/ActivityToast";
 import Board from "./ui/Board";
 import LevelEnd from "./ui/LevelEnd";
 import MainMenu from "./ui/MainMenu";
@@ -85,6 +86,7 @@ export default function App() {
         </select>
       </nav>
       <TurnBar />
+      <ActivityToast />
       <section className={styles.table}>
         <div className={styles.desktopBoards} aria-label="Before and after board views">
           <section className={styles.boardFrame} aria-label="YESOD before board">
