@@ -229,7 +229,7 @@ export default function MainMenu({ onStart, onTutorial }: MainMenuProps) {
                 Continue
               </button>
               <button onClick={startNewGame}>New Game</button>
-              <button onClick={onTutorial}>Tutorial</button>
+              <button onClick={onTutorial}>How to play</button>
               <button onClick={() => setShowTeaching(true)}>Teaching</button>
               <button onClick={onStart} disabled={!hasRunningGame}>Level {level.id}</button>
             </nav>

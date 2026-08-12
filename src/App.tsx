@@ -8,7 +8,6 @@ import ActivityConsole from "./ui/ActivityConsole";
 import Board from "./ui/Board";
 import LevelEnd from "./ui/LevelEnd";
 import MainMenu from "./ui/MainMenu";
-import PlayableTutorial, { tutorialSteps } from "./ui/PlayableTutorial";
 import TutorialPanel from "./ui/TutorialPanel";
 import TurnBar from "./ui/TurnBar";
 import VerseCheckModal from "./ui/VerseCheckModal";
@@ -17,24 +16,9 @@ import styles from "./App.module.css";
 export default function App() {
   const [ready, setReady] = useState(false);
   const [showTutorial, setShowTutorial] = useState(false);
-  const [tutorialStep, setTutorialStep] = useState<number | null>(null);
   const state = useGame();
-  const activeTutorial = tutorialStep === null ? null : tutorialSteps[tutorialStep];
   const warningNotice = useGame((store) => store.warningNotice);
   const clearWarningNotice = useGame((store) => store.clearWarningNotice);
-  const startPlayableTutorial = () => {
-    state.startLevel(1, state.helper);
-    setReady(true);
-    setShowTutorial(false);
-    setTutorialStep(0);
-  };
-
-  useEffect(() => {
-    if (tutorialStep === null) return;
-    const tutorial = tutorialSteps[tutorialStep];
-    state.setMode(tutorial.view ?? "now");
-    state.selectPiece(tutorial.selectedPiece ?? null);
-  }, [tutorialStep]);
 
   useEffect(() => {
     const onKey = (event: KeyboardEvent) => {
@@ -69,7 +53,7 @@ export default function App() {
   if (!ready) {
     return (
       <>
-        <MainMenu onStart={() => setReady(true)} onTutorial={startPlayableTutorial} />
+        <MainMenu onStart={() => setReady(true)} onTutorial={() => setShowTutorial(true)} />
         {showTutorial && <TutorialPanel onClose={() => setShowTutorial(false)} />}
       </>
     );
@@ -87,7 +71,7 @@ export default function App() {
     >
       <nav className={styles.levels} aria-label="Levels">
         <button onClick={() => setReady(false)}>Menu</button>
-        <button onClick={startPlayableTutorial}>Tutorial</button>
+        <button onClick={() => setShowTutorial(true)}>Help</button>
         {levels.map((level) => (
           <button key={level.id} onClick={() => state.startLevel(level.id, state.helper)} disabled={level.id > state.campaign.highestUnlockedLevel}>
             {level.id}
@@ -101,31 +85,22 @@ export default function App() {
           ))}
         </select>
       </nav>
-      <TurnBar tutorialView={!!activeTutorial?.viewTarget} tutorialEndTurn={!!activeTutorial?.endTurn} />
+      <TurnBar />
       <section className={styles.table}>
         <div className={styles.desktopBoards} aria-label="Before and after board views">
           <section className={styles.boardFrame} aria-label="YESOD before board">
             <h2>YESOD <span>Before</span></h2>
-            <Board
-              viewMode="now"
-              tutorialSquares={activeTutorial?.view === "now" ? activeTutorial?.boardSquares ?? [] : []}
-              tutorialPrimarySquare={activeTutorial?.view === "now" ? activeTutorial?.primarySquare : undefined}
-            />
+            <Board viewMode="now" />
           </section>
           <section className={styles.boardFrame} aria-label="MALKUT after board">
             <h2>MALKUT <span>After</span></h2>
-            <Board
-              viewMode="coming"
-              interactive={false}
-              tutorialSquares={activeTutorial?.view === "coming" ? activeTutorial?.boardSquares ?? [] : []}
-              tutorialPrimarySquare={activeTutorial?.view === "coming" ? activeTutorial?.primarySquare : undefined}
-            />
+            <Board viewMode="coming" interactive={false} />
           </section>
         </div>
         <div className={styles.mobileBoard}>
-          <Board tutorialSquares={activeTutorial?.boardSquares ?? []} tutorialPrimarySquare={activeTutorial?.primarySquare} />
+          <Board />
         </div>
-        <ActionPanel tutorialActions={activeTutorial?.actions ?? []} />
+        <ActionPanel />
       </section>
       <ActivityConsole />
       {showTutorial && <TutorialPanel compact onClose={() => setShowTutorial(false)} />}
@@ -134,13 +109,6 @@ export default function App() {
           <strong>Warning</strong>
           <p>{warningNotice.text}</p>
         </aside>
-      )}
-      {tutorialStep !== null && (
-        <PlayableTutorial
-          step={tutorialStep}
-          onStep={setTutorialStep}
-          onClose={() => setTutorialStep(null)}
-        />
       )}
       <VerseCheckModal />
       <LevelEnd />

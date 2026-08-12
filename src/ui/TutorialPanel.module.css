@@ -14,7 +14,7 @@
   right: 18px;
   top: 18px;
   z-index: 20;
-  width: min(420px, calc(100vw - 36px));
+  width: min(760px, calc(100vw - 36px));
   animation: drawerSlideIn 240ms ease-out both;
 }
 
@@ -29,80 +29,47 @@
   animation: tutorialPanelIn 260ms ease-out both;
 }
 
-.panel header p {
-  margin: 0;
-  color: var(--c-yellow);
-  text-transform: uppercase;
-}
-
 .panel h2 {
   margin: 4px 0 12px;
   color: var(--c-lamp);
   font-size: 32px;
 }
 
-.walkthrough {
-  display: grid;
-  gap: 10px;
+.copy {
+  max-width: 68ch;
 }
 
-.walkthrough article {
-  position: relative;
-  border: 1px solid var(--c-grid-2);
-  background: var(--c-panel-2);
-  padding: 10px 10px 10px 42px;
-  animation: tutorialLineIn 220ms ease-out both;
-}
-
-.walkthrough article:nth-child(2) {
-  animation-delay: 45ms;
-}
-
-.walkthrough article:nth-child(3) {
-  animation-delay: 90ms;
-}
-
-.walkthrough article:nth-child(4) {
-  animation-delay: 135ms;
-}
-
-.walkthrough strong {
-  display: block;
-  color: var(--c-lamp);
-}
-
-.walkthrough p,
-.roles p {
-  margin: 4px 0 0;
-  line-height: 1.4;
-}
-
-.arrow {
-  position: absolute;
-  left: 10px;
-  top: 11px;
+.copy h3 {
+  margin: 22px 0 8px;
   color: var(--c-yellow);
-  font-weight: 700;
-  animation: pointPulse 950ms ease-in-out infinite;
+  font-size: 18px;
 }
 
-.roles {
-  margin-top: 14px;
-  padding-top: 12px;
-  border-top: 1px solid var(--c-grid-2);
+.copy h3:first-child {
+  margin-top: 0;
 }
 
-.roles h3 {
-  margin: 0 0 8px;
-  color: var(--c-yellow);
-  font-size: 16px;
+.copy p,
+.copy li {
+  line-height: 1.55;
 }
 
-.keys {
-  display: grid;
-  gap: 6px;
-  margin: 14px 0;
-  color: var(--c-yellow);
+.copy p {
+  margin: 0 0 12px;
+}
+
+.copy ol,
+.copy ul {
+  margin: 0 0 12px 22px;
+  padding: 0;
+}
+
+.copy li + li {
+  margin-top: 6px;
+}
+
+.narrowSeeing {
+  display: none;
 }
 
 .panel button {
@@ -112,22 +79,13 @@
   color: var(--c-grey-2);
   border-radius: 0;
   padding: 0 12px;
+  margin-top: 8px;
 }
 
 .panel button:not(:disabled):hover {
   border-color: var(--c-lamp);
   color: var(--c-lamp);
   box-shadow: 0 0 14px rgba(238, 206, 105, 0.2);
-}
-
-@keyframes pointPulse {
-  0%,
-  100% {
-    transform: translateX(0);
-  }
-  50% {
-    transform: translateX(6px);
-  }
 }
 
 @keyframes tutorialOverlayIn {
@@ -161,17 +119,6 @@
   }
 }
 
-@keyframes tutorialLineIn {
-  0% {
-    opacity: 0;
-    transform: translateX(-8px);
-  }
-  100% {
-    opacity: 1;
-    transform: translateX(0);
-  }
-}
-
 @media (max-width: 420px) {
   .panel {
     padding: 14px;
@@ -180,8 +127,14 @@
   .panel h2 {
     font-size: 24px;
   }
+}
 
-  .walkthrough article {
-    padding-left: 36px;
+@media (max-width: 1100px) {
+  .wideSeeing {
+    display: none;
+  }
+
+  .narrowSeeing {
+    display: block;
   }
 }
