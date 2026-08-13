@@ -6,6 +6,7 @@ import { availableHelpers, useGame } from "./store/useGame";
 import ActionPanel from "./ui/ActionPanel";
 import ActivityToast from "./ui/ActivityToast";
 import Board from "./ui/Board";
+import DemoMode from "./ui/DemoMode";
 import LevelEnd from "./ui/LevelEnd";
 import MainMenu from "./ui/MainMenu";
 import TutorialPanel from "./ui/TutorialPanel";
@@ -14,7 +15,7 @@ import VerseCheckModal from "./ui/VerseCheckModal";
 import styles from "./App.module.css";
 
 export default function App() {
-  const [ready, setReady] = useState(false);
+  const [screen, setScreen] = useState<"menu" | "game" | "demo">("menu");
   const [showTutorial, setShowTutorial] = useState(false);
   const state = useGame();
   const warningNotice = useGame((store) => store.warningNotice);
@@ -50,11 +51,30 @@ export default function App() {
     return () => window.removeEventListener("keydown", onKey);
   }, [state]);
 
-  if (!ready) {
+  if (screen === "demo") {
+    return <DemoMode onSkip={() => setScreen("menu")} />;
+  }
+
+  if (screen === "menu") {
     return (
       <>
-        <MainMenu onStart={() => setReady(true)} onTutorial={() => setShowTutorial(true)} />
-        {showTutorial && <TutorialPanel onClose={() => setShowTutorial(false)} />}
+        <MainMenu
+          onStart={() => setScreen("game")}
+          onTutorial={() => setShowTutorial(true)}
+          onDemo={() => {
+            setShowTutorial(false);
+            setScreen("demo");
+          }}
+        />
+        {showTutorial && (
+          <TutorialPanel
+            onClose={() => setShowTutorial(false)}
+            onDemo={() => {
+              setShowTutorial(false);
+              setScreen("demo");
+            }}
+          />
+        )}
       </>
     );
   }
@@ -70,7 +90,7 @@ export default function App() {
       }}
     >
       <nav className={styles.levels} aria-label="Levels">
-        <button onClick={() => setReady(false)}>Menu</button>
+        <button onClick={() => setScreen("menu")}>Menu</button>
         <button onClick={() => setShowTutorial(true)}>Help</button>
         {levels.map((level) => (
           <button key={level.id} onClick={() => state.startLevel(level.id, state.helper)} disabled={level.id > state.campaign.highestUnlockedLevel}>
@@ -103,7 +123,16 @@ export default function App() {
         </div>
         <ActionPanel />
       </section>
-      {showTutorial && <TutorialPanel compact onClose={() => setShowTutorial(false)} />}
+      {showTutorial && (
+        <TutorialPanel
+          compact
+          onClose={() => setShowTutorial(false)}
+          onDemo={() => {
+            setShowTutorial(false);
+            setScreen("demo");
+          }}
+        />
+      )}
       {warningNotice && (
         <aside className={styles.warningLightbox} data-warning-lightbox role="alert" aria-live="assertive">
           <strong>Warning</strong>

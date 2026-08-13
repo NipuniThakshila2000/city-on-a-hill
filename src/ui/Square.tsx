@@ -91,6 +91,7 @@ export default function Square({ pos, tutorialSquares = [], tutorialPrimarySquar
       }}
       tabIndex={interactive ? 0 : -1}
       aria-disabled={!interactive}
+      disabled={!interactive}
       aria-label={keyOf(pos)}
     >
       {tutorialPrimary && <span className={styles.tutorialArrow}>{"->"}</span>}

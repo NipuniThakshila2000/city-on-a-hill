@@ -3,9 +3,10 @@ import styles from "./TutorialPanel.module.css";
 type TutorialPanelProps = {
   compact?: boolean;
   onClose: () => void;
+  onDemo?: () => void;
 };
 
-export default function TutorialPanel({ compact = false, onClose }: TutorialPanelProps) {
+export default function TutorialPanel({ compact = false, onClose, onDemo }: TutorialPanelProps) {
   return (
     <section className={compact ? styles.drawer : styles.overlay} aria-label="How to play">
       <div className={styles.panel}>
@@ -70,7 +71,10 @@ export default function TutorialPanel({ compact = false, onClose }: TutorialPane
           <p>The Defender is the easy answer. He kills anything from anywhere.</p>
           <p>Use him when another piece could have handled it, and eventually he stops waiting for your orders.</p>
         </article>
-        <button onClick={onClose}>Close</button>
+        <div className={styles.actions}>
+          <button onClick={onClose}>Close</button>
+          {onDemo && <button onClick={onDemo}>Watch a demo</button>}
+        </div>
       </div>
     </section>
   );

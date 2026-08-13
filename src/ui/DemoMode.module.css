@@ -1,0 +1,175 @@
+.demo {
+  min-height: 100vh;
+  padding: 14px 18px 20px;
+  background: linear-gradient(180deg, var(--c-panel), var(--c-ink));
+  color: var(--c-grey-2);
+}
+
+.controls {
+  width: min(1240px, 100%);
+  margin: 0 auto 12px;
+  display: grid;
+  grid-template-columns: auto auto 1fr;
+  gap: 10px;
+  align-items: center;
+}
+
+.controls button {
+  min-height: 34px;
+  border: 1px solid rgba(214, 196, 136, 0.34);
+  background: rgba(14, 17, 13, 0.82);
+  color: var(--c-grey-2);
+  padding: 0 12px;
+  border-radius: 0;
+}
+
+.controls button:hover {
+  border-color: var(--c-lamp);
+  color: var(--c-lamp);
+}
+
+.progress {
+  height: 4px;
+  background: rgba(214, 196, 136, 0.18);
+  overflow: hidden;
+}
+
+.progress span {
+  display: block;
+  height: 100%;
+  background: var(--c-lamp);
+  transition: width 220ms linear;
+}
+
+.stage {
+  width: min(1240px, 100%);
+  margin: 0 auto;
+  display: grid;
+  gap: 14px;
+}
+
+.boards {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 16px;
+}
+
+.boardFrame {
+  display: grid;
+  gap: 8px;
+  min-width: 0;
+  padding: 8px;
+  border: 1px solid rgba(214, 196, 136, 0.22);
+  background: rgba(10, 12, 9, 0.44);
+}
+
+.boardFrame h2 {
+  margin: 0;
+  padding-bottom: 7px;
+  border-bottom: 1px solid rgba(238, 206, 105, 0.28);
+  color: var(--c-lamp);
+  font-size: 16px;
+}
+
+.caption {
+  min-height: 86px;
+  display: grid;
+  place-items: center;
+  border: 1px solid rgba(214, 196, 136, 0.26);
+  background: rgba(10, 12, 9, 0.78);
+  padding: 16px 22px;
+}
+
+.caption p {
+  max-width: 860px;
+  margin: 0;
+  color: #fff2c9;
+  font-size: clamp(18px, 2.1vw, 28px);
+  line-height: 1.32;
+  text-align: center;
+}
+
+.verseOverlay {
+  position: fixed;
+  inset: 0;
+  z-index: 50;
+  display: grid;
+  place-items: center;
+  background: rgba(5, 7, 6, 0.72);
+}
+
+.versePanel {
+  width: min(620px, calc(100vw - 26px));
+  border: 2px solid var(--c-lamp);
+  background: linear-gradient(180deg, #191d15, #0d100c);
+  box-shadow: 0 20px 48px rgba(0, 0, 0, 0.48);
+  padding: 20px;
+}
+
+.verseMath header p {
+  outline: 3px solid var(--c-lamp);
+  outline-offset: 5px;
+}
+
+.versePanel header p {
+  margin: 0 0 6px;
+  color: var(--c-yellow);
+  font-weight: 700;
+}
+
+.versePanel header h2 {
+  margin: 0 0 18px;
+  color: var(--c-grey-2);
+}
+
+.prompt {
+  margin: 0 0 16px;
+  padding: 12px;
+  border: 1px solid rgba(214, 196, 136, 0.24);
+  background: rgba(238, 206, 105, 0.08);
+  color: #fff2c9;
+  font-size: 24px;
+  line-height: 1.35;
+}
+
+.versePanel label {
+  display: grid;
+  gap: 7px;
+  color: var(--c-grey);
+}
+
+.versePanel input {
+  min-height: 42px;
+  border: 1px solid var(--c-grid-2);
+  background: #080a08;
+  color: var(--c-lamp);
+  padding: 0 10px;
+  font-size: 20px;
+}
+
+.meta {
+  margin-top: 12px;
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  color: var(--c-grey);
+}
+
+@media (max-width: 760px) {
+  .demo {
+    padding: 10px;
+  }
+
+  .boards {
+    grid-template-columns: 1fr;
+  }
+
+  .caption {
+    min-height: 96px;
+    padding: 14px;
+  }
+
+  .meta {
+    display: grid;
+  }
+}

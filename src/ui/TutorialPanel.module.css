@@ -72,6 +72,12 @@
   display: none;
 }
 
+.actions {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
 .panel button {
   min-height: 40px;
   border: 1px solid var(--c-grid-2);

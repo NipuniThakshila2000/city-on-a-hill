@@ -91,9 +91,10 @@ const teachingLinks = [
 type MainMenuProps = {
   onStart: () => void;
   onTutorial: () => void;
+  onDemo: () => void;
 };
 
-export default function MainMenu({ onStart, onTutorial }: MainMenuProps) {
+export default function MainMenu({ onStart, onTutorial, onDemo }: MainMenuProps) {
   const [showTeaching, setShowTeaching] = useState(false);
   const {
     campaign,
@@ -230,6 +231,7 @@ export default function MainMenu({ onStart, onTutorial }: MainMenuProps) {
               </button>
               <button onClick={startNewGame}>New Game</button>
               <button onClick={onTutorial}>How to play</button>
+              <button onClick={onDemo}>Watch a demo</button>
               <button onClick={() => setShowTeaching(true)}>Teaching</button>
               <button onClick={onStart} disabled={!hasRunningGame}>Level {level.id}</button>
             </nav>
