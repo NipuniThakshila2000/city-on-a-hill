@@ -9,7 +9,7 @@
   width: min(1240px, 100%);
   margin: 0 auto 12px;
   display: grid;
-  grid-template-columns: auto auto 1fr;
+  grid-template-columns: auto auto auto 1fr;
   gap: 10px;
   align-items: center;
 }
@@ -25,6 +25,31 @@
 
 .controls button:hover {
   border-color: var(--c-lamp);
+  color: var(--c-lamp);
+}
+
+.speed {
+  display: inline-grid;
+  grid-template-columns: repeat(4, auto);
+  border: 1px solid rgba(214, 196, 136, 0.24);
+  background: rgba(8, 10, 8, 0.42);
+}
+
+.speed button {
+  min-height: 32px;
+  border: 0;
+  border-right: 1px solid rgba(214, 196, 136, 0.2);
+  background: transparent;
+  padding: 0 9px;
+  color: var(--c-grey);
+}
+
+.speed button:last-child {
+  border-right: 0;
+}
+
+.speed .selectedSpeed {
+  background: rgba(238, 206, 105, 0.16);
   color: var(--c-lamp);
 }
 
@@ -158,6 +183,15 @@
 @media (max-width: 760px) {
   .demo {
     padding: 10px;
+  }
+
+  .controls {
+    grid-template-columns: auto auto 1fr;
+  }
+
+  .speed {
+    grid-column: 1 / -1;
+    justify-self: start;
   }
 
   .boards {

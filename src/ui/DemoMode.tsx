@@ -12,10 +12,12 @@ type DemoModeProps = {
 const DEFAULT_HOLD_BEFORE = 1000;
 const DEFAULT_ACTION_TIME = 760;
 const DEFAULT_HOLD_AFTER = 2500;
+const PLAYBACK_SPEEDS = [0.5, 1, 1.5, 2] as const;
 
 export default function DemoMode({ onSkip }: DemoModeProps) {
   const [stepIndex, setStepIndex] = useState(0);
   const [paused, setPaused] = useState(false);
+  const [playbackSpeed, setPlaybackSpeed] = useState<(typeof PLAYBACK_SPEEDS)[number]>(1);
   const [typedAnswer, setTypedAnswer] = useState("");
   const state = useGame();
   const timers = useRef<number[]>([]);
@@ -49,6 +51,7 @@ export default function DemoMode({ onSkip }: DemoModeProps) {
     const holdBefore = step.caption ? step.holdBefore ?? DEFAULT_HOLD_BEFORE : 80;
     const actionTime = step.actionTime ?? DEFAULT_ACTION_TIME;
     const holdAfter = step.holdAfter ?? DEFAULT_HOLD_AFTER;
+    const scaled = (ms: number) => Math.max(1, Math.round(ms / playbackSpeed));
 
     schedule(() => {
       try {
@@ -59,7 +62,7 @@ export default function DemoMode({ onSkip }: DemoModeProps) {
             index += 1;
             setTypedAnswer(answers.slice(0, index));
             if (index >= answers.length) window.clearInterval(typeTimer);
-          }, Math.max(140, Math.floor(actionTime / Math.max(answers.length, 1))));
+          }, Math.max(70, Math.floor(scaled(actionTime) / Math.max(answers.length, 1))));
           intervals.current.push(typeTimer);
         }
         if (step.action) {
@@ -70,7 +73,7 @@ export default function DemoMode({ onSkip }: DemoModeProps) {
               console.error(error);
               throw error;
             }
-          }, step.typeAnswer ? actionTime : 0);
+          }, step.typeAnswer ? scaled(actionTime) : 0);
         }
       } catch (error) {
         console.error(error);
@@ -79,17 +82,29 @@ export default function DemoMode({ onSkip }: DemoModeProps) {
       schedule(() => {
         setTypedAnswer("");
         setStepIndex((current) => Math.min(current + 1, DEMO_STEPS.length - 1));
-      }, actionTime + holdAfter);
-    }, holdBefore);
+      }, scaled(actionTime + holdAfter));
+    }, scaled(holdBefore));
 
     return clearScheduled;
-  }, [paused, step, stepIndex]);
+  }, [paused, playbackSpeed, step, stepIndex]);
 
   return (
     <main className={styles.demo} aria-label="Demo mode">
       <header className={styles.controls}>
         <button onClick={() => setPaused((value) => !value)}>{paused ? "Play" : "Pause"}</button>
         <button onClick={onSkip}>Skip</button>
+        <div className={styles.speed} aria-label="Playback speed">
+          {PLAYBACK_SPEEDS.map((speed) => (
+            <button
+              key={speed}
+              className={speed === playbackSpeed ? styles.selectedSpeed : ""}
+              onClick={() => setPlaybackSpeed(speed)}
+              aria-pressed={speed === playbackSpeed}
+            >
+              {speed}x
+            </button>
+          ))}
+        </div>
         <div className={styles.progress} aria-label="Demo progress">
           <span style={{ width: `${progress}%` }} />
         </div>
