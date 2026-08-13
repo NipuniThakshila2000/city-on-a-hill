@@ -1,17 +1,20 @@
 .demo {
   min-height: 100vh;
+  min-height: 100dvh;
   padding: 14px 18px 20px;
   background: linear-gradient(180deg, var(--c-panel), var(--c-ink));
   color: var(--c-grey-2);
+  overflow-x: hidden;
 }
 
 .controls {
   width: min(1240px, 100%);
   margin: 0 auto 12px;
   display: grid;
-  grid-template-columns: auto auto auto 1fr;
+  grid-template-columns: auto auto minmax(180px, auto) minmax(140px, 1fr);
   gap: 10px;
   align-items: center;
+  min-width: 0;
 }
 
 .controls button {
@@ -30,9 +33,10 @@
 
 .speed {
   display: inline-grid;
-  grid-template-columns: repeat(4, auto);
+  grid-template-columns: repeat(4, minmax(42px, auto));
   border: 1px solid rgba(214, 196, 136, 0.24);
   background: rgba(8, 10, 8, 0.42);
+  min-width: 0;
 }
 
 .speed button {
@@ -57,6 +61,7 @@
   height: 4px;
   background: rgba(214, 196, 136, 0.18);
   overflow: hidden;
+  min-width: 96px;
 }
 
 .progress span {
@@ -71,16 +76,20 @@
   margin: 0 auto;
   display: grid;
   gap: 14px;
+  min-width: 0;
 }
 
 .boards {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 16px;
+  align-items: start;
+  min-width: 0;
 }
 
 .boardFrame {
   display: grid;
+  justify-items: center;
   gap: 8px;
   min-width: 0;
   padding: 8px;
@@ -89,6 +98,7 @@
 }
 
 .boardFrame h2 {
+  width: 100%;
   margin: 0;
   padding-bottom: 7px;
   border-bottom: 1px solid rgba(238, 206, 105, 0.28);
@@ -103,15 +113,17 @@
   border: 1px solid rgba(214, 196, 136, 0.26);
   background: rgba(10, 12, 9, 0.78);
   padding: 16px 22px;
+  min-width: 0;
 }
 
 .caption p {
-  max-width: 860px;
+  max-width: min(860px, 100%);
   margin: 0;
   color: #fff2c9;
-  font-size: clamp(18px, 2.1vw, 28px);
+  font-size: clamp(17px, 2.1vw, 28px);
   line-height: 1.32;
   text-align: center;
+  overflow-wrap: anywhere;
 }
 
 .verseOverlay {
@@ -120,11 +132,14 @@
   z-index: 50;
   display: grid;
   place-items: center;
+  padding: 13px;
   background: rgba(5, 7, 6, 0.72);
 }
 
 .versePanel {
   width: min(620px, calc(100vw - 26px));
+  max-height: calc(100dvh - 26px);
+  overflow: auto;
   border: 2px solid var(--c-lamp);
   background: linear-gradient(180deg, #191d15, #0d100c);
   box-shadow: 0 20px 48px rgba(0, 0, 0, 0.48);
@@ -153,8 +168,9 @@
   border: 1px solid rgba(214, 196, 136, 0.24);
   background: rgba(238, 206, 105, 0.08);
   color: #fff2c9;
-  font-size: 24px;
+  font-size: clamp(18px, 3.3vw, 24px);
   line-height: 1.35;
+  overflow-wrap: anywhere;
 }
 
 .versePanel label {
@@ -164,6 +180,8 @@
 }
 
 .versePanel input {
+  width: 100%;
+  min-width: 0;
   min-height: 42px;
   border: 1px solid var(--c-grid-2);
   background: #080a08;
@@ -178,6 +196,26 @@
   justify-content: space-between;
   gap: 12px;
   color: var(--c-grey);
+  min-width: 0;
+}
+
+@media (max-width: 980px) {
+  .demo {
+    padding: 12px;
+  }
+
+  .controls,
+  .stage {
+    width: min(900px, 100%);
+  }
+
+  .boards {
+    gap: 12px;
+  }
+
+  .boardFrame {
+    padding: 7px;
+  }
 }
 
 @media (max-width: 760px) {
@@ -187,6 +225,7 @@
 
   .controls {
     grid-template-columns: auto auto 1fr;
+    gap: 8px;
   }
 
   .speed {
@@ -205,5 +244,86 @@
 
   .meta {
     display: grid;
+  }
+}
+
+@media (max-width: 480px) {
+  .demo {
+    padding: 8px;
+  }
+
+  .controls {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .controls > button {
+    width: 100%;
+  }
+
+  .speed,
+  .progress {
+    grid-column: 1 / -1;
+    width: 100%;
+  }
+
+  .speed {
+    grid-template-columns: repeat(4, 1fr);
+  }
+
+  .speed button {
+    padding: 0 4px;
+  }
+
+  .boardFrame {
+    padding: 6px;
+  }
+
+  .caption {
+    min-height: 104px;
+    padding: 12px;
+  }
+
+  .caption p {
+    font-size: 16px;
+    line-height: 1.34;
+  }
+
+  .versePanel {
+    padding: 14px;
+  }
+
+  .versePanel header h2 {
+    margin-bottom: 12px;
+  }
+
+  .prompt {
+    padding: 10px;
+  }
+}
+
+@media (max-height: 680px) and (min-width: 761px) {
+  .demo {
+    padding-top: 8px;
+  }
+
+  .controls {
+    margin-bottom: 8px;
+  }
+
+  .stage {
+    gap: 9px;
+  }
+
+  .boards {
+    gap: 10px;
+  }
+
+  .caption {
+    min-height: 68px;
+    padding: 10px 16px;
+  }
+
+  .caption p {
+    font-size: clamp(16px, 1.8vw, 22px);
   }
 }
