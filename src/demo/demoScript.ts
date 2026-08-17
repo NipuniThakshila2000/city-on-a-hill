@@ -227,6 +227,26 @@ export const DEMO_STEPS: DemoStep[] = [
     highlight: "houses"
   },
   {
+    id: "oil-reward",
+    caption: "After a level, you earn Oil. First-try verse checks are one of the best Oil sources, so memorising the passages changes your whole campaign.",
+    holdAfter: 3600
+  },
+  {
+    id: "servant-skills",
+    caption: "Spend Oil on the Servants screen. Each piece has a permanent skill tree with three tiers and two choices per tier.",
+    holdAfter: 3600
+  },
+  {
+    id: "skill-forks",
+    caption: "Choose carefully. Buying one skill in a tier closes the other choice for that campaign.",
+    holdAfter: 3400
+  },
+  {
+    id: "difficulty-curve",
+    caption: "The later levels push back with stronger darkness, shorter forecasts, worse building squares, and tighter turn budgets.",
+    holdAfter: 3600
+  },
+  {
     id: "finish-silent",
     action: "finishLevel",
     actionTime: 5200,

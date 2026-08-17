@@ -67,6 +67,20 @@ export default function TutorialPanel({ compact = false, onClose, onDemo }: Tuto
           <p>Any piece standing on a lit square heals 1 HP each turn.</p>
           <p>That's why light matters twice — it wins you the level, and it keeps your pieces alive.</p>
 
+          <h3>Oil</h3>
+          <p>Oil is the campaign currency. You earn it after a level and spend it on permanent servant skills.</p>
+          <p>The level-end screen shows exactly where your Oil came from: finishing the level, lighting houses, keeping the lamp untouched, keeping pieces alive, and passing verse checks on the first try.</p>
+          <p>Oil is not awarded for kills. Knowing the passages is the fastest way to earn more.</p>
+
+          <h3>Servant skills</h3>
+          <p>Open Servants from the menu to spend Oil. Each piece has its own skill tree with three tiers.</p>
+          <p>Every tier has two choices. Buying one closes the other for that campaign, so confirm carefully before spending.</p>
+          <p>Skills apply immediately and stay with your campaign. There is no respec.</p>
+
+          <h3>Difficulty</h3>
+          <p>Later levels give you less warning, stronger darkness, worse building positions, and more work to finish before the turn limit.</p>
+          <p>Upgrades widen your margin, but every level is still built to be winnable without them.</p>
+
           <h3>One warning</h3>
           <p>The Defender is the easy answer. He kills anything from anywhere.</p>
           <p>Use him when another piece could have handled it, and eventually he stops waiting for your orders.</p>
