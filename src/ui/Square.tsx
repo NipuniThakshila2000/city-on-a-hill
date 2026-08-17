@@ -100,7 +100,9 @@ export default function Square({ pos, tutorialSquares = [], tutorialPrimarySquar
       aria-disabled={!interactive}
       disabled={!interactive}
       aria-label={keyOf(pos)}
+      title={squareKey}
     >
+      <span className={styles.coordinateTooltip}>{squareKey}</span>
       {tutorialPrimary && <span className={styles.tutorialArrow}>{"->"}</span>}
       {tutorialHighlight && !tutorialPrimary && <span className={styles.tutorialDot} />}
       {coord && <span className={styles.coord}>{coord}</span>}
