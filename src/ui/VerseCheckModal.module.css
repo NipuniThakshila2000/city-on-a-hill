@@ -11,6 +11,8 @@
 
 .panel {
   width: min(520px, 100%);
+  max-height: calc(100svh - 28px);
+  overflow: auto;
   border: 2px solid var(--c-grid-2);
   background: var(--c-panel);
   color: var(--c-grey-2);
@@ -126,6 +128,10 @@
 }
 
 @media (max-width: 420px) {
+  .overlay {
+    padding: 10px;
+  }
+
   .panel {
     padding: 14px;
   }
@@ -145,6 +151,12 @@
 
   .actions {
     grid-template-columns: 1fr;
+  }
+
+  .warningMeter {
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 4px;
   }
 }
 

@@ -3,6 +3,7 @@
   inset: 0;
   display: grid;
   place-items: center;
+  padding: 14px;
   background: var(--c-shadow);
   z-index: 30;
   animation: overlayFade 180ms ease-out both;
@@ -12,6 +13,8 @@
   position: relative;
   overflow: hidden;
   width: min(92vw, 420px);
+  max-height: calc(100svh - 28px);
+  overflow: auto;
   border: 2px solid var(--c-grid-2);
   background: var(--c-panel);
   padding: 20px;
@@ -73,9 +76,25 @@
   display: flex;
   justify-content: space-between;
   gap: 12px;
+  flex-wrap: wrap;
   border-bottom: 1px solid rgba(214, 196, 136, 0.16);
   padding-bottom: 5px;
   color: var(--c-grey-2);
+}
+
+@media (max-width: 420px) {
+  .panel {
+    width: min(100%, 420px);
+    padding: 14px;
+  }
+
+  .panel h2 {
+    font-size: 22px;
+  }
+
+  .oilAward {
+    padding: 10px;
+  }
 }
 
 .oilAward .prominent {

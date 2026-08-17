@@ -1,5 +1,5 @@
 .board {
-  width: min(100%, 680px, calc(100vh - 190px));
+  width: min(100%, 680px, calc(50vw - 38px), calc(100vh - 190px));
   min-width: 0;
   aspect-ratio: 1;
   display: grid;
@@ -28,15 +28,21 @@
   }
 }
 
+@media (max-width: 1180px) {
+  .board {
+    width: min(100%, 680px, calc(100vw - 28px), calc(100vh - 250px));
+  }
+}
+
 @media (max-width: 760px) {
   .board {
-    width: min(100%, 620px, calc(100vh - 255px));
+    width: min(100%, 620px, calc(100vw - 20px), calc(100vh - 255px));
   }
 }
 
 @media (max-width: 420px) {
   .board {
-    width: min(100%, calc(100vh - 285px));
+    width: min(100%, calc(100vw - 16px), calc(100vh - 285px));
     border-width: 1px;
     box-shadow: 0 0 0 2px var(--c-shadow);
   }

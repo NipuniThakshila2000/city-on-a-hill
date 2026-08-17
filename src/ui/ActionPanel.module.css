@@ -1,6 +1,6 @@
 .panel {
   border-left: 2px solid var(--c-grid-2);
-  padding-left: 16px;
+  padding-left: clamp(10px, 1.2vw, 16px);
   min-height: 320px;
   min-width: 0;
   animation: panelSlideIn 320ms ease-out both;
@@ -47,7 +47,7 @@
 
 .stats div {
   display: grid;
-  grid-template-columns: 84px 1fr;
+  grid-template-columns: minmax(68px, 84px) minmax(0, 1fr);
   gap: 8px;
   align-items: baseline;
   border-bottom: 1px solid rgba(214, 196, 136, 0.18);
@@ -102,6 +102,7 @@
   border-radius: 0;
   text-align: left;
   overflow-wrap: anywhere;
+  line-height: 1.18;
 }
 
 .actions button:not(.unavailable):hover,
@@ -173,7 +174,7 @@
   }
 }
 
-@media (max-width: 760px) {
+@media (max-width: 1180px) {
   .panel {
     width: 100%;
     border-left: 0;
@@ -200,6 +201,7 @@
 
   .actions,
   .threats {
+    grid-template-columns: 1fr;
     gap: 6px;
   }
 

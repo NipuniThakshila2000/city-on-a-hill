@@ -11,10 +11,10 @@
 
 .drawer {
   position: fixed;
-  right: 18px;
-  top: 18px;
+  right: clamp(8px, 2vw, 18px);
+  top: clamp(8px, 2vw, 18px);
   z-index: 20;
-  width: min(760px, calc(100vw - 36px));
+  width: min(760px, calc(100vw - 16px));
   animation: drawerSlideIn 240ms ease-out both;
 }
 
@@ -24,7 +24,7 @@
   color: var(--c-grey-2);
   padding: 18px;
   box-shadow: 0 0 0 4px var(--c-shadow);
-  max-height: calc(100vh - 32px);
+  max-height: calc(100svh - 16px);
   overflow: auto;
   animation: tutorialPanelIn 260ms ease-out both;
 }
@@ -126,12 +126,25 @@
 }
 
 @media (max-width: 420px) {
+  .overlay {
+    padding: 10px;
+  }
+
   .panel {
     padding: 14px;
   }
 
   .panel h2 {
     font-size: 24px;
+  }
+
+  .actions {
+    display: grid;
+    grid-template-columns: 1fr;
+  }
+
+  .panel button {
+    width: 100%;
   }
 }
 

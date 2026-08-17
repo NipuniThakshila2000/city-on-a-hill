@@ -1,6 +1,6 @@
 .screen {
   min-height: 100vh;
-  padding: 22px clamp(14px, 2.4vw, 34px) 34px;
+  padding: clamp(14px, 2vw, 22px) clamp(10px, 2.4vw, 34px) 34px;
   color: #f4efe6;
   background:
     linear-gradient(135deg, rgba(70, 86, 84, 0.24) 0 18%, transparent 18% 100%),
@@ -28,7 +28,7 @@
   max-width: 1360px;
   margin: 0 auto 24px;
   display: grid;
-  grid-template-columns: 94px 1fr 116px;
+  grid-template-columns: minmax(78px, 94px) 1fr minmax(92px, 116px);
   gap: 16px;
   align-items: center;
 }
@@ -113,14 +113,14 @@
   max-width: 1360px;
   margin: 0 auto;
   display: grid;
-  grid-template-columns: repeat(4, minmax(0, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
   gap: clamp(14px, 1.8vw, 24px);
 }
 
 .tree {
   --tree-color: #8b6a2d;
   position: relative;
-  min-height: 682px;
+  min-height: 660px;
   display: grid;
   grid-template-rows: 116px 18px 30px repeat(3, minmax(132px, 1fr));
   row-gap: 10px;
@@ -318,7 +318,7 @@
 
 @media (max-width: 960px) {
   .trees {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
   }
 }
 
@@ -350,5 +350,19 @@
   .portraitWrap {
     width: 96px;
     height: 96px;
+  }
+}
+
+@media (max-width: 360px) {
+  .tier {
+    grid-template-columns: 1fr;
+  }
+
+  .tree {
+    grid-template-rows: 110px 18px 30px repeat(3, auto);
+  }
+
+  .skill {
+    min-height: 112px;
   }
 }

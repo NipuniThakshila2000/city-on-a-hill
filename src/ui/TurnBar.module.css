@@ -2,8 +2,8 @@
   max-width: 1680px;
   margin: 0 auto 14px;
   display: grid;
-  grid-template-columns: minmax(0, 1fr) minmax(340px, 520px);
-  gap: 16px;
+  grid-template-columns: minmax(0, 1fr) minmax(280px, 520px);
+  gap: clamp(10px, 1.2vw, 16px);
   align-items: start;
   border-block: 1px solid var(--c-grid-2);
   padding: 10px 0;
@@ -45,6 +45,7 @@
   background: var(--c-panel-2);
   color: var(--c-grey-2);
   border-radius: 0;
+  white-space: nowrap;
 }
 
 .actions button:not(:disabled):hover {
@@ -112,7 +113,7 @@
   }
 }
 
-@media (max-width: 760px) {
+@media (max-width: 1180px) {
   .bar {
     grid-template-columns: 1fr;
     gap: 10px;
@@ -128,7 +129,9 @@
   .viewToggle {
     display: block;
   }
+}
 
+@media (max-width: 760px) {
   .bar span,
   .bar p,
   .actions button {
@@ -141,9 +144,19 @@
 }
 
 @media (max-width: 420px) {
+  .status,
+  .actions {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
   .bar span,
   .bar p,
   .actions button {
     font-size: 12px;
+  }
+
+  .actions button {
+    white-space: normal;
   }
 }
