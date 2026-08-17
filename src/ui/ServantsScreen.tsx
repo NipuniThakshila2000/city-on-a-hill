@@ -27,7 +27,7 @@ export default function ServantsScreen({ onBack }: ServantsScreenProps) {
     <main className={styles.screen}>
       <header className={styles.header}>
         <button onClick={onBack}>Back</button>
-        <h1>Skills</h1>
+        <span className={styles.headerSpacer} aria-hidden="true" />
         <div className={styles.oilBadge} aria-label={`${campaign.oil} Oil`}>
           <span className={styles.oilIcon} />
           <strong>{campaign.oil}</strong>

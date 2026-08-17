@@ -41,13 +41,8 @@
   text-transform: uppercase;
 }
 
-.header h1 {
-  margin: 0;
-  text-align: center;
-  color: #f4e3a0;
-  font-size: 16px;
-  text-transform: uppercase;
-  letter-spacing: 0;
+.headerSpacer {
+  min-height: 1px;
 }
 
 .header nav {
@@ -247,9 +242,9 @@
 
 .closed {
   color: rgba(231, 223, 207, 0.34);
-  background:
-    linear-gradient(145deg, transparent 47%, rgba(231, 223, 207, 0.42) 48%, rgba(231, 223, 207, 0.42) 52%, transparent 53%),
-    rgba(10, 10, 10, 0.72);
+  background: rgba(10, 10, 10, 0.72);
+  border-color: rgba(231, 223, 207, 0.22);
+  text-decoration: line-through;
 }
 
 .skill:disabled:not(.closed):not(.bought) {
@@ -271,10 +266,9 @@
     grid-template-columns: 1fr auto;
   }
 
-  .header h1 {
+  .headerSpacer {
     grid-column: 1 / -1;
     grid-row: 2;
-    text-align: left;
   }
 
   .trees {
