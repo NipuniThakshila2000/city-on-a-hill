@@ -170,9 +170,7 @@
 .lattice span {
   position: absolute;
   inset: 0;
-  background:
-    linear-gradient(32deg, transparent 49.5%, rgba(231, 223, 207, 0.54) 50%, transparent 50.5%),
-    linear-gradient(-32deg, transparent 49.5%, rgba(231, 223, 207, 0.54) 50%, transparent 50.5%);
+  background: transparent;
 }
 
 .tier {
