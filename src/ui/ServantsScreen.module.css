@@ -115,12 +115,7 @@
 }
 
 .tree::before {
-  content: "";
-  position: absolute;
-  inset: 0 18% 0;
-  background: linear-gradient(180deg, transparent, color-mix(in srgb, var(--tree-color), transparent 32%), transparent);
-  clip-path: polygon(50% 0, 68% 12%, 62% 100%, 38% 100%, 32% 12%);
-  opacity: 0.36;
+  content: none;
 }
 
 .portraitWrap {
@@ -160,14 +155,7 @@
 }
 
 .lattice {
-  position: absolute;
-  top: 162px;
-  bottom: 10px;
-  left: 18%;
-  right: 18%;
-  border: 1px solid rgba(231, 223, 207, 0.48);
-  clip-path: polygon(50% 0, 100% 14%, 100% 86%, 50% 100%, 0 86%, 0 14%);
-  opacity: 0.78;
+  display: none;
 }
 
 .lattice span {
