@@ -76,6 +76,23 @@ export default function TutorialPanel({ compact = false, onClose, onDemo }: Tuto
           <p>Open Servants from the menu to spend Oil. Each piece has its own skill tree with three tiers.</p>
           <p>Every tier has two choices. Buying one closes the other for that campaign, so confirm carefully before spending.</p>
           <p>Skills apply immediately and stay with your campaign. There is no respec.</p>
+          <div className={styles.skillPreview} aria-label="Skill tree example">
+            <div>
+              <strong>Tier 1</strong>
+              <span>Shield</span>
+              <span>Truth</span>
+            </div>
+            <div>
+              <strong>Tier 2</strong>
+              <span>Armor</span>
+              <span>Move</span>
+            </div>
+            <div>
+              <strong>Tier 3</strong>
+              <span>Cover</span>
+              <span>Thorns</span>
+            </div>
+          </div>
 
           <h3>Difficulty</h3>
           <p>Later levels give you less warning, stronger darkness, worse building positions, and more work to finish before the turn limit.</p>

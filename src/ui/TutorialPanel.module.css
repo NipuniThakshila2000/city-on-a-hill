@@ -68,6 +68,41 @@
   margin-top: 6px;
 }
 
+.skillPreview {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 8px;
+  margin: 12px 0 4px;
+}
+
+.skillPreview div {
+  display: grid;
+  gap: 6px;
+  min-width: 0;
+  padding: 10px;
+  border: 1px solid rgba(214, 196, 136, 0.28);
+  background:
+    linear-gradient(180deg, rgba(238, 206, 105, 0.08), transparent),
+    rgba(8, 10, 8, 0.38);
+}
+
+.skillPreview strong {
+  color: var(--c-lamp);
+  font-size: 12px;
+  text-transform: uppercase;
+}
+
+.skillPreview span {
+  min-height: 30px;
+  display: grid;
+  place-items: center;
+  border: 1px solid rgba(214, 196, 136, 0.22);
+  background: rgba(16, 18, 15, 0.78);
+  color: var(--c-grey-2);
+  font-size: 12px;
+  text-align: center;
+}
+
 .narrowSeeing {
   display: none;
 }
@@ -145,6 +180,10 @@
 
   .panel button {
     width: 100%;
+  }
+
+  .skillPreview {
+    grid-template-columns: 1fr;
   }
 }
 

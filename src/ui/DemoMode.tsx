@@ -25,6 +25,7 @@ export default function DemoMode({ onSkip }: DemoModeProps) {
   const step = DEMO_STEPS[stepIndex];
   const progress = ((stepIndex + 1) / DEMO_STEPS.length) * 100;
   const highlightSquares = useMemo(() => demoHighlightSquares(state, step?.highlight), [state, step?.highlight]);
+  const showSkillTree = step?.id === "servant-skills" || step?.id === "skill-forks";
 
   useEffect(() => {
     startDemoLevel();
@@ -125,6 +126,32 @@ export default function DemoMode({ onSkip }: DemoModeProps) {
         <div className={styles.caption} aria-live="polite">
           {step?.caption && <p>{step.caption}</p>}
         </div>
+
+        {showSkillTree && (
+          <aside className={styles.skillCallout} aria-label="Demo skill tree example">
+            <header>
+              <span>Protector</span>
+              <strong>8 Oil</strong>
+            </header>
+            <div className={styles.skillRows}>
+              <div>
+                <small>Tier 1</small>
+                <button className={styles.skillBought}>Shield of Faith</button>
+                <button className={step.id === "skill-forks" ? styles.skillClosed : ""}>Belt of Truth</button>
+              </div>
+              <div>
+                <small>Tier 2</small>
+                <button>Breastplate</button>
+                <button>Feet Shod</button>
+              </div>
+              <div>
+                <small>Tier 3</small>
+                <button>Under His Wings</button>
+                <button>Ten Thousand</button>
+              </div>
+            </div>
+          </aside>
+        )}
       </section>
 
       {state.combatCheck && (
