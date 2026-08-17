@@ -2,10 +2,12 @@ import { create } from "zustand";
 import { HOUSES, TEMPLE } from "../game/constants";
 import { checkVerseAnswer, createCombatCheck, PIECE_STATS, THREAT_STATS } from "../game/combat";
 import { isAvoidableDestroy } from "../game/destroyer";
-import { keyOf, samePos } from "../game/distance";
+import { dist, keyOf, samePos } from "../game/distance";
+import { isLit } from "../game/light";
 import { canBuild, canRelease, legalMoves, lockedSquares, occupiedByPiece } from "../game/rules";
+import { attackBonus, destroyerChargeLimit, hasSkill, maxHpBonus, skillAvailable, skillById } from "../game/skills";
 import { endTurn } from "../game/turnEngine";
-import type { ActivityLogEntry, GameState, HelperId, Level, PieceId, Pos, ViewMode } from "../game/types";
+import type { ActivityLogEntry, GameState, HelperId, Level, OilAward, PieceId, Pos, SkillId, ViewMode } from "../game/types";
 import { levels } from "../levels";
 import { loadCampaign, saveCampaign } from "./persist";
 
@@ -15,6 +17,7 @@ let warningNoticeId = 0;
 
 type GameStore = GameState & {
   startLevel: (levelId: number, helper: HelperId) => void;
+  purchaseSkill: (skillId: SkillId) => void;
   selectPiece: (pieceId: PieceId | null) => void;
   selectSquare: (pos: Pos) => void;
   moveSelected: (pos: Pos) => void;
@@ -35,6 +38,9 @@ const helpers: HelperId[] = ["counsel", "might", "knowledge", "understanding", "
 const blankCampaign = loadCampaign();
 
 const pieceName = (id: PieceId) => id === "looser" ? "Looser" : id[0].toUpperCase() + id.slice(1);
+
+const pieceMaxHp = (pieceId: PieceId, campaign: GameState["campaign"]) =>
+  PIECE_STATS[pieceId].maxHp + maxHpBonus(campaign, pieceId);
 
 const nextActionEffect = (type: NonNullable<GameState["actionEffect"]>["type"], pos: Pos, text?: string) => ({
   id: actionEffectId += 1,
@@ -76,19 +82,22 @@ const makeState = (level: Level, helper: HelperId, campaign = loadCampaign()): G
   phase: "player",
   helper,
   pieces: {
-    protector: { id: "protector", pos: level.startPositions.protector, alive: true, hp: PIECE_STATS.protector.maxHp, maxHp: PIECE_STATS.protector.maxHp, moved: false, acted: false },
-    destroyer: { id: "destroyer", pos: level.startPositions.destroyer, alive: true, hp: PIECE_STATS.destroyer.maxHp, maxHp: PIECE_STATS.destroyer.maxHp, moved: false, acted: false },
-    binder: { id: "binder", pos: level.startPositions.binder, alive: true, hp: PIECE_STATS.binder.maxHp, maxHp: PIECE_STATS.binder.maxHp, moved: false, acted: false, locked: false },
-    looser: { id: "looser", pos: level.startPositions.looser, alive: true, hp: PIECE_STATS.looser.maxHp, maxHp: PIECE_STATS.looser.maxHp, moved: false, acted: false }
+    protector: { id: "protector", pos: level.startPositions.protector, alive: true, hp: pieceMaxHp("protector", campaign), maxHp: pieceMaxHp("protector", campaign), moved: false, acted: false },
+    destroyer: { id: "destroyer", pos: level.startPositions.destroyer, alive: true, hp: pieceMaxHp("destroyer", campaign), maxHp: pieceMaxHp("destroyer", campaign), moved: false, acted: false },
+    binder: { id: "binder", pos: level.startPositions.binder, alive: true, hp: pieceMaxHp("binder", campaign), maxHp: pieceMaxHp("binder", campaign), moved: false, acted: false, locked: false },
+    looser: { id: "looser", pos: level.startPositions.looser, alive: true, hp: pieceMaxHp("looser", campaign), maxHp: pieceMaxHp("looser", campaign), moved: false, acted: false }
   },
   moveTrails: {},
   threats: [],
   cornerstones: [],
   preparedSoil: [],
   templeHits: 0,
-  destroyerCharges: 3,
+  destroyerCharges: destroyerChargeLimit(campaign),
+  firstTryVersePasses: 0,
+  looserSecondChanceUsed: false,
   avoidableDestroysAtLevelStart: campaign.avoidableDestroys,
   campaign,
+  oilAward: undefined,
   mode: "now",
   selectedPieceId: null,
   selectedSquare: TEMPLE,
@@ -96,6 +105,23 @@ const makeState = (level: Level, helper: HelperId, campaign = loadCampaign()): G
   activityLog: [logEntry(1, "Keep the lamp lit. Get light to the houses.")],
   destroyerAutonomous: campaign.avoidableDestroys >= 3
 });
+
+const oilAwardFor = (state: GameState, avoidableDelta: number): OilAward => {
+  const housesLit = HOUSES.filter((house) => isLit(house, state)).length;
+  const piecesAlive = Object.values(state.pieces).filter((piece) => piece.alive).length;
+  const lines = [
+    { label: "Level completed", amount: state.phase === "won" ? 10 : 0 },
+    { label: "Houses lit", amount: housesLit * 4 },
+    { label: "Lamp never hit", amount: state.phase === "won" && state.templeHits === 0 ? 6 : 0 },
+    { label: "Pieces still alive", amount: state.phase === "won" ? piecesAlive * 2 : 0 },
+    { label: "First-try verse checks", amount: state.firstTryVersePasses * 3, prominent: true },
+    {
+      label: "Without Malice",
+      amount: state.phase === "won" && avoidableDelta === 0 && hasSkill(state.campaign, "destroyer-without-malice") ? 10 : 0
+    }
+  ];
+  return { lines, total: lines.reduce((sum, line) => sum + line.amount, 0) };
+};
 
 const destroyerBlockedMessage = (state: GameState) => {
   if (state.pieces.destroyer.acted) return "Destroyer already acted this turn.";
@@ -147,13 +173,14 @@ const resolveDestroyerAttack = (
     return;
   }
 
-  const damage = PIECE_STATS.destroyer.offense ?? 0;
+  const damage = (PIECE_STATS.destroyer.offense ?? 0) + attackBonus(state.campaign, "destroyer");
   const hp = target.hp - damage;
   const removed = hp <= 0;
   const actionEffect = nextActionEffect(removed ? "destroy" : "damage", target.pos, `-${damage}`);
   set({
     campaign,
     combatCheck: undefined,
+    firstTryVersePasses: state.firstTryVersePasses + (state.combatCheck?.mistakesMade === 0 ? 1 : 0),
     threats: removed
       ? state.threats.filter((t) => t.id !== threatId)
       : state.threats.map((t) => t.id === threatId ? { ...t, hp } : t),
@@ -176,6 +203,30 @@ export const useGame = create<GameStore>((set, get) => ({
   startLevel: (levelId, helper) => {
     const level = levels.find((l) => l.id === levelId) ?? levels[0];
     set(makeState(level, helper));
+  },
+  purchaseSkill: (skillId) => {
+    const state = get();
+    const skill = skillById(skillId);
+    if (!skill || !skillAvailable(state.campaign, skill)) return;
+    if (!globalThis.confirm(`Spend ${skill.cost} Oil on ${skill.name}? This choice is permanent.`)) return;
+    const campaign = {
+      ...state.campaign,
+      oil: state.campaign.oil - skill.cost,
+      purchasedSkills: [...state.campaign.purchasedSkills, skill.id]
+    };
+    saveCampaign(campaign);
+    set({
+      campaign,
+      pieces: Object.fromEntries(
+        Object.entries(state.pieces).map(([id, piece]) => {
+          const pieceId = id as PieceId;
+          const maxHp = pieceMaxHp(pieceId, campaign);
+          return [id, { ...piece, maxHp, hp: Math.min(maxHp, piece.hp + Math.max(0, maxHp - piece.maxHp)) }];
+        })
+      ) as GameState["pieces"],
+      destroyerCharges: Math.max(state.destroyerCharges, destroyerChargeLimit(campaign)),
+      ...withLog(state, `${skill.name} purchased for ${pieceName(skill.piece)}.`, "success")
+    });
   },
   selectPiece: (pieceId) => set({ selectedPieceId: pieceId }),
   selectSquare: (pos) => set({ selectedSquare: pos }),
@@ -202,11 +253,14 @@ export const useGame = create<GameStore>((set, get) => ({
       set(withLog(state, binder.locked ? "Binder is already locked." : "Binder cannot lock again this turn."));
       return;
     }
-    const actionEffect = nextActionEffect("block", binder.pos);
+    const lockPos = hasSkill(state.campaign, "binder-long-arms") && dist(state.selectedSquare, binder.pos) <= 1
+      ? state.selectedSquare
+      : binder.pos;
+    const actionEffect = nextActionEffect("block", lockPos);
     set({
-      pieces: { ...state.pieces, binder: { ...binder, locked: true, acted: true } },
+      pieces: { ...state.pieces, binder: { ...binder, pos: lockPos, locked: true, acted: true } },
       actionEffect,
-      ...withLog(state, `Binder locked ${keyOf(binder.pos)} to hold an attack lane.`)
+      ...withLog(state, `Binder locked ${keyOf(lockPos)} to hold an attack lane.`)
     });
     clearActionEffectSoon(actionEffect.id, set, get);
   },
@@ -217,13 +271,13 @@ export const useGame = create<GameStore>((set, get) => ({
       set(withLog(state, "Select Binder before using Unlock."));
       return;
     }
-    if (state.phase !== "player" || binder.acted || !binder.locked) {
+    if (state.phase !== "player" || (binder.acted && !hasSkill(state.campaign, "binder-keys-of-the-kingdom")) || !binder.locked) {
       set(withLog(state, !binder.locked ? "Binder has no lock to release." : "Binder cannot unlock again this turn."));
       return;
     }
     const actionEffect = nextActionEffect("release", binder.pos);
     set({
-      pieces: { ...state.pieces, binder: { ...binder, locked: false, acted: true } },
+      pieces: { ...state.pieces, binder: { ...binder, locked: false, acted: hasSkill(state.campaign, "binder-keys-of-the-kingdom") ? binder.acted : true } },
       actionEffect,
       ...withLog(state, `Binder unlocked ${keyOf(binder.pos)}.`)
     });
@@ -242,7 +296,15 @@ export const useGame = create<GameStore>((set, get) => ({
     }
     const locked = lockedSquares(state)[0];
     const actionEffect = nextActionEffect("release", locked);
+    const unravelTarget = hasSkill(state.campaign, "looser-the-one-who-unravels")
+      ? state.threats.find((threat) => dist(threat.pos, looser.pos) <= 1)
+      : undefined;
     set({
+      threats: unravelTarget
+        ? state.threats
+            .map((threat) => threat.id === unravelTarget.id ? { ...threat, hp: threat.hp - 2 } : threat)
+            .filter((threat) => threat.hp > 0)
+        : state.threats,
       pieces: {
         ...state.pieces,
         binder: samePos(state.pieces.binder.pos, locked)
@@ -302,7 +364,7 @@ export const useGame = create<GameStore>((set, get) => ({
       set(withLog(state, destroyerBlockedMessage(state)));
       return;
     }
-    set({ combatCheck: createCombatCheck("destroyer", target) });
+    set({ combatCheck: createCombatCheck("destroyer", target, state.campaign) });
   },
   submitVerseGuess: (guess) => {
     const state = get();
@@ -368,9 +430,16 @@ export const useGame = create<GameStore>((set, get) => ({
         ...campaign,
         highestUnlockedLevel: Math.max(campaign.highestUnlockedLevel, Math.min(next.level.id + 1, levels.length))
       };
-      saveCampaign(campaign);
       add("YESOD and MALKUT are aligned. The level is complete.", "success");
     }
+    if (["won", "lost", "failed"].includes(next.phase)) {
+      const award = oilAwardFor({ ...next, campaign }, campaign.avoidableDestroys - state.avoidableDestroysAtLevelStart);
+      campaign = { ...campaign, oil: campaign.oil + award.total };
+      saveCampaign(campaign);
+      set({ ...next, campaign, oilAward: award, selectedPieceId: null, activityLog: log.slice(0, 10), combatCheck: undefined });
+      return;
+    }
+    saveCampaign(campaign);
     set({ ...next, campaign, selectedPieceId: null, activityLog: log.slice(0, 10), combatCheck: undefined });
   },
   toggleMode: () => set({ mode: get().mode === "now" ? "coming" : "now" }),

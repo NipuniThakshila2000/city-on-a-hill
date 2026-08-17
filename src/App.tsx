@@ -9,13 +9,14 @@ import Board from "./ui/Board";
 import DemoMode from "./ui/DemoMode";
 import LevelEnd from "./ui/LevelEnd";
 import MainMenu from "./ui/MainMenu";
+import ServantsScreen from "./ui/ServantsScreen";
 import TutorialPanel from "./ui/TutorialPanel";
 import TurnBar from "./ui/TurnBar";
 import VerseCheckModal from "./ui/VerseCheckModal";
 import styles from "./App.module.css";
 
 export default function App() {
-  const [screen, setScreen] = useState<"menu" | "game" | "demo">("menu");
+  const [screen, setScreen] = useState<"menu" | "game" | "demo" | "servants">("menu");
   const [showTutorial, setShowTutorial] = useState(false);
   const state = useGame();
   const warningNotice = useGame((store) => store.warningNotice);
@@ -65,6 +66,7 @@ export default function App() {
             setShowTutorial(false);
             setScreen("demo");
           }}
+          onServants={() => setScreen("servants")}
         />
         {showTutorial && (
           <TutorialPanel
@@ -79,6 +81,10 @@ export default function App() {
     );
   }
 
+  if (screen === "servants") {
+    return <ServantsScreen onBack={() => setScreen("menu")} />;
+  }
+
   return (
     <main
       className={styles.app}
@@ -91,6 +97,7 @@ export default function App() {
     >
       <nav className={styles.levels} aria-label="Levels">
         <button onClick={() => setScreen("menu")}>Menu</button>
+        <button onClick={() => setScreen("servants")}>Servants</button>
         <button onClick={() => setShowTutorial(true)}>Help</button>
         {levels.map((level) => (
           <button key={level.id} onClick={() => state.startLevel(level.id, state.helper)} disabled={level.id > state.campaign.highestUnlockedLevel}>

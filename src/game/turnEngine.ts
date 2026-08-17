@@ -1,7 +1,8 @@
 import { HOUSES } from "./constants";
 import { makeThreat, THREAT_STATS } from "./combat";
-import { samePos } from "./distance";
+import { dist, samePos } from "./distance";
 import { isLit } from "./light";
+import { hasSkill } from "./skills";
 import { stepThreats } from "./threatAI";
 import { tickCornerstones } from "./building";
 import { autoFireTarget, shouldAutoFire } from "./destroyer";
@@ -34,27 +35,40 @@ export const enemyPhase = (state: GameState): GameState => {
     threats: next.threats,
     locked: lockedSquares(next),
     protector: next.pieces.protector.pos,
-    protectorCoversDiagonals: next.helper === "might",
+    protectorCoversDiagonals: next.helper === "might" || hasSkill(next.campaign, "protector-under-his-wings"),
     looser: next.pieces.looser.alive ? next.pieces.looser.pos : undefined,
     cornerstones: next.cornerstones.filter((c) => c.complete).map((c) => c.pos)
   });
 
   const pieces = { ...next.pieces };
+  let looserSecondChanceUsed = next.looserSecondChanceUsed;
   for (const hit of result.pieceHits) {
     const piece = pieces[hit.pieceId];
+    if (piece.id === "binder" && piece.locked && hasSkill(next.campaign, "binder-immovable")) continue;
     const hp = Math.max(0, piece.hp - hit.damage);
-    pieces[hit.pieceId] = { ...piece, hp, alive: hp > 0 };
+    const rescuedLooser =
+      piece.id === "looser" &&
+      hp <= 0 &&
+      !looserSecondChanceUsed &&
+      hasSkill(next.campaign, "looser-delivered-from-darkness");
+    if (rescuedLooser) looserSecondChanceUsed = true;
+    pieces[hit.pieceId] = { ...piece, hp: rescuedLooser ? 1 : hp, alive: rescuedLooser || hp > 0 };
     next = {
       ...next,
       message: `${THREAT_STATS[next.threats.find((t) => t.id === hit.threatId)?.tier ?? 1].name} attacked ${hit.pieceId}.`
     };
   }
 
+  const threats = hasSkill(next.campaign, "protector-ten-thousand")
+    ? result.threats
+        .map((threat) => dist(threat.pos, next.pieces.protector.pos) <= 1 ? { ...threat, hp: threat.hp - 1 } : threat)
+        .filter((threat) => threat.hp > 0)
+    : result.threats;
   const templeHits = next.templeHits + result.templeHits;
   if (templeHits >= 3) {
-    return { ...next, pieces, threats: result.threats, templeHits, phase: "lost" };
+    return { ...next, pieces, looserSecondChanceUsed, threats, templeHits, phase: "lost" };
   }
-  return { ...next, pieces, threats: result.threats, templeHits };
+  return { ...next, pieces, looserSecondChanceUsed, threats, templeHits };
 };
 
 export const upkeepPhase = (state: GameState): GameState => {

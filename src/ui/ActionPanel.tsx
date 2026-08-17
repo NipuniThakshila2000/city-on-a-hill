@@ -1,4 +1,5 @@
 import { PIECE_STATS } from "../game/combat";
+import { attackBonus } from "../game/skills";
 import { keyOf } from "../game/distance";
 import { canBuild, canRelease } from "../game/rules";
 import { useGame } from "../store/useGame";
@@ -27,13 +28,18 @@ export default function ActionPanel({ tutorialActions = [] }: ActionPanelProps) 
   return (
     <aside className={styles.panel} aria-label="Piece actions">
       <h2>{selected ? names[selected.id] : "Level objective"}</h2>
-      {!selected && <p>Light C7, D7, and E7 before the turn limit while keeping the lamp under 3 hits.</p>}
+      {!selected && (
+        <>
+          <div className={styles.oilLine}><span />Oil <strong>{state.campaign.oil}</strong></div>
+          <p>Light C7, D7, and E7 before the turn limit while keeping the lamp under 3 hits.</p>
+        </>
+      )}
       {selected && stats && (
         <>
           <p>{keyOf(selected.pos)} {selected.moved ? "moved" : "ready"} {selected.acted ? "acted" : ""}</p>
           <dl className={styles.stats}>
             <div><dt>HP</dt><dd>{selected.hp} / {selected.maxHp}</dd></div>
-            {stats.actionLabel && <div><dt>{stats.actionLabel}</dt><dd>{stats.offense}</dd></div>}
+            {stats.actionLabel && <div><dt>{stats.actionLabel}</dt><dd>{(stats.offense ?? 0) + attackBonus(state.campaign, selected.id)}</dd></div>}
             <div><dt>Defense</dt><dd>{stats.defense}</dd></div>
             <div><dt>Passage</dt><dd>{stats.passage}</dd></div>
           </dl>

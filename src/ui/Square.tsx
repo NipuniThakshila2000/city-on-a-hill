@@ -3,6 +3,7 @@ import { dist, keyOf, samePos } from "../game/distance";
 import { isLit } from "../game/light";
 import { canBuild, legalMoves, lockedSquares } from "../game/rules";
 import { protectorCoveredSquares } from "../game/threatAI";
+import { hasSkill } from "../game/skills";
 import type { Pos, ViewMode } from "../game/types";
 import { useGame } from "../store/useGame";
 import houseSrc from "../assets/structures/house.webp";
@@ -31,7 +32,10 @@ export default function Square({ pos, tutorialSquares = [], tutorialPrimarySquar
   const cornerstone = state.cornerstones.find((c) => samePos(c.pos, pos));
   const selected = state.selectedPieceId ? state.pieces[state.selectedPieceId] : null;
   const legal = interactive && selected ? legalMoves(state, selected.id).some((p) => samePos(p, pos)) : false;
-  const forecastWindow = state.helper === "counsel" ? state.level.forecastWindow + 1 : state.level.forecastWindow;
+  const forecastWindow =
+    state.level.forecastWindow +
+    (state.helper === "counsel" ? 1 : 0) +
+    (hasSkill(state.campaign, "destroyer-the-tower") ? 1 : 0);
   const forecast = state.level.spawns.filter(
     (s) => s.turn > state.turn && s.turn <= state.turn + forecastWindow && samePos(s.pos, pos)
   );
@@ -41,7 +45,10 @@ export default function Square({ pos, tutorialSquares = [], tutorialPrimarySquar
   const showSoil = state.helper === "knowledge" || state.preparedSoil.includes(keyOf(pos));
   const soil = state.level.soil[keyOf(pos)];
   const actionEffect = state.actionEffect && samePos(state.actionEffect.pos, pos) ? state.actionEffect : null;
-  const protectedSquare = protectorCoveredSquares(state.pieces.protector.pos, state.helper === "might").some((p) =>
+  const protectedSquare = protectorCoveredSquares(
+    state.pieces.protector.pos,
+    state.helper === "might" || hasSkill(state.campaign, "protector-under-his-wings")
+  ).some((p) =>
     samePos(p, pos)
   );
   const destroyTarget =

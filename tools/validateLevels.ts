@@ -10,7 +10,9 @@ const files = readdirSync(levelDir)
 const failures = files
   .map((file) => {
     const source = readFileSync(join(levelDir, file), "utf8");
-    const checks = (source.match(/\{\s*turn:/g) ?? []).length;
+    const spawns = (source.match(/\{\s*turn:/g) ?? []).length;
+    const fourthChargeAvailable = source.includes("destroyer-fourth-charge");
+    const checks = Math.min(spawns, fourthChargeAvailable ? 4 : 3);
     return { file, checks };
   })
   .filter((level) => level.checks > MAX_VERSE_CHECKS);

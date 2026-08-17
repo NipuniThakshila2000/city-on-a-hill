@@ -1,5 +1,6 @@
 import { BOARD_SIZE, HOUSES, TEMPLE, TIE_BREAK } from "./constants";
 import { addPos, dist, inBounds, samePos } from "./distance";
+import { hasSkill } from "./skills";
 import type { GameState, Piece, Pos } from "./types";
 
 export const occupiedByPiece = (state: GameState, pos: Pos, except?: string) =>
@@ -24,13 +25,19 @@ export const isBlockedForPiece = (state: GameState, pos: Pos, pieceId: string) =
   occupiedByThreat(state, pos) ||
   state.cornerstones.some((c) => samePos(c.pos, pos));
 
-const reachableLooser = (state: GameState, piece: Piece) => {
+const adjacentToLooser = (state: GameState, piece: Piece) =>
+  piece.id !== "looser" &&
+  state.pieces.looser.alive &&
+  hasSkill(state.campaign, "looser-loosed-on-earth") &&
+  dist(state.pieces.looser.pos, piece.pos) <= 1;
+
+const reachableWithin = (state: GameState, piece: Piece, steps: number, directions: Pos[]) => {
   const seen = new Set([`${piece.pos.x},${piece.pos.y}`]);
   let frontier = [piece.pos];
-  for (let step = 0; step < 3; step += 1) {
+  for (let step = 0; step < steps; step += 1) {
     const next: Pos[] = [];
     for (const p of frontier) {
-      for (const d of TIE_BREAK) {
+      for (const d of directions) {
         const n = addPos(p, d);
         const key = `${n.x},${n.y}`;
         if (seen.has(key) || isBlockedForPiece(state, n, piece.id)) continue;
@@ -60,7 +67,23 @@ export const legalMoves = (state: GameState, pieceId: keyof GameState["pieces"])
     }
     return moves;
   }
-  if (piece.id === "looser") return reachableLooser(state, piece).filter((p) => !samePos(p, piece.pos));
+  if (piece.id === "looser") {
+    const steps = hasSkill(state.campaign, "looser-swift-waters") ? 4 : 3;
+    return reachableWithin(state, piece, steps, TIE_BREAK).filter((p) => !samePos(p, piece.pos));
+  }
+  if (piece.id === "protector" && hasSkill(state.campaign, "protector-feet-shod")) {
+    return reachableWithin(
+      state,
+      piece,
+      adjacentToLooser(state, piece) ? 3 : 2,
+      [
+        { x: 0, y: -1 },
+        { x: 1, y: 0 },
+        { x: 0, y: 1 },
+        { x: -1, y: 0 }
+      ]
+    ).filter((p) => !samePos(p, piece.pos));
+  }
   return [
     { x: 0, y: -1 },
     { x: 1, y: 0 },

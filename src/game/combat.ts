@@ -1,4 +1,6 @@
 import type { CombatCheck, HelperId, PieceId, Threat, ThreatTier } from "./types";
+import type { CampaignSave } from "./types";
+import { attackBonus } from "./skills";
 
 export type PieceStat = {
   maxHp: number;
@@ -76,11 +78,12 @@ const deterministicIndex = (seed: string, length: number) =>
 
 export const createCombatCheck = (
   attackerId: Exclude<PieceId, "protector">,
-  defender: Threat
+  defender: Threat,
+  campaign?: CampaignSave
 ): CombatCheck => {
   const attacker = PIECE_STATS[attackerId];
   const defenderStats = THREAT_STATS[defender.tier];
-  const offense = attacker.offense ?? 0;
+  const offense = (attacker.offense ?? 0) + (campaign ? attackBonus(campaign, attackerId) : 0);
   const difficulty = checkDifficulty(offense, defenderStats.defense);
   const lines = PASSAGE_LINES[attackerId];
   const line = lines[deterministicIndex(`${attackerId}:${defender.id}`, lines.length)];

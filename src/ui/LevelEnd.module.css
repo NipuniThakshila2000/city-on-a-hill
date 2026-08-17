@@ -40,6 +40,52 @@
   color: var(--c-lamp);
 }
 
+.oilAward {
+  display: grid;
+  gap: 7px;
+  margin: 12px 0 14px;
+  padding: 12px;
+  border: 1px solid rgba(238, 206, 105, 0.34);
+  background: rgba(8, 8, 8, 0.32);
+}
+
+.oilAward h3 {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  justify-content: space-between;
+  margin: 0 0 4px;
+  color: var(--c-lamp);
+}
+
+.oilAward h3 span {
+  width: 15px;
+  height: 23px;
+  border: 2px solid var(--c-lamp);
+  border-radius: 7px 7px 4px 4px;
+  background:
+    linear-gradient(180deg, transparent 0 40%, rgba(219, 144, 45, 0.92) 41% 100%),
+    rgba(255, 255, 255, 0.08);
+  transform: rotate(8deg);
+}
+
+.oilAward div {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  border-bottom: 1px solid rgba(214, 196, 136, 0.16);
+  padding-bottom: 5px;
+  color: var(--c-grey-2);
+}
+
+.oilAward .prominent {
+  color: var(--c-lamp);
+  font-size: 16px;
+  background: rgba(238, 206, 105, 0.08);
+  border: 1px solid rgba(238, 206, 105, 0.24);
+  padding: 7px;
+}
+
 .panel button {
   display: block;
   width: 100%;

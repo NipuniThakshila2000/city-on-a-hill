@@ -2,7 +2,7 @@ import type { Level } from "./schema";
 
 export const level02: Level = {
   id: 2,
-  turns: 9,
+  turns: 8,
   forecastWindow: 2,
   startPositions: {
     destroyer: { x: 2, y: 2 },

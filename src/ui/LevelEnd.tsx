@@ -14,6 +14,17 @@ export default function LevelEnd() {
       <div className={`${styles.panel} ${state.phase === "won" ? styles.won : ""}`}>
         {state.phase === "won" && <div className={styles.burst} aria-hidden="true" />}
         <h2>{state.phase === "won" ? "Level complete" : state.phase === "lost" ? "The lamp went out" : "The houses stayed dark"}</h2>
+        {state.oilAward && (
+          <section className={styles.oilAward} aria-label="Oil earned">
+            <h3><span />Oil earned <strong>{state.oilAward.total}</strong></h3>
+            {state.oilAward.lines.map((line) => (
+              <div className={line.prominent ? styles.prominent : ""} key={line.label}>
+                <span>{line.label}</span>
+                <strong>{line.amount}</strong>
+              </div>
+            ))}
+          </section>
+        )}
         <button onClick={() => state.startLevel(state.level.id, state.helper)}>Retry</button>
         {state.phase === "won" && state.level.id < levels.length && (
           <button onClick={() => state.startLevel(next, state.helper)}>Next level</button>

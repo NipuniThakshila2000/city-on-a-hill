@@ -11,6 +11,31 @@ export type HelperId =
 export type Phase = "player" | "enemy" | "upkeep" | "won" | "lost" | "failed";
 export type ViewMode = "now" | "coming";
 export type Soil = "good" | "poor";
+export type SkillId =
+  | "protector-shield-of-faith"
+  | "protector-belt-of-truth"
+  | "protector-breastplate-of-righteousness"
+  | "protector-feet-shod"
+  | "protector-under-his-wings"
+  | "protector-ten-thousand"
+  | "destroyer-the-tower"
+  | "destroyer-wings-as-a-bat"
+  | "destroyer-seeing-from-far-off"
+  | "destroyer-set-at-his-right-hand"
+  | "destroyer-fourth-charge"
+  | "destroyer-without-malice"
+  | "binder-solid-rock"
+  | "binder-long-arms"
+  | "binder-whatsoever-thou-shalt-bind"
+  | "binder-keys-of-the-kingdom"
+  | "binder-bound-in-heaven"
+  | "binder-immovable"
+  | "looser-shoal"
+  | "looser-swift-waters"
+  | "looser-the-one-who-unravels"
+  | "looser-delivered-from-darkness"
+  | "looser-translated-into-the-kingdom"
+  | "looser-loosed-on-earth";
 export type Piece = {
   id: PieceId;
   pos: Pos;
@@ -65,9 +90,20 @@ export type Level = {
   soil: Record<string, Soil>;
 };
 export type CampaignSave = {
-  version: 1;
+  version: 2;
   avoidableDestroys: number;
   highestUnlockedLevel: number;
+  oil: number;
+  purchasedSkills: SkillId[];
+};
+export type OilAwardLine = {
+  label: string;
+  amount: number;
+  prominent?: boolean;
+};
+export type OilAward = {
+  total: number;
+  lines: OilAwardLine[];
 };
 export type GameState = {
   level: Level;
@@ -81,8 +117,11 @@ export type GameState = {
   preparedSoil: string[];
   templeHits: number;
   destroyerCharges: number;
+  firstTryVersePasses: number;
+  looserSecondChanceUsed: boolean;
   avoidableDestroysAtLevelStart: number;
   campaign: CampaignSave;
+  oilAward?: OilAward;
   mode: ViewMode;
   selectedPieceId: PieceId | null;
   selectedSquare: Pos;

@@ -5,9 +5,11 @@ import { canBuild } from "./rules";
 import type { CampaignSave, GameState, HelperId } from "./types";
 
 const campaign: CampaignSave = {
-  version: 1,
+  version: 2,
   avoidableDestroys: 0,
-  highestUnlockedLevel: 1
+  highestUnlockedLevel: 1,
+  oil: 0,
+  purchasedSkills: []
 };
 
 const stateAtD6 = (overrides: Partial<GameState> = {}): GameState => {
@@ -62,6 +64,8 @@ const stateAtD6 = (overrides: Partial<GameState> = {}): GameState => {
     preparedSoil: ["D6"],
     templeHits: 0,
     destroyerCharges: 3,
+    firstTryVersePasses: 0,
+    looserSecondChanceUsed: false,
     avoidableDestroysAtLevelStart: 0,
     campaign,
     mode: "now",

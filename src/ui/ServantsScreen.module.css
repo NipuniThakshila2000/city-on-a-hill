@@ -1,0 +1,281 @@
+.screen {
+  min-height: 100vh;
+  padding: 18px 22px 30px;
+  color: #e7dfcf;
+  background:
+    radial-gradient(circle at 50% 16%, rgba(231, 217, 170, 0.14), transparent 18%),
+    linear-gradient(90deg, rgba(0, 0, 0, 0.72), transparent 18%, transparent 82%, rgba(0, 0, 0, 0.72)),
+    linear-gradient(180deg, rgba(52, 51, 44, 0.92), rgba(25, 22, 18, 0.98));
+  overflow-x: hidden;
+}
+
+.screen::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  background:
+    repeating-linear-gradient(0deg, transparent, transparent 5px, rgba(255, 255, 255, 0.025) 6px),
+    radial-gradient(circle at 20% 80%, rgba(136, 62, 47, 0.28), transparent 24%),
+    radial-gradient(circle at 78% 78%, rgba(54, 93, 113, 0.28), transparent 24%);
+  mix-blend-mode: screen;
+  opacity: 0.72;
+}
+
+.header {
+  position: relative;
+  z-index: 1;
+  max-width: 1280px;
+  margin: 0 auto 26px;
+  display: grid;
+  grid-template-columns: 88px 1fr 110px;
+  gap: 16px;
+  align-items: center;
+}
+
+.header button {
+  min-height: 34px;
+  border: 1px solid rgba(231, 223, 207, 0.35);
+  background: rgba(8, 8, 8, 0.46);
+  color: #e7dfcf;
+  text-transform: uppercase;
+}
+
+.header nav {
+  display: flex;
+  justify-content: center;
+  gap: clamp(12px, 3vw, 32px);
+  text-transform: uppercase;
+  font-size: 12px;
+  letter-spacing: 0;
+  color: rgba(231, 223, 207, 0.54);
+}
+
+.header nav strong {
+  color: #f4e3a0;
+  border-bottom: 2px solid #f4e3a0;
+  padding-bottom: 5px;
+}
+
+.oilBadge {
+  justify-self: end;
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  color: #f4e3a0;
+}
+
+.oilIcon {
+  width: 18px;
+  height: 28px;
+  display: inline-block;
+  border: 2px solid rgba(244, 227, 160, 0.88);
+  border-radius: 8px 8px 5px 5px;
+  background:
+    linear-gradient(180deg, transparent 0 38%, rgba(244, 177, 69, 0.9) 39% 100%),
+    rgba(255, 255, 255, 0.08);
+  box-shadow: inset 0 0 0 2px rgba(0, 0, 0, 0.38), 0 0 16px rgba(244, 177, 69, 0.26);
+  transform: rotate(8deg);
+}
+
+.oilIcon::before {
+  content: "";
+  display: block;
+  width: 8px;
+  height: 5px;
+  margin: -7px auto 0;
+  border: 1px solid rgba(244, 227, 160, 0.82);
+  background: rgba(16, 15, 13, 0.86);
+}
+
+.trees {
+  position: relative;
+  z-index: 1;
+  max-width: 1280px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: clamp(16px, 3vw, 34px);
+}
+
+.tree {
+  --tree-color: #8b6a2d;
+  position: relative;
+  min-height: 700px;
+  display: grid;
+  grid-template-rows: 110px auto auto 1fr 1fr 1fr;
+  align-items: start;
+  justify-items: center;
+  padding: 12px 8px;
+}
+
+.tree::before {
+  content: "";
+  position: absolute;
+  inset: 0 18% 0;
+  background: linear-gradient(180deg, transparent, color-mix(in srgb, var(--tree-color), transparent 32%), transparent);
+  clip-path: polygon(50% 0, 68% 12%, 62% 100%, 38% 100%, 32% 12%);
+  opacity: 0.36;
+}
+
+.portraitWrap {
+  position: relative;
+  width: 96px;
+  height: 96px;
+  border-radius: 50%;
+  overflow: hidden;
+  border: 2px solid color-mix(in srgb, var(--tree-color), #fff 24%);
+  box-shadow: 0 0 26px color-mix(in srgb, var(--tree-color), transparent 42%);
+}
+
+.portraitWrap img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center 26%;
+  filter: saturate(0.84) brightness(0.82);
+}
+
+.passage {
+  position: relative;
+  margin: 4px 0 0;
+  color: rgba(231, 223, 207, 0.58);
+  font-size: 11px;
+  text-transform: uppercase;
+}
+
+.tree h2 {
+  position: relative;
+  margin: 2px 0 10px;
+  color: #f4e3a0;
+  font-size: 18px;
+  text-transform: uppercase;
+}
+
+.lattice {
+  position: absolute;
+  top: 178px;
+  bottom: 18px;
+  left: 20%;
+  right: 20%;
+  border: 1px solid rgba(231, 223, 207, 0.48);
+  clip-path: polygon(50% 0, 100% 14%, 100% 86%, 50% 100%, 0 86%, 0 14%);
+  opacity: 0.78;
+}
+
+.lattice span {
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(32deg, transparent 49.5%, rgba(231, 223, 207, 0.54) 50%, transparent 50.5%),
+    linear-gradient(-32deg, transparent 49.5%, rgba(231, 223, 207, 0.54) 50%, transparent 50.5%);
+}
+
+.tier {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 8px;
+  margin-top: 36px;
+}
+
+.skill {
+  min-height: 118px;
+  padding: 9px 7px;
+  border: 1px solid rgba(231, 223, 207, 0.42);
+  background: rgba(17, 15, 13, 0.76);
+  color: #e7dfcf;
+  text-align: left;
+  box-shadow: 0 0 0 2px rgba(0, 0, 0, 0.24);
+}
+
+.skill span {
+  display: inline-grid;
+  place-items: center;
+  width: 20px;
+  height: 20px;
+  margin-bottom: 5px;
+  border: 1px solid color-mix(in srgb, var(--tree-color), #fff 28%);
+  color: #f4e3a0;
+  text-transform: uppercase;
+}
+
+.skill strong,
+.skill small,
+.skill em {
+  display: block;
+}
+
+.skill strong {
+  font-size: 12px;
+  line-height: 1.2;
+}
+
+.skill small {
+  margin-top: 5px;
+  color: rgba(231, 223, 207, 0.68);
+  line-height: 1.25;
+}
+
+.skill em {
+  margin-top: 7px;
+  color: #f4e3a0;
+  font-style: normal;
+  font-size: 11px;
+}
+
+.skill:not(:disabled):hover {
+  border-color: #f4e3a0;
+  box-shadow: 0 0 18px color-mix(in srgb, var(--tree-color), transparent 38%);
+}
+
+.bought {
+  border-color: #f4e3a0;
+  background: color-mix(in srgb, var(--tree-color), rgba(17, 15, 13, 0.72) 58%);
+}
+
+.closed {
+  color: rgba(231, 223, 207, 0.34);
+  background:
+    linear-gradient(145deg, transparent 47%, rgba(231, 223, 207, 0.42) 48%, rgba(231, 223, 207, 0.42) 52%, transparent 53%),
+    rgba(10, 10, 10, 0.72);
+}
+
+.skill:disabled:not(.closed):not(.bought) {
+  opacity: 0.58;
+}
+
+@media (max-width: 960px) {
+  .trees {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 560px) {
+  .screen {
+    padding: 14px 10px 22px;
+  }
+
+  .header {
+    grid-template-columns: 1fr auto;
+  }
+
+  .header nav {
+    grid-column: 1 / -1;
+    grid-row: 2;
+    order: 3;
+    overflow-x: auto;
+    justify-content: start;
+    padding-bottom: 6px;
+  }
+
+  .trees {
+    grid-template-columns: 1fr;
+  }
+
+  .tree {
+    min-height: 640px;
+  }
+}

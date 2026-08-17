@@ -25,6 +25,26 @@
   margin: 12px 0;
 }
 
+.oilLine {
+  display: inline-flex;
+  gap: 8px;
+  align-items: center;
+  margin: 0 0 12px;
+  color: var(--c-lamp);
+}
+
+.oilLine span {
+  width: 15px;
+  height: 23px;
+  border: 2px solid var(--c-lamp);
+  border-radius: 7px 7px 4px 4px;
+  background:
+    linear-gradient(180deg, transparent 0 40%, rgba(219, 144, 45, 0.92) 41% 100%),
+    rgba(255, 255, 255, 0.08);
+  box-shadow: 0 0 12px rgba(238, 206, 105, 0.26);
+  transform: rotate(8deg);
+}
+
 .stats div {
   display: grid;
   grid-template-columns: 84px 1fr;
