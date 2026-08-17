@@ -41,6 +41,15 @@
   text-transform: uppercase;
 }
 
+.header h1 {
+  margin: 0;
+  text-align: center;
+  color: #f4e3a0;
+  font-size: 16px;
+  text-transform: uppercase;
+  letter-spacing: 0;
+}
+
 .header nav {
   display: flex;
   justify-content: center;
@@ -262,13 +271,10 @@
     grid-template-columns: 1fr auto;
   }
 
-  .header nav {
+  .header h1 {
     grid-column: 1 / -1;
     grid-row: 2;
-    order: 3;
-    overflow-x: auto;
-    justify-content: start;
-    padding-bottom: 6px;
+    text-align: left;
   }
 
   .trees {

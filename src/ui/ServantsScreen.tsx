@@ -27,13 +27,7 @@ export default function ServantsScreen({ onBack }: ServantsScreenProps) {
     <main className={styles.screen}>
       <header className={styles.header}>
         <button onClick={onBack}>Back</button>
-        <nav aria-label="Game tabs">
-          <span>Inventory</span>
-          <strong>Skills</strong>
-          <span>Map</span>
-          <span>Quests</span>
-          <span>Notebook</span>
-        </nav>
+        <h1>Skills</h1>
         <div className={styles.oilBadge} aria-label={`${campaign.oil} Oil`}>
           <span className={styles.oilIcon} />
           <strong>{campaign.oil}</strong>
