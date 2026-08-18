@@ -48,12 +48,51 @@ export type Piece = {
 };
 export type MoveTrail = { pieceId: PieceId; from: Pos; to: Pos; turn: number };
 export type ThreatTier = 1 | 2 | 3 | 4;
-export type Threat = { id: string; pos: Pos; tier: ThreatTier; hp: number; maxHp: number };
+export type DarknessBehaviour = "direct" | "avoidLight" | "targetCheckpoint" | "suppressLight";
+export type Threat = {
+  id: string;
+  pos: Pos;
+  tier: ThreatTier;
+  hp: number;
+  maxHp: number;
+  anchoredTurns?: number;
+};
 export type Spawn = { turn: number; pos: Pos; id: string; tier?: ThreatTier };
-export type Cornerstone = { pos: Pos; turnsRemaining: number; complete: boolean };
+export type CheckpointState =
+  | "planned"
+  | "targeted"
+  | "preparing"
+  | "establishing"
+  | "active"
+  | "threatened"
+  | "suppressed"
+  | "disconnected";
+export type Checkpoint = {
+  pos: Pos;
+  turnsRemaining: number;
+  complete: boolean;
+  suppressedTurns?: number;
+};
+export type HouseObjective =
+  | { type: "continuousLight"; turns: number }
+  | { type: "scripture" }
+  | { type: "noAdjacentDarkness" }
+  | { type: "standard" };
+export type House = {
+  id: string;
+  name: string;
+  pos: Pos;
+  objective: HouseObjective;
+};
+export type HouseProgress = {
+  litTurns: number;
+  scriptureComplete: boolean;
+  stabilized: boolean;
+};
+export type OrderLevel = 0 | 1 | 2 | 3;
 export type ActionEffect = {
   id: number;
-  type: "block" | "release" | "build" | "prepare" | "destroy" | "damage" | "heal";
+  type: "block" | "release" | "establish" | "prepare" | "destroy" | "damage" | "heal" | "brace" | "anchor" | "disperse" | "order";
   pos: Pos;
   text?: string;
 };
@@ -88,6 +127,7 @@ export type Level = {
   startPositions: Record<PieceId, Pos>;
   spawns: Spawn[];
   soil: Record<string, Soil>;
+  houses?: House[];
 };
 export type CampaignSave = {
   version: 2;
@@ -113,7 +153,10 @@ export type GameState = {
   pieces: Record<PieceId, Piece>;
   moveTrails: Partial<Record<PieceId, MoveTrail>>;
   threats: Threat[];
-  cornerstones: Cornerstone[];
+  checkpoints: Checkpoint[];
+  houseProgress: Record<string, HouseProgress>;
+  order: OrderLevel;
+  protectorBraced: boolean;
   preparedSoil: string[];
   templeHits: number;
   destroyerCharges: number;
@@ -138,10 +181,16 @@ export type ThreatBoard = {
   protector: Pos;
   protectorCoversDiagonals: boolean;
   looser?: Pos;
-  cornerstones: Pos[];
+  checkpoints: Pos[];
+  constructingCheckpoints: Pos[];
+  lit: Pos[];
+  threatenedCheckpoints: Pos[];
+  anchoredThreatIds: string[];
 };
 export type ThreatStepResult = {
   threats: Threat[];
   templeHits: number;
   pieceHits: { pieceId: PieceId; threatId: string; damage: number }[];
+  disruptedCheckpoints: Pos[];
+  suppressedCheckpoints: Pos[];
 };

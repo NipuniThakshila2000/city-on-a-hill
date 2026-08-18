@@ -47,6 +47,10 @@
   background: radial-gradient(circle at 50% 58%, rgba(238, 206, 105, 0.32), var(--c-panel) 58%);
 }
 
+.houseStable {
+  box-shadow: inset 0 0 0 2px rgba(238, 206, 105, 0.62), inset 0 0 22px rgba(238, 206, 105, 0.2);
+}
+
 .legal {
   box-shadow: inset 0 0 0 3px var(--c-yellow);
   animation: legalPulse 1.1s ease-in-out infinite;
@@ -64,9 +68,9 @@
   box-shadow: inset 0 0 0 3px #e05a45, inset 0 0 18px rgba(224, 90, 69, 0.22);
 }
 
-.buildable {
+.establishable {
   box-shadow: inset 0 0 0 3px var(--c-lamp);
-  animation: buildablePulse 1.15s ease-in-out infinite;
+  animation: establishablePulse 1.15s ease-in-out infinite;
 }
 
 .houseGlow {
@@ -204,8 +208,7 @@
 }
 
 .lock,
-.cornerScaffold,
-.cornerComplete,
+.checkpoint,
 .forecast {
   position: absolute;
   inset: 0;
@@ -231,12 +234,11 @@
     linear-gradient(transparent 44%, var(--c-lock) 45% 55%, transparent 56%);
 }
 
-.cornerScaffold,
-.cornerComplete {
+.checkpoint {
   color: var(--c-yellow);
 }
 
-.cornerScaffold {
+.checkpoint {
   inset: 20%;
   border: 2px dashed var(--c-yellow);
   background:
@@ -245,10 +247,44 @@
   font-size: 18px;
 }
 
-.cornerComplete {
+.active,
+.threatened {
   inset: 24%;
   background: var(--c-yellow);
   clip-path: polygon(50% 0, 100% 45%, 72% 100%, 28% 100%, 0 45%);
+}
+
+.threatened {
+  background: #f0a65a;
+  box-shadow: 0 0 14px rgba(224, 90, 69, 0.72);
+}
+
+.suppressed,
+.disconnected {
+  inset: 24%;
+  border-style: solid;
+  opacity: 0.44;
+  filter: saturate(0.45);
+}
+
+.suppressed {
+  border-color: #8e65cb;
+  color: #c8b8ee;
+}
+
+.houseName {
+  position: absolute;
+  left: 2px;
+  right: 2px;
+  bottom: 2px;
+  z-index: 2;
+  padding: 1px 2px;
+  background: rgba(8, 10, 8, 0.62);
+  color: #fff0c2;
+  font-size: 9px;
+  line-height: 1;
+  text-align: center;
+  pointer-events: none;
 }
 
 .houseImage {
@@ -270,6 +306,24 @@
   color: var(--c-rust-2);
   border: 2px solid var(--c-rust);
   inset: 12px;
+  z-index: 4;
+  background: rgba(8, 10, 8, 0.42);
+  animation: routeRedraw 420ms ease-out both;
+}
+
+.forecastTier2 {
+  border-style: dashed;
+  color: #c8b8ee;
+}
+
+.forecastTier3 {
+  border-color: #e05a45;
+  color: #ffd6c2;
+}
+
+.forecastTier4 {
+  border-color: #8e65cb;
+  color: #e5d8ff;
 }
 
 .soil {
@@ -338,7 +392,7 @@
   animation: releasePixels 680ms steps(5, end) both;
 }
 
-.build {
+.establish {
   left: 50%;
   bottom: 17%;
   width: 14px;
@@ -355,7 +409,7 @@
     16px -24px 0 var(--c-lamp);
   image-rendering: pixelated;
   transform: translateX(-50%);
-  animation: buildPixels 720ms steps(5, end) both;
+  animation: establishPixels 720ms steps(5, end) both;
 }
 
 .prepare {
@@ -490,7 +544,7 @@
   }
 }
 
-@keyframes buildPixels {
+@keyframes establishPixels {
   0% {
     opacity: 0;
     transform: translateX(-50%) translateY(18px) scale(0.72);
@@ -603,7 +657,7 @@
   }
 }
 
-@keyframes buildablePulse {
+@keyframes establishablePulse {
   0%,
   100% {
     box-shadow: inset 0 0 0 3px var(--c-lamp);
@@ -685,8 +739,7 @@
   }
 
   .lock,
-  .cornerScaffold,
-  .cornerComplete,
+  .checkpoint,
   .forecast {
     font-size: 18px;
   }
@@ -722,7 +775,7 @@
 
   .block,
   .release,
-  .build,
+  .establish,
   .prepare {
     border-width: 3px;
   }
@@ -734,13 +787,23 @@
   }
 
   .lock,
-  .cornerScaffold,
-  .cornerComplete,
+  .checkpoint,
   .forecast {
     font-size: 16px;
   }
 
   .soil {
     display: none;
+  }
+}
+
+@keyframes routeRedraw {
+  0% {
+    opacity: 0;
+    transform: scale(0.74);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1);
   }
 }

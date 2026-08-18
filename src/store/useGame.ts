@@ -2,12 +2,12 @@ import { create } from "zustand";
 import { HOUSES, TEMPLE } from "../game/constants";
 import { checkVerseAnswer, createCombatCheck, PIECE_STATS, THREAT_STATS } from "../game/combat";
 import { isAvoidableDestroy } from "../game/destroyer";
-import { dist, keyOf, samePos } from "../game/distance";
-import { isLit } from "../game/light";
-import { canBuild, canRelease, legalMoves, lockedSquares, occupiedByPiece } from "../game/rules";
+import { addPos, dist, inBounds, keyOf, samePos } from "../game/distance";
+import { housesForLevel, isHouseLit, isLit } from "../game/light";
+import { canEstablishCheckpoint, canRelease, isBlockedForPiece, legalMoves, lockedSquares, occupiedByPiece } from "../game/rules";
 import { attackBonus, destroyerChargeLimit, hasSkill, maxHpBonus, skillAvailable, skillById } from "../game/skills";
 import { endTurn } from "../game/turnEngine";
-import type { ActivityLogEntry, GameState, HelperId, Level, OilAward, PieceId, Pos, SkillId, ViewMode } from "../game/types";
+import type { ActivityLogEntry, GameState, HelperId, HouseProgress, Level, OilAward, PieceId, Pos, SkillId, ViewMode } from "../game/types";
 import { levels } from "../levels";
 import { loadCampaign, saveCampaign } from "./persist";
 
@@ -24,7 +24,14 @@ type GameStore = GameState & {
   lockBinder: () => void;
   unlockBinder: () => void;
   releaseLock: () => void;
-  buildHere: () => void;
+  braceProtector: () => void;
+  anchorThreat: () => void;
+  freeCheckpoint: () => void;
+  disperseThreat: () => void;
+  watchThreat: () => void;
+  stayThyHand: () => void;
+  tendHouseScripture: () => void;
+  establishCheckpoint: () => void;
   destroyThreat: (threatId: string) => void;
   submitVerseGuess: (guess: string) => void;
   cancelVerseCheck: () => void;
@@ -76,6 +83,14 @@ const withLog = (state: GameState, text: string, tone: ActivityLogEntry["tone"] 
   activityLog: [logEntry(state.turn, text, tone), ...state.activityLog].slice(0, 10)
 });
 
+const initialHouseProgress = (level: Level): Record<string, HouseProgress> =>
+  Object.fromEntries(
+    housesForLevel({ level }).map((house) => [
+      house.id,
+      { litTurns: 0, scriptureComplete: false, stabilized: false }
+    ])
+  );
+
 const makeState = (level: Level, helper: HelperId, campaign = loadCampaign()): GameState => ({
   level,
   turn: 1,
@@ -89,7 +104,10 @@ const makeState = (level: Level, helper: HelperId, campaign = loadCampaign()): G
   },
   moveTrails: {},
   threats: [],
-  cornerstones: [],
+  checkpoints: [],
+  houseProgress: initialHouseProgress(level),
+  order: 0,
+  protectorBraced: false,
   preparedSoil: [],
   templeHits: 0,
   destroyerCharges: destroyerChargeLimit(campaign),
@@ -101,17 +119,17 @@ const makeState = (level: Level, helper: HelperId, campaign = loadCampaign()): G
   mode: "now",
   selectedPieceId: null,
   selectedSquare: TEMPLE,
-  message: "Keep the lamp lit. Get light to the houses.",
-  activityLog: [logEntry(1, "Keep the lamp lit. Get light to the houses.")],
+  message: "There is one Cornerstone. Carry its Light to the houses.",
+  activityLog: [logEntry(1, "There is one Cornerstone. Carry its Light to the houses.")],
   destroyerAutonomous: campaign.avoidableDestroys >= 3
 });
 
 const oilAwardFor = (state: GameState, avoidableDelta: number): OilAward => {
-  const housesLit = HOUSES.filter((house) => isLit(house, state)).length;
+  const housesLit = housesForLevel(state).filter((house) => state.houseProgress[house.id]?.stabilized || isHouseLit(house, state)).length;
   const piecesAlive = Object.values(state.pieces).filter((piece) => piece.alive).length;
   const lines = [
     { label: "Level completed", amount: state.phase === "won" ? 10 : 0 },
-    { label: "Houses lit", amount: housesLit * 4 },
+    { label: "Houses held in Light", amount: housesLit * 4 },
     { label: "Lamp never hit", amount: state.phase === "won" && state.templeHits === 0 ? 6 : 0 },
     { label: "Pieces still alive", amount: state.phase === "won" ? piecesAlive * 2 : 0 },
     { label: "First-try verse checks", amount: state.firstTryVersePasses * 3, prominent: true },
@@ -317,16 +335,151 @@ export const useGame = create<GameStore>((set, get) => ({
     });
     clearActionEffectSoon(actionEffect.id, set, get);
   },
-  buildHere: () => {
+  braceProtector: () => {
+    const state = get();
+    const protector = state.pieces.protector;
+    if (state.selectedPieceId !== "protector" || state.phase !== "player" || protector.acted) {
+      set(withLog(state, "Protector must be ready to Brace."));
+      return;
+    }
+    const actionEffect = nextActionEffect("brace", protector.pos);
+    set({
+      protectorBraced: true,
+      pieces: { ...state.pieces, protector: { ...protector, moved: true, acted: true } },
+      actionEffect,
+      ...withLog(state, `Protector braced at ${keyOf(protector.pos)}. Guard widens for the next enemy phase.`)
+    });
+    clearActionEffectSoon(actionEffect.id, set, get);
+  },
+  anchorThreat: () => {
+    const state = get();
+    const binder = state.pieces.binder;
+    const target = state.threats.find((threat) => samePos(threat.pos, state.selectedSquare) && dist(threat.pos, binder.pos) <= 1);
+    if (state.selectedPieceId !== "binder" || state.phase !== "player" || binder.acted || !target) {
+      set(withLog(state, "Binder must stand adjacent to a selected Darkness to Anchor it."));
+      return;
+    }
+    const actionEffect = nextActionEffect("anchor", target.pos);
+    set({
+      threats: state.threats.map((threat) => threat.id === target.id ? { ...threat, anchoredTurns: 1 } : threat),
+      pieces: { ...state.pieces, binder: { ...binder, acted: true } },
+      actionEffect,
+      order: Math.min(3, state.order + 1) as GameState["order"],
+      ...withLog(state, `Binder anchored ${target.id} at ${keyOf(target.pos)}. The route holds for one enemy phase.`, "success")
+    });
+    clearActionEffectSoon(actionEffect.id, set, get);
+  },
+  freeCheckpoint: () => {
+    const state = get();
+    const looser = state.pieces.looser;
+    const target = state.checkpoints.find((checkpoint) => checkpoint.suppressedTurns && dist(checkpoint.pos, looser.pos) <= 1);
+    if (state.selectedPieceId !== "looser" || state.phase !== "player" || looser.acted || !target) {
+      set(withLog(state, "Looser must be adjacent to a suppressed Checkpoint to Free it."));
+      return;
+    }
+    const actionEffect = nextActionEffect("release", target.pos);
+    set({
+      checkpoints: state.checkpoints.map((checkpoint) => samePos(checkpoint.pos, target.pos) ? { ...checkpoint, suppressedTurns: undefined } : checkpoint),
+      pieces: { ...state.pieces, looser: { ...looser, acted: true } },
+      actionEffect,
+      order: Math.min(3, state.order + 1) as GameState["order"],
+      ...withLog(state, `Looser freed the Checkpoint at ${keyOf(target.pos)}. Light holds.`, "success")
+    });
+    clearActionEffectSoon(actionEffect.id, set, get);
+  },
+  disperseThreat: () => {
+    const state = get();
+    const looser = state.pieces.looser;
+    const target = state.threats.find((threat) => samePos(threat.pos, state.selectedSquare) && dist(threat.pos, looser.pos) <= 1);
+    if (state.selectedPieceId !== "looser" || state.phase !== "player" || looser.acted || !target) {
+      set(withLog(state, "Looser must be adjacent to a selected Darkness to Disperse it."));
+      return;
+    }
+    const options = [
+      { x: 0, y: -1 },
+      { x: 1, y: 0 },
+      { x: 0, y: 1 },
+      { x: -1, y: 0 }
+    ]
+      .map((dir) => addPos(target.pos, dir))
+      .filter((pos) => inBounds(pos) && !isBlockedForPiece(state, pos, "looser") && !samePos(pos, looser.pos))
+      .sort((a, b) => dist(b, looser.pos) - dist(a, looser.pos) || a.y - b.y || a.x - b.x);
+    const destination = options[0];
+    if (!destination) {
+      set(withLog(state, "There is no legal square to disperse that Darkness into."));
+      return;
+    }
+    const actionEffect = nextActionEffect("disperse", destination);
+    set({
+      threats: state.threats.map((threat) => threat.id === target.id ? { ...threat, pos: destination } : threat),
+      pieces: { ...state.pieces, looser: { ...looser, acted: true } },
+      actionEffect,
+      order: Math.min(3, state.order + 1) as GameState["order"],
+      ...withLog(state, `Looser dispersed ${target.id} to ${keyOf(destination)}. The future route changed.`, "success")
+    });
+    clearActionEffectSoon(actionEffect.id, set, get);
+  },
+  watchThreat: () => {
+    const state = get();
+    const destroyer = state.pieces.destroyer;
+    const target = state.threats.find((threat) => samePos(threat.pos, state.selectedSquare));
+    if (state.selectedPieceId !== "destroyer" || state.phase !== "player" || destroyer.acted || !target) {
+      set(withLog(state, "Select Destroyer and a Darkness to Watch."));
+      return;
+    }
+    set({
+      pieces: { ...state.pieces, destroyer: { ...destroyer, acted: true } },
+      order: Math.min(3, state.order + 1) as GameState["order"],
+      ...withLog(state, `Destroyer watched ${target.id}. The hand stayed ready.`, "success")
+    });
+  },
+  stayThyHand: () => {
+    const state = get();
+    const destroyer = state.pieces.destroyer;
+    if (state.selectedPieceId !== "destroyer" || state.phase !== "player" || destroyer.acted) {
+      set(withLog(state, "Destroyer cannot stay his hand right now."));
+      return;
+    }
+    set({
+      pieces: { ...state.pieces, destroyer: { ...destroyer, acted: true } },
+      order: Math.min(3, state.order + 1) as GameState["order"],
+      ...withLog(state, "Destroyer stayed his hand. The way holds.", "success")
+    });
+  },
+  tendHouseScripture: () => {
+    const state = get();
+    const id = state.selectedPieceId;
+    if (!id) return;
+    const piece = state.pieces[id];
+    const house = housesForLevel(state).find((candidate) =>
+      candidate.objective.type === "scripture" &&
+      isHouseLit(candidate, state) &&
+      dist(candidate.pos, piece.pos) <= 1
+    );
+    if (!house || piece.acted || state.phase !== "player") {
+      set(withLog(state, "A ready servant must stand beside a lit Scripture house."));
+      return;
+    }
+    set({
+      houseProgress: {
+        ...state.houseProgress,
+        [house.id]: { ...(state.houseProgress[house.id] ?? { litTurns: 0, scriptureComplete: false, stabilized: false }), scriptureComplete: true, stabilized: true }
+      },
+      pieces: { ...state.pieces, [id]: { ...piece, acted: true } },
+      order: Math.min(3, state.order + 1) as GameState["order"],
+      ...withLog(state, `${house.name} received Scripture and stabilized.`, "success")
+    });
+  },
+  establishCheckpoint: () => {
     const state = get();
     const id = state.selectedPieceId;
     if (!id) {
-      set(withLog(state, "Select a player before using Build."));
+      set(withLog(state, "Select a servant before establishing a Checkpoint."));
       return;
     }
     const piece = state.pieces[id];
-    if (!canBuild(state, piece)) {
-      set(withLog(state, piece.moved ? "A player that moved cannot build until next turn." : "Build is only available on an open, safe square."));
+    if (!canEstablishCheckpoint(state, piece)) {
+      set(withLog(state, piece.moved ? "A servant that moved cannot establish a Checkpoint until next turn." : "Establish Checkpoint is only available on an open, safe square."));
       return;
     }
     const key = keyOf(piece.pos);
@@ -342,12 +495,12 @@ export const useGame = create<GameStore>((set, get) => ({
       clearActionEffectSoon(actionEffect.id, set, get);
       return;
     }
-    const actionEffect = nextActionEffect("build", piece.pos);
+    const actionEffect = nextActionEffect("establish", piece.pos);
     set({
-      cornerstones: [...state.cornerstones, { pos: piece.pos, turnsRemaining: 2, complete: false }],
+      checkpoints: [...state.checkpoints, { pos: piece.pos, turnsRemaining: 1, complete: false }],
       pieces: { ...state.pieces, [id]: { ...piece, acted: true } },
       actionEffect,
-      ...withLog(state, `Cornerstone planted at ${key}.`)
+      ...withLog(state, `Checkpoint of Light established at ${key}. It will stabilize during Upkeep.`)
     });
     clearActionEffectSoon(actionEffect.id, set, get);
   },
@@ -448,7 +601,7 @@ export const useGame = create<GameStore>((set, get) => ({
 
 export const availableHelpers = helpers;
 
-export const canOccupyForBuild = (state: GameState, pos: Pos) =>
+export const canOccupyForCheckpoint = (state: GameState, pos: Pos) =>
   !samePos(pos, TEMPLE) &&
   !HOUSES.some((h) => samePos(h, pos)) &&
   !occupiedByPiece(state, pos);

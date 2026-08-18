@@ -1,6 +1,5 @@
 import { useGame } from "../store/useGame";
-import { HOUSES } from "../game/constants";
-import { isLit } from "../game/light";
+import { housesForLevel } from "../game/light";
 import ActivityConsole from "./ActivityConsole";
 import ForecastToggle from "./ForecastToggle";
 import styles from "./TurnBar.module.css";
@@ -12,14 +11,16 @@ type TurnBarProps = {
 
 export default function TurnBar({ tutorialView = false, tutorialEndTurn = false }: TurnBarProps) {
   const { turn, level, templeHits, destroyerCharges, message, endPlayerTurn, phase } = useGame();
-  const housesLit = useGame((state) => HOUSES.filter((house) => isLit(house, state)).length);
+  const housesHeld = useGame((state) => housesForLevel(state).filter((house) => state.houseProgress[house.id]?.stabilized).length);
+  const order = useGame((state) => state.order);
   return (
     <header className={styles.bar}>
       <div className={styles.turnControls}>
         <div className={styles.status}>
           <span>Turn {Math.min(turn, level.turns)} / {level.turns}</span>
           <span>Lamp hits {templeHits} / 3</span>
-          <span>Houses lit {housesLit} / 3</span>
+          <span>Houses held {housesHeld} / 3</span>
+          <span>{order === 3 ? "Full Order" : `Order ${order}`}</span>
           <span>Destroyer {destroyerCharges}</span>
         </div>
         <p>{message}</p>

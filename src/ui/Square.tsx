@@ -1,8 +1,9 @@
-import { HOUSES, PIECE_LABELS, TEMPLE } from "../game/constants";
+import { PIECE_LABELS, TEMPLE } from "../game/constants";
 import { dist, keyOf, samePos } from "../game/distance";
-import { isLit } from "../game/light";
-import { canBuild, legalMoves, lockedSquares } from "../game/rules";
-import { protectorCoveredSquares } from "../game/threatAI";
+import { activeCheckpoints, checkpointState, housesForLevel, isHouseLit, isLit, litSquares } from "../game/light";
+import { canEstablishCheckpoint, legalMoves, lockedSquares } from "../game/rules";
+import { projectThreatPath, protectorCoveredSquares, threatBehaviour } from "../game/threatAI";
+import { makeThreat, THREAT_STATS } from "../game/combat";
 import { hasSkill } from "../game/skills";
 import type { Pos, ViewMode } from "../game/types";
 import { useGame } from "../store/useGame";
@@ -26,28 +27,62 @@ export default function Square({ pos, tutorialSquares = [], tutorialPrimarySquar
   const piece = Object.values(state.pieces).find((p) => p.alive && samePos(p.pos, pos));
   const moveTrail = Object.values(state.moveTrails).find((trail) => trail && samePos(trail.from, pos));
   const threat = state.threats.find((t) => samePos(t.pos, pos));
-  const house = HOUSES.some((h) => samePos(h, pos));
+  const house = housesForLevel(state).find((h) => samePos(h.pos, pos));
   const temple = samePos(TEMPLE, pos);
   const locked = lockedSquares(state).some((p) => samePos(p, pos));
-  const cornerstone = state.cornerstones.find((c) => samePos(c.pos, pos));
+  const checkpoint = state.checkpoints.find((c) => samePos(c.pos, pos));
+  const checkpointKind = checkpoint ? checkpointState(checkpoint, state) : null;
   const selected = state.selectedPieceId ? state.pieces[state.selectedPieceId] : null;
   const legal = interactive && selected ? legalMoves(state, selected.id).some((p) => samePos(p, pos)) : false;
   const forecastWindow =
     state.level.forecastWindow +
     (state.helper === "counsel" ? 1 : 0) +
     (hasSkill(state.campaign, "destroyer-the-tower") ? 1 : 0);
-  const forecast = state.level.spawns.filter(
-    (s) => s.turn > state.turn && s.turn <= state.turn + forecastWindow && samePos(s.pos, pos)
-  );
+  const forecastBoard = {
+    threats: state.threats,
+    locked: lockedSquares(state),
+    protector: state.pieces.protector.pos,
+    protectorCoversDiagonals: state.protectorBraced || state.helper === "might" || hasSkill(state.campaign, "protector-under-his-wings"),
+    looser: state.pieces.looser.alive ? state.pieces.looser.pos : undefined,
+    checkpoints: activeCheckpoints(state).map((c) => c.pos),
+    constructingCheckpoints: state.checkpoints.filter((c) => !c.complete).map((c) => c.pos),
+    lit: litSquares(state),
+    threatenedCheckpoints: state.checkpoints.map((c) => c.pos),
+    anchoredThreatIds: state.threats.filter((candidate) => candidate.anchoredTurns).map((candidate) => candidate.id)
+  };
+  const forecast = [
+    ...state.threats.flatMap((candidate) =>
+      projectThreatPath(candidate, forecastBoard, forecastWindow).map((step, index) => ({
+        id: `${candidate.id}-${index}`,
+        turn: state.turn + index + 1,
+        tier: candidate.tier,
+        step,
+        routeStep: index + 1
+      }))
+    ),
+    ...state.level.spawns
+      .filter((s) => s.turn > state.turn && s.turn <= state.turn + forecastWindow)
+      .flatMap((spawn) => [
+        { id: `${spawn.id}-entry`, turn: spawn.turn, tier: spawn.tier ?? 1, step: spawn.pos, routeStep: 0 },
+        ...projectThreatPath(makeThreat(spawn), forecastBoard, Math.max(1, state.turn + forecastWindow - spawn.turn)).map((step, index) => ({
+          id: `${spawn.id}-${index}`,
+          turn: spawn.turn + index + 1,
+          tier: spawn.tier ?? 1,
+          step,
+          routeStep: index + 1
+        }))
+      ])
+  ].filter((entry) => samePos(entry.step, pos));
   const lit = isLit(pos, state);
-  const houseLit = house && lit;
-  const buildable = selected ? canBuild(state, selected) && samePos(selected.pos, pos) : false;
+  const houseLit = !!house && isHouseLit(house, state);
+  const houseStable = !!house && !!state.houseProgress[house.id]?.stabilized;
+  const establishable = selected ? canEstablishCheckpoint(state, selected) && samePos(selected.pos, pos) : false;
   const showSoil = state.helper === "knowledge" || state.preparedSoil.includes(keyOf(pos));
   const soil = state.level.soil[keyOf(pos)];
   const actionEffect = state.actionEffect && samePos(state.actionEffect.pos, pos) ? state.actionEffect : null;
   const protectedSquare = protectorCoveredSquares(
     state.pieces.protector.pos,
-    state.helper === "might" || hasSkill(state.campaign, "protector-under-his-wings")
+    state.protectorBraced || state.helper === "might" || hasSkill(state.campaign, "protector-under-his-wings")
   ).some((p) =>
     samePos(p, pos)
   );
@@ -59,8 +94,8 @@ export default function Square({ pos, tutorialSquares = [], tutorialPrimarySquar
     state.destroyerCharges > 0 &&
     !!threat;
   const houseGlow =
-    house &&
-    state.actionEffect?.type === "build" &&
+    !!house &&
+    state.actionEffect?.type === "establish" &&
     dist(pos, state.actionEffect.pos) <= 2;
   const coord = pos.y === 0 ? String.fromCharCode(65 + pos.x) : pos.x === 0 ? String(pos.y + 1) : "";
   const tutorialHighlight = tutorialSquares.includes(squareKey);
@@ -73,11 +108,12 @@ export default function Square({ pos, tutorialSquares = [], tutorialPrimarySquar
     house ? styles.house : "",
     house && !houseLit ? styles.houseDark : "",
     houseLit ? styles.houseLit : "",
+    houseStable ? styles.houseStable : "",
     protectedSquare ? styles.protected : "",
     protectedSquare && selected?.id === "protector" ? styles.protectedActive : "",
     legal ? styles.legal : "",
     destroyTarget ? styles.destroyTarget : "",
-    buildable ? styles.buildable : "",
+    establishable ? styles.establishable : "",
     houseGlow ? styles.houseGlow : "",
     state.selectedSquare.x === pos.x && state.selectedSquare.y === pos.y ? styles.focused : "",
     tutorialHighlight ? styles.tutorialHighlight : "",
@@ -114,14 +150,19 @@ export default function Square({ pos, tutorialSquares = [], tutorialPrimarySquar
       {temple && <span className={styles.templeLamp} />}
       {house && <img className={styles.houseImage} src={houseSrc} alt="" draggable={false} />}
       {locked && <span className={styles.lock} />}
-      {cornerstone && (
-        <span className={cornerstone.complete ? styles.cornerComplete : styles.cornerScaffold}>
-          {cornerstone.complete ? "" : cornerstone.turnsRemaining}
+      {checkpoint && (
+        <span className={`${styles.checkpoint} ${checkpointKind ? styles[checkpointKind] : ""}`} title={`Checkpoint of Light: ${checkpointKind}`}>
+          {checkpoint.complete ? "" : checkpoint.turnsRemaining}
         </span>
       )}
-      {displayMode === "coming" && forecast.map((f) => <span className={styles.forecast} key={f.id}>{f.turn}</span>)}
+      {displayMode === "coming" && forecast.map((f) => (
+        <span className={`${styles.forecast} ${styles[`forecastTier${f.tier}`]}`} key={f.id} title={`${THREAT_STATS[f.tier].name}: turn ${f.turn}, ${threatBehaviour(f.tier)}`}>
+          {f.routeStep === 0 ? f.turn : f.routeStep}
+        </span>
+      ))}
       {threat && <Darkness threat={threat} targeted={destroyTarget} />}
-      {showSoil && soil === "poor" && !cornerstone && <span className={styles.soil}>poor</span>}
+      {house && <span className={styles.houseName}>{house.name.replace("House of ", "")}</span>}
+      {showSoil && soil === "poor" && !checkpoint && <span className={styles.soil}>poor</span>}
       {actionEffect && <span key={actionEffect.id} className={`${styles.effect} ${styles[actionEffect.type]}`}>{actionEffect.text}</span>}
       {piece && <Piece piece={piece} selected={state.selectedPieceId === piece.id} />}
     </button>

@@ -23,7 +23,7 @@ export const isBlockedForPiece = (state: GameState, pos: Pos, pieceId: string) =
   lockedSquares(state).some((l) => samePos(l, pos)) ||
   occupiedByPiece(state, pos, pieceId) ||
   occupiedByThreat(state, pos) ||
-  state.cornerstones.some((c) => samePos(c.pos, pos));
+  state.checkpoints.some((c) => samePos(c.pos, pos));
 
 const adjacentToLooser = (state: GameState, piece: Piece) =>
   piece.id !== "looser" &&
@@ -94,14 +94,14 @@ export const legalMoves = (state: GameState, pieceId: keyof GameState["pieces"])
     .filter((p) => !isBlockedForPiece(state, p, piece.id));
 };
 
-export const canBuild = (state: GameState, piece: Piece) =>
+export const canEstablishCheckpoint = (state: GameState, piece: Piece) =>
   piece.alive &&
   !piece.moved &&
   !piece.acted &&
   state.phase === "player" &&
   !samePos(piece.pos, TEMPLE) &&
   !HOUSES.some((h) => samePos(h, piece.pos)) &&
-  !state.cornerstones.some((c) => samePos(c.pos, piece.pos)) &&
+  !state.checkpoints.some((c) => samePos(c.pos, piece.pos)) &&
   !occupiedByThreat(state, piece.pos);
 
 export const canRelease = (state: GameState, piece: Piece) =>

@@ -8,10 +8,11 @@ export const soilAt = (state: GameState, pos: Pos) => {
 };
 
 export const canPlantAt = (state: GameState, pos: Pos) =>
-  !state.cornerstones.some((c) => samePos(c.pos, pos)) && soilAt(state, pos) === "good";
+  !state.checkpoints.some((c) => samePos(c.pos, pos)) && soilAt(state, pos) === "good";
 
-export const tickCornerstones = (state: GameState) =>
-  state.cornerstones.map((c) => {
+export const tickCheckpoints = (state: GameState) =>
+  state.checkpoints.map((c) => {
+    if (c.suppressedTurns) return { ...c, suppressedTurns: Math.max(0, c.suppressedTurns - 1) || undefined };
     if (c.complete) return c;
     const turnsRemaining = c.turnsRemaining - 1;
     return { ...c, turnsRemaining, complete: turnsRemaining <= 0 };

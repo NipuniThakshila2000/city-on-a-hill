@@ -5,6 +5,7 @@ import styles from "./Darkness.module.css";
 
 export default function Darkness({ threat, targeted }: { threat: Threat; targeted: boolean }) {
   const stat = THREAT_STATS[threat.tier];
+  const marks = { 1: "S", 2: "Sh", 3: "D", 4: "A" } as const;
   const classes = [styles.darkness, styles[`tier${threat.tier}`], targeted ? styles.targeted : ""]
     .filter(Boolean)
     .join(" ");
@@ -15,7 +16,7 @@ export default function Darkness({ threat, targeted }: { threat: Threat; targete
       <span className={styles.hp} aria-hidden="true">
         <span style={{ width: `${(threat.hp / threat.maxHp) * 100}%` }} />
       </span>
-      <span className={styles.badge}>{threat.tier}</span>
+      <span className={styles.badge}>{marks[threat.tier]}</span>
     </span>
   );
 }

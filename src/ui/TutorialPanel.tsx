@@ -14,93 +14,47 @@ export default function TutorialPanel({ compact = false, onClose, onDemo }: Tuto
           <h2>How to play</h2>
         </header>
         <article className={styles.copy}>
-          <h3>The goal</h3>
-          <p>Two things:</p>
-          <ol>
-            <li>Keep the lamp lit. It's in the middle of the board. If darkness hits it three times, you lose.</li>
-            <li>Get light down to the three houses at the bottom.</li>
-          </ol>
-          <p>You do not win by killing everything.</p>
+          <h3>The Goal</h3>
+          <p>Keep the Lamp at the central Cornerstone lit. If Darkness reaches it three times, you lose.</p>
+          <p>Carry connected Light from the Cornerstone to the three houses. You do not win by killing everything.</p>
 
-          <h3>The board</h3>
-          <p>A 7×7 grid. Your temple sits dead centre. The three houses are at the bottom, in the dark.</p>
-          <p>Light spreads two squares from the temple. That's not far enough to reach the houses — so you have to build.</p>
+          <h3>The Board</h3>
+          <p>The Temple, Lamp, and one Cornerstone sit dead centre. Servants establish Checkpoints of Light that carry its Light outward.</p>
+          <p>A Checkpoint only works while it connects back to the Cornerstone, either directly or through another active Checkpoint.</p>
 
-          <h3>Your turn</h3>
-          <p>Each of your four pieces gets one move and one action per turn. Move first, then act — or just act.</p>
-          <p>When you're done, hit End turn. Then the darkness moves. Then it's your turn again.</p>
+          <h3>Your Turn</h3>
+          <p>Each servant gets one move and one action. Move first, then act, or just act. When you end the turn, Darkness moves deterministically.</p>
 
-          <h3>Seeing what's coming</h3>
-          <p className={styles.wideSeeing}>Two boards sit side by side. The left one is Now. The right one is Coming — it shows where darkness will appear, two turns before it does.</p>
-          <p className={styles.narrowSeeing}>Two views of the board. Now shows what's there. Coming shows where darkness will appear, two turns before it does — switch between them with the button above the board.</p>
-          <p>So you're never surprised. You just never have enough pieces to cover everything you can see.</p>
+          <h3>Coming</h3>
+          <p className={styles.wideSeeing}>The left board is Now. The right board is Coming. Coming shows entry turns, Darkness type, and predicted route steps.</p>
+          <p className={styles.narrowSeeing}>Now shows the present board. Coming shows entry turns, Darkness type, and predicted route steps.</p>
+          <p>Move, Bind, Brace, Disperse, or establish a Checkpoint and the future route redraws immediately.</p>
 
-          <h3>Your four pieces</h3>
-          <p>Protector — moves 1 square. Can't attack at all. Protects his square and the four around it. Darkness can't walk into those squares.</p>
-          <p>Defender — flies anywhere, hits anything. Only 3 uses per level.</p>
-          <p>Binder — moves 1 square. Locks the square he's on. Nothing crosses it — including your own pieces. He's stuck there until he unlocks.</p>
-          <p>Looser — moves 3 squares. Unlocks things. Dies in one hit.</p>
+          <h3>Servants</h3>
+          <p>Protector - never attacks. Guard blocks nearby entry. Brace widens protection for the next Enemy Phase.</p>
+          <p>Binder - Bind locks a square. Release Bind opens it. Anchor holds adjacent Darkness for one Enemy Phase.</p>
+          <p>Looser - Release removes a Bind. Free restores a suppressed Checkpoint. Disperse pushes adjacent Darkness away.</p>
+          <p>Destroyer - strikes hard from anywhere, but restraint matters. Watch or Stay Thy Hand can preserve Order.</p>
 
-          <h3>Building light</h3>
-          <p>Stand a piece on an empty square and choose Build.</p>
-          <p>If the soil is bad, you have to spend a turn preparing it first. Then plant. Then wait two turns while it finishes.</p>
-          <p>Once it's done, that square lights two squares around it. Build in the right place and the light reaches the houses.</p>
-          <p>Build early, while the board is quiet. A half-built cornerstone gets destroyed if darkness walks onto it.</p>
+          <h3>Checkpoints Of Light</h3>
+          <p>Stand a servant on an empty square and choose Establish Checkpoint.</p>
+          <p>Poor soil must be prepared first. A new Checkpoint stabilizes during Upkeep and is vulnerable until then.</p>
+          <p>Houses receive Light only through the connected network. Suppressed or disconnected Checkpoints dim until restored.</p>
 
-          <h3>Fighting</h3>
-          <p>When you attack darkness — or it attacks you — a verse appears with words missing.</p>
-          <p>Fill in the blanks. Get it right and your attack lands. Get it wrong and you take the hit instead.</p>
-          <p>You get up to three tries, with hints after each miss. How many blanks you face depends on how strong your piece is against that enemy — a strong match gives you one blank and three tries, a bad match gives you four blanks and one try.</p>
-          <p>Each piece has its own passage. The Protector fights with Psalm 91, the Defender with Psalm 109, the Binder with Matthew 16:19, the Looser with Colossians 1:13.</p>
-          <p>Only four passages in the whole game. You'll know them by the end.</p>
+          <h3>Houses</h3>
+          <p>Peace must stay connected for two complete turns. Wisdom needs a Scripture interaction once Light reaches it. Mercy cannot stabilize while Darkness is adjacent.</p>
 
-          <h3>Pick a helper</h3>
-          <p>Before each level, choose one of the seven spirits.</p>
-          <ul>
-            <li>Counsel — see one extra turn into the future</li>
-            <li>Might — the Protector covers more ground</li>
-            <li>Knowledge — you can see which squares have bad soil</li>
-          </ul>
-          <p>You only get one. The same level plays differently depending on which you brought.</p>
+          <h3>Scripture</h3>
+          <p>Major actions can call for Scripture. The four passages remain Psalm 91, Psalm 109, Matthew 16:19, and Colossians 1:13.</p>
 
-          <h3>Healing</h3>
-          <p>Any piece standing on a lit square heals 1 HP each turn.</p>
-          <p>That's why light matters twice — it wins you the level, and it keeps your pieces alive.</p>
+          <h3>Order</h3>
+          <p>Order rises when routes are redirected, houses stabilize, the Lamp is protected, and restraint holds. It can fall when the network breaks or the centre is struck.</p>
 
           <h3>Oil</h3>
-          <p>Oil is the campaign currency. You earn it after a level and spend it on permanent servant skills.</p>
-          <p>The level-end screen shows exactly where your Oil came from: finishing the level, lighting houses, keeping the lamp untouched, keeping pieces alive, and passing verse checks on the first try.</p>
-          <p>Oil is not awarded for kills. Knowing the passages is the fastest way to earn more.</p>
+          <p>Oil is earned for completing levels, holding houses in Light, preserving the Lamp and servants, and passing verse checks. Oil is not awarded for kills.</p>
 
-          <h3>Servant skills</h3>
-          <p>Open Servants from the menu to spend Oil. Each piece has its own skill tree with three tiers.</p>
-          <p>Every tier has two choices. Buying one closes the other for that campaign, so confirm carefully before spending.</p>
-          <p>Skills apply immediately and stay with your campaign. There is no respec.</p>
-          <div className={styles.skillPreview} aria-label="Skill tree example">
-            <div>
-              <strong>Tier 1</strong>
-              <span>Shield</span>
-              <span>Truth</span>
-            </div>
-            <div>
-              <strong>Tier 2</strong>
-              <span>Armor</span>
-              <span>Move</span>
-            </div>
-            <div>
-              <strong>Tier 3</strong>
-              <span>Cover</span>
-              <span>Thorns</span>
-            </div>
-          </div>
-
-          <h3>Difficulty</h3>
-          <p>Later levels give you less warning, stronger darkness, worse building positions, and more work to finish before the turn limit.</p>
-          <p>Upgrades widen your margin, but every level is still built to be winnable without them.</p>
-
-          <h3>One warning</h3>
-          <p>The Defender is the easy answer. He kills anything from anywhere.</p>
-          <p>Use him when another piece could have handled it, and eventually he stops waiting for your orders.</p>
+          <h3>One Warning</h3>
+          <p>The Destroyer is the easy answer. Use him when another servant could have handled it, and eventually he stops waiting for your orders.</p>
         </article>
         <div className={styles.actions}>
           <button onClick={onClose}>Close</button>

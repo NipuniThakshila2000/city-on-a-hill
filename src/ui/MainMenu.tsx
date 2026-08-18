@@ -104,7 +104,7 @@ export default function MainMenu({ onStart, onTutorial, onDemo, onServants }: Ma
     startLevel,
     turn,
     threats,
-    cornerstones,
+    checkpoints,
     preparedSoil,
     templeHits,
     pieces,
@@ -113,7 +113,7 @@ export default function MainMenu({ onStart, onTutorial, onDemo, onServants }: Ma
   const hasRunningGame =
     turn > 1 ||
     threats.length > 0 ||
-    cornerstones.length > 0 ||
+    checkpoints.length > 0 ||
     preparedSoil.length > 0 ||
     templeHits > 0 ||
     destroyerCharges < 3 ||

@@ -156,7 +156,7 @@ export default function DemoMode({ onSkip }: DemoModeProps) {
 
       {state.combatCheck && (
         <section className={styles.verseOverlay} role="dialog" aria-modal="true" aria-label="Verse check">
-          <div className={`${styles.versePanel} ${step?.highlight === "verse-math" ? styles.verseMath : ""}`}>
+          <div className={styles.versePanel}>
             <header>
               <p>{state.combatCheck.header}</p>
               <h2>{state.combatCheck.passage}</h2>

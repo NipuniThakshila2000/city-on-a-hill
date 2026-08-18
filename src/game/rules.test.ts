@@ -1,7 +1,7 @@
 import { describe, expect, it } from "vitest";
 import { level01 } from "../levels/level01";
 import { PIECE_STATS } from "./combat";
-import { canBuild } from "./rules";
+import { canEstablishCheckpoint } from "./rules";
 import type { CampaignSave, GameState, HelperId } from "./types";
 
 const campaign: CampaignSave = {
@@ -60,7 +60,14 @@ const stateAtD6 = (overrides: Partial<GameState> = {}): GameState => {
     },
     moveTrails: {},
     threats: [],
-    cornerstones: [],
+    checkpoints: [],
+    houseProgress: {
+      peace: { litTurns: 0, scriptureComplete: false, stabilized: false },
+      wisdom: { litTurns: 0, scriptureComplete: false, stabilized: false },
+      mercy: { litTurns: 0, scriptureComplete: false, stabilized: false }
+    },
+    order: 0,
+    protectorBraced: false,
     preparedSoil: ["D6"],
     templeHits: 0,
     destroyerCharges: 3,
@@ -78,29 +85,29 @@ const stateAtD6 = (overrides: Partial<GameState> = {}): GameState => {
   return { ...state, ...overrides };
 };
 
-describe("canBuild", () => {
-  it("allows a ready piece to build on D6 even though D6 is lit", () => {
+describe("canEstablishCheckpoint", () => {
+  it("allows a ready piece to establish a checkpoint on D6 even though D6 is lit", () => {
     const state = stateAtD6();
-    expect(canBuild(state, state.pieces.protector)).toBe(true);
+    expect(canEstablishCheckpoint(state, state.pieces.protector)).toBe(true);
   });
 
-  it("disallows building after the selected piece has moved this turn", () => {
+  it("disallows establishing after the selected piece has moved this turn", () => {
     const state = stateAtD6({
       pieces: {
         ...stateAtD6().pieces,
         protector: { ...stateAtD6().pieces.protector, moved: true }
       }
     });
-    expect(canBuild(state, state.pieces.protector)).toBe(false);
+    expect(canEstablishCheckpoint(state, state.pieces.protector)).toBe(false);
   });
 
-  it("disallows building after the selected piece has acted this turn", () => {
+  it("disallows establishing after the selected piece has acted this turn", () => {
     const state = stateAtD6({
       pieces: {
         ...stateAtD6().pieces,
         protector: { ...stateAtD6().pieces.protector, acted: true }
       }
     });
-    expect(canBuild(state, state.pieces.protector)).toBe(false);
+    expect(canEstablishCheckpoint(state, state.pieces.protector)).toBe(false);
   });
 });

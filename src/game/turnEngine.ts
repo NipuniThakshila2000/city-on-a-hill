@@ -1,13 +1,13 @@
 import { HOUSES } from "./constants";
 import { makeThreat, THREAT_STATS } from "./combat";
-import { dist, samePos } from "./distance";
-import { isLit } from "./light";
+import { dist, keyOf, samePos } from "./distance";
+import { activeCheckpoints, housesForLevel, isHouseLit, isLit, litSquares } from "./light";
 import { hasSkill } from "./skills";
 import { stepThreats } from "./threatAI";
-import { tickCornerstones } from "./building";
+import { tickCheckpoints } from "./checkpoint";
 import { autoFireTarget, shouldAutoFire } from "./destroyer";
 import { lockedSquares } from "./rules";
-import type { GameState } from "./types";
+import type { GameState, HouseProgress, OrderLevel } from "./types";
 
 export const resetPiecesForTurn = (state: GameState) => {
   const pieces = { ...state.pieces };
@@ -35,9 +35,13 @@ export const enemyPhase = (state: GameState): GameState => {
     threats: next.threats,
     locked: lockedSquares(next),
     protector: next.pieces.protector.pos,
-    protectorCoversDiagonals: next.helper === "might" || hasSkill(next.campaign, "protector-under-his-wings"),
+    protectorCoversDiagonals: next.protectorBraced || next.helper === "might" || hasSkill(next.campaign, "protector-under-his-wings"),
     looser: next.pieces.looser.alive ? next.pieces.looser.pos : undefined,
-    cornerstones: next.cornerstones.filter((c) => c.complete).map((c) => c.pos)
+    checkpoints: activeCheckpoints(next).map((c) => c.pos),
+    constructingCheckpoints: next.checkpoints.filter((c) => !c.complete).map((c) => c.pos),
+    lit: litSquares(next),
+    threatenedCheckpoints: next.checkpoints.map((c) => c.pos),
+    anchoredThreatIds: next.threats.filter((threat) => threat.anchoredTurns).map((threat) => threat.id)
   });
 
   const pieces = { ...next.pieces };
@@ -65,15 +69,58 @@ export const enemyPhase = (state: GameState): GameState => {
         .filter((threat) => threat.hp > 0)
     : result.threats;
   const templeHits = next.templeHits + result.templeHits;
+  const checkpoints = next.checkpoints
+    .filter((checkpoint) => checkpoint.complete || !result.disruptedCheckpoints.some((pos) => samePos(pos, checkpoint.pos)))
+    .map((checkpoint) => {
+      const suppressed =
+        result.suppressedCheckpoints.some((pos) => samePos(pos, checkpoint.pos)) ||
+        (checkpoint.complete && result.disruptedCheckpoints.some((pos) => samePos(pos, checkpoint.pos)));
+      return suppressed ? { ...checkpoint, suppressedTurns: 1 } : checkpoint;
+    });
   if (templeHits >= 3) {
-    return { ...next, pieces, looserSecondChanceUsed, threats, templeHits, phase: "lost" };
+    return { ...next, pieces, looserSecondChanceUsed, threats, checkpoints, templeHits, phase: "lost" };
   }
-  return { ...next, pieces, looserSecondChanceUsed, threats, templeHits };
+  return { ...next, pieces, looserSecondChanceUsed, threats, checkpoints, templeHits };
+};
+
+const emptyHouseProgress = (): HouseProgress => ({
+  litTurns: 0,
+  scriptureComplete: false,
+  stabilized: false
+});
+
+export const updateHouseProgress = (state: GameState) => {
+  const progress = { ...state.houseProgress };
+  for (const house of housesForLevel(state)) {
+    const before = progress[house.id] ?? emptyHouseProgress();
+    const lit = isHouseLit(house, state);
+    const adjacentDarkness = state.threats.some((threat) => dist(threat.pos, house.pos) <= 1);
+    const litTurns = lit ? before.litTurns + 1 : 0;
+    let stabilized = before.stabilized;
+    if (!stabilized) {
+      if (house.objective.type === "standard") stabilized = lit;
+      if (house.objective.type === "continuousLight") stabilized = litTurns >= house.objective.turns;
+      if (house.objective.type === "scripture") stabilized = lit && before.scriptureComplete;
+      if (house.objective.type === "noAdjacentDarkness") stabilized = lit && !adjacentDarkness;
+    }
+    if (house.objective.type === "noAdjacentDarkness" && adjacentDarkness) stabilized = false;
+    progress[house.id] = { ...before, litTurns, stabilized };
+  }
+  return progress;
+};
+
+const orderAfterTurn = (state: GameState, previous: GameState): OrderLevel => {
+  let order = state.order;
+  const stabilizedNow = housesForLevel(state).some((house) => state.houseProgress[house.id]?.stabilized && !previous.houseProgress[house.id]?.stabilized);
+  const newDisconnection = state.checkpoints.some((checkpoint) => checkpoint.complete && !activeCheckpoints(state).some((active) => samePos(active.pos, checkpoint.pos)));
+  if (stabilizedNow || state.templeHits === previous.templeHits) order = Math.min(3, order + 1) as OrderLevel;
+  if (newDisconnection || state.templeHits > previous.templeHits) order = Math.max(0, order - 1) as OrderLevel;
+  return order;
 };
 
 export const upkeepPhase = (state: GameState): GameState => {
   const turn = state.turn;
-  let cornerstones = tickCornerstones(state);
+  let checkpoints = tickCheckpoints(state);
   const occupied = [
     ...Object.values(state.pieces).filter((p) => p.alive).map((p) => p.pos),
     ...state.threats.map((t) => t.pos)
@@ -83,22 +130,27 @@ export const upkeepPhase = (state: GameState): GameState => {
     .map((s) => makeThreat(s))
     .filter((s) => !occupied.some((p) => samePos(p, s.pos)));
   let threats = [...state.threats, ...spawns];
-  cornerstones = cornerstones.filter(
+  checkpoints = checkpoints.filter(
     (c) => !threats.some((t) => samePos(t.pos, c.pos)) || c.complete
   );
 
-  const checked: GameState = {
+  let checked: GameState = {
     ...state,
     threats,
-    cornerstones,
+    checkpoints,
     pieces: resetPiecesForTurn(state),
     phase: "player",
-    turn: turn + 1
+    turn: turn + 1,
+    protectorBraced: false
   };
+  checked = { ...checked, houseProgress: updateHouseProgress(checked) };
+  checked = { ...checked, order: orderAfterTurn(checked, state) };
+  const justStabilized = housesForLevel(checked).find((house) => checked.houseProgress[house.id]?.stabilized && !state.houseProgress[house.id]?.stabilized);
+  if (justStabilized) checked = { ...checked, message: `${justStabilized.name} holds in the Light.` };
 
   if (turn >= state.level.turns) {
-    const housesLit = HOUSES.every((h) => isLit(h, checked));
-    return { ...checked, phase: housesLit ? "won" : "failed" };
+    const housesComplete = housesForLevel(checked).every((h) => checked.houseProgress[h.id]?.stabilized);
+    return { ...checked, phase: housesComplete ? "won" : "failed" };
   }
   return checked;
 };

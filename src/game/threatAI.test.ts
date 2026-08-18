@@ -10,7 +10,11 @@ const base = (overrides: Partial<ThreatBoard>): ThreatBoard => ({
   locked: [],
   protector: { x: 6, y: 6 },
   protectorCoversDiagonals: false,
-  cornerstones: [],
+  checkpoints: [],
+  constructingCheckpoints: [],
+  lit: [],
+  threatenedCheckpoints: [],
+  anchoredThreatIds: [],
   ...overrides
 });
 
