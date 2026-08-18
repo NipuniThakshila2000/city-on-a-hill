@@ -119,6 +119,24 @@ export type CombatCheck = {
   triesRemaining: number;
   hint: string;
   announcement?: string;
+  attackerName: string;
+  defenderName: string;
+  attackerOffense: number;
+  defenderDefense: number;
+  defenderAttack: number;
+  margin: number;
+  sequence: ScripturePrompt[];
+  currentPromptIndex: number;
+};
+export type ScripturePrompt = {
+  passage: string;
+  prompt: string;
+  answers: string[];
+  blanks: number;
+  mistakesMade: number;
+  totalTries: number;
+  triesRemaining: number;
+  hint: string;
 };
 export type Level = {
   id: number;

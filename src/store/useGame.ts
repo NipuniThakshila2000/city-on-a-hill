@@ -195,10 +195,11 @@ const resolveDestroyerAttack = (
   const hp = target.hp - damage;
   const removed = hp <= 0;
   const actionEffect = nextActionEffect(removed ? "destroy" : "damage", target.pos, `-${damage}`);
+  const sequenceMistakes = state.combatCheck?.sequence.reduce((sum, prompt) => sum + prompt.mistakesMade, 0) ?? state.combatCheck?.mistakesMade ?? 0;
   set({
     campaign,
     combatCheck: undefined,
-    firstTryVersePasses: state.firstTryVersePasses + (state.combatCheck?.mistakesMade === 0 ? 1 : 0),
+    firstTryVersePasses: state.firstTryVersePasses + (sequenceMistakes === 0 ? 1 : 0),
     threats: removed
       ? state.threats.filter((t) => t.id !== threatId)
       : state.threats.map((t) => t.id === threatId ? { ...t, hp } : t),
@@ -523,23 +524,48 @@ export const useGame = create<GameStore>((set, get) => ({
     const state = get();
     const check = state.combatCheck;
     if (!check) return;
-    if (checkVerseAnswer(guess, check.answers)) {
-      resolveDestroyerAttack(state, set, get, check.defenderThreatId, true);
+    const prompt = check.sequence[check.currentPromptIndex];
+    if (checkVerseAnswer(guess, prompt.answers)) {
+      const nextPromptIndex = check.currentPromptIndex + 1;
+      if (nextPromptIndex >= check.sequence.length) {
+        resolveDestroyerAttack(state, set, get, check.defenderThreatId, true);
+        return;
+      }
+      const nextPrompt = check.sequence[nextPromptIndex];
+      set({
+        combatCheck: {
+          ...check,
+          currentPromptIndex: nextPromptIndex,
+          passage: nextPrompt.passage,
+          prompt: nextPrompt.prompt,
+          answers: nextPrompt.answers,
+          blanks: nextPrompt.blanks,
+          mistakesMade: nextPrompt.mistakesMade,
+          totalTries: nextPrompt.totalTries,
+          triesRemaining: nextPrompt.triesRemaining,
+          hint: nextPrompt.hint,
+          announcement: "The word holds. Continue the sequence."
+        },
+        ...withLog(state, "The word holds. The scripture sequence continues.", "success")
+      });
       return;
     }
-    if (check.triesRemaining > 1) {
-      const triesRemaining = check.triesRemaining - 1;
-      const mistakesMade = check.mistakesMade + 1;
-      const announcement = `Warning: mistake ${mistakesMade} of ${check.totalTries}. Use the next hint and try again. ${triesRemaining} ${triesRemaining === 1 ? "try" : "tries"} remain.`;
+    if (prompt.triesRemaining > 1) {
+      const triesRemaining = prompt.triesRemaining - 1;
+      const mistakesMade = prompt.mistakesMade + 1;
+      const nextSequence = check.sequence.map((entry, index) =>
+        index === check.currentPromptIndex ? { ...entry, mistakesMade, triesRemaining } : entry
+      );
+      const announcement = `${triesRemaining === 1 ? "One attempt remains" : "The word is not yet set"}. Use the next hint and try again.`;
       set({
-        combatCheck: { ...check, mistakesMade, triesRemaining, announcement },
+        combatCheck: { ...check, sequence: nextSequence, mistakesMade, triesRemaining, announcement },
         warningNotice: warningNotice(announcement),
         ...withLog(state, `${announcement} ${check.passage} hint: ${check.hint}.`)
       });
       return;
     }
-    const finalMistake = check.mistakesMade + 1;
-    const warning = `Warning: mistake ${finalMistake} of ${check.totalTries}. The check is spent.`;
+    const finalMistake = prompt.mistakesMade + 1;
+    const warning = `The word did not hold. Counter-blow received.`;
     resolveDestroyerAttack(state, set, get, check.defenderThreatId, false, warning);
   },
   cancelVerseCheck: () => set({ combatCheck: undefined }),

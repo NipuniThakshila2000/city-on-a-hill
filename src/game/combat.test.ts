@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { checkDifficulty, checkVerseAnswer, createCombatCheck, makeThreat } from "./combat";
+import { checkDifficulty, checkVerseAnswer, createCombatCheck, makeThreat, scriptureSequenceLength } from "./combat";
 
 describe("combat checks", () => {
   it("uses margin to set blanks and tries", () => {
@@ -24,5 +24,13 @@ describe("combat checks", () => {
     const threat = makeThreat({ id: "L1-A4", pos: { x: 0, y: 3 }, tier: 1 });
     const check = createCombatCheck("destroyer", threat);
     expect(checkVerseAnswer(check.answers.join(", "), check.answers)).toBe(true);
+  });
+
+  it("scales scripture sequence length by darkness tier", () => {
+    expect(scriptureSequenceLength(1, 7)).toBe(1);
+    expect(scriptureSequenceLength(2, 3)).toBe(2);
+    expect(scriptureSequenceLength(3, 0)).toBe(2);
+    expect(scriptureSequenceLength(4, 1)).toBe(3);
+    expect(createCombatCheck("destroyer", makeThreat({ id: "abyss", pos: { x: 0, y: 0 }, tier: 4 })).sequence).toHaveLength(3);
   });
 });

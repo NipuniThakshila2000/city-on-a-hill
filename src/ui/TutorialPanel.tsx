@@ -28,7 +28,10 @@ export default function TutorialPanel({ compact = false, onClose, onDemo }: Tuto
           <h3>Coming</h3>
           <p className={styles.wideSeeing}>The left board is Now. The right board is Coming. Coming shows entry turns, Darkness type, and predicted route steps.</p>
           <p className={styles.narrowSeeing}>Now shows the present board. Coming shows entry turns, Darkness type, and predicted route steps.</p>
+          <p>A solid square shows where Darkness will enter the board. Its number is the fixed arrival turn.</p>
+          <p>A dashed square shows where Darkness is predicted to move next. Its number is the future turn it is expected to reach that square.</p>
           <p>Move, Bind, Brace, Disperse, or establish a Checkpoint and the future route redraws immediately.</p>
+          <p>Solid means where Darkness is coming from. Dashed means where Darkness is currently heading.</p>
 
           <h3>Servants</h3>
           <p>Protector - never attacks. Guard blocks nearby entry. Brace widens protection for the next Enemy Phase.</p>

@@ -156,8 +156,12 @@ export default function Square({ pos, tutorialSquares = [], tutorialPrimarySquar
         </span>
       )}
       {displayMode === "coming" && forecast.map((f) => (
-        <span className={`${styles.forecast} ${styles[`forecastTier${f.tier}`]}`} key={f.id} title={`${THREAT_STATS[f.tier].name}: turn ${f.turn}, ${threatBehaviour(f.tier)}`}>
-          {f.routeStep === 0 ? f.turn : f.routeStep}
+        <span
+          className={`${styles.forecast} ${f.routeStep === 0 ? styles.forecastEntry : styles.forecastRoute} ${styles[`forecastTier${f.tier}`]}`}
+          key={f.id}
+          title={`${f.routeStep === 0 ? "Entry" : "Predicted route"}: ${THREAT_STATS[f.tier].name}, turn ${f.turn}, ${threatBehaviour(f.tier)}`}
+        >
+          {f.turn}
         </span>
       ))}
       {threat && <Darkness threat={threat} targeted={destroyTarget} />}

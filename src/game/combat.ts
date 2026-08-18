@@ -1,4 +1,4 @@
-import type { CombatCheck, HelperId, PieceId, Threat, ThreatTier } from "./types";
+import type { CombatCheck, HelperId, PieceId, ScripturePrompt, Threat, ThreatTier } from "./types";
 import type { CampaignSave } from "./types";
 import { attackBonus } from "./skills";
 
@@ -55,19 +55,23 @@ export const helperName = (helper: HelperId) => helper[0].toUpperCase() + helper
 const PASSAGE_LINES: Record<PieceId, string[]> = {
   protector: [
     "He is my refuge and my fortress",
-    "He shall give his angels charge over thee"
+    "He shall give his angels charge over thee",
+    "Thou shalt not be afraid for the terror by night"
   ],
   destroyer: [
     "Hold not thy peace O God of my praise",
-    "Let his days be few and let another take his office"
+    "Let his days be few and let another take his office",
+    "Let them be before the Lord continually"
   ],
   binder: [
     "Whatsoever thou shalt bind on earth shall be bound in heaven",
-    "Whatsoever thou shalt loose on earth shall be loosed in heaven"
+    "Whatsoever thou shalt loose on earth shall be loosed in heaven",
+    "I will give unto thee the keys of the kingdom"
   ],
   looser: [
     "Who hath delivered us from the power of darkness",
-    "And hath translated us into the kingdom of his dear Son"
+    "And hath translated us into the kingdom of his dear Son",
+    "In whom we have redemption through his blood"
   ]
 };
 
@@ -75,6 +79,44 @@ const normalize = (value: string) => value.toLowerCase().replace(/[^a-z0-9\s]/g,
 
 const deterministicIndex = (seed: string, length: number) =>
   [...seed].reduce((sum, char) => sum + char.charCodeAt(0), 0) % length;
+
+export const scriptureSequenceLength = (darknessTier: ThreatTier, margin: number) => {
+  let base = darknessTier === 4 ? 3 : darknessTier >= 2 ? 2 : 1;
+  if (margin <= -3) base += 1;
+  return Math.min(base, 3);
+};
+
+const createScripturePrompt = (
+  attackerId: Exclude<PieceId, "protector">,
+  defender: Threat,
+  promptIndex: number,
+  blanks: number,
+  tries: number
+): ScripturePrompt => {
+  const lines = PASSAGE_LINES[attackerId];
+  const line = lines[(deterministicIndex(`${attackerId}:${defender.id}`, lines.length) + promptIndex) % lines.length];
+  const words = line.split(" ");
+  const candidates = words.map((word, index) => ({ word, index })).filter(({ word }) => word.length > 3);
+  const blanked = new Set<number>();
+  let cursor = deterministicIndex(`${defender.id}:${promptIndex}`, Math.max(candidates.length, 1));
+
+  while (blanked.size < blanks && blanked.size < candidates.length) {
+    blanked.add(candidates[cursor % candidates.length].index);
+    cursor += 2;
+  }
+
+  const answers = words.filter((_, index) => blanked.has(index));
+  return {
+    passage: PIECE_STATS[attackerId].passage,
+    prompt: words.map((word, index) => blanked.has(index) ? "_____" : word).join(" "),
+    answers: answers.map((answer) => normalize(answer)[0] ?? answer.toLowerCase()),
+    blanks,
+    mistakesMade: 0,
+    totalTries: tries,
+    triesRemaining: tries,
+    hint: answers.map((answer) => `${answer[0]}...`).join(", ")
+  };
+};
 
 export const createCombatCheck = (
   attackerId: Exclude<PieceId, "protector">,
@@ -85,33 +127,32 @@ export const createCombatCheck = (
   const defenderStats = THREAT_STATS[defender.tier];
   const offense = (attacker.offense ?? 0) + (campaign ? attackBonus(campaign, attackerId) : 0);
   const difficulty = checkDifficulty(offense, defenderStats.defense);
-  const lines = PASSAGE_LINES[attackerId];
-  const line = lines[deterministicIndex(`${attackerId}:${defender.id}`, lines.length)];
-  const words = line.split(" ");
-  const candidates = words.map((word, index) => ({ word, index })).filter(({ word }) => word.length > 3);
-  const blanked = new Set<number>();
-  let cursor = deterministicIndex(defender.id, Math.max(candidates.length, 1));
-
-  while (blanked.size < difficulty.blanks && blanked.size < candidates.length) {
-    blanked.add(candidates[cursor % candidates.length].index);
-    cursor += 2;
-  }
-
-  const answers = words.filter((_, index) => blanked.has(index));
-  const prompt = words.map((word, index) => blanked.has(index) ? "_____" : word).join(" ");
+  const sequence = Array.from({ length: scriptureSequenceLength(defender.tier, difficulty.margin) }, (_, index) =>
+    createScripturePrompt(attackerId, defender, index, difficulty.blanks, difficulty.tries)
+  );
+  const first = sequence[0];
+  const attackerName = attackerId === "looser" ? "Looser" : attackerId[0].toUpperCase() + attackerId.slice(1);
 
   return {
     attackerId,
     defenderThreatId: defender.id,
-    header: `${attacker.actionLabel} ${offense} vs Defense ${defenderStats.defense} -> ${difficulty.blanks} blanks, ${difficulty.tries} ${difficulty.tries === 1 ? "try" : "tries"}`,
-    passage: attacker.passage,
-    prompt,
-    answers: answers.map((answer) => normalize(answer)[0] ?? answer.toLowerCase()),
-    blanks: difficulty.blanks,
+    header: `Attack ${offense} vs Defense ${defenderStats.defense} -> Margin ${difficulty.margin >= 0 ? "+" : ""}${difficulty.margin} -> ${difficulty.blanks} blanks, ${difficulty.tries} ${difficulty.tries === 1 ? "try" : "tries"}`,
+    passage: first.passage,
+    prompt: first.prompt,
+    answers: first.answers,
+    blanks: first.blanks,
     mistakesMade: 0,
-    totalTries: difficulty.tries,
-    triesRemaining: difficulty.tries,
-    hint: answers.map((answer) => `${answer[0]}...`).join(", ")
+    totalTries: first.totalTries,
+    triesRemaining: first.triesRemaining,
+    hint: first.hint,
+    attackerName,
+    defenderName: defenderStats.name,
+    attackerOffense: offense,
+    defenderDefense: defenderStats.defense,
+    defenderAttack: defenderStats.attack,
+    margin: difficulty.margin,
+    sequence,
+    currentPromptIndex: 0
   };
 };
 

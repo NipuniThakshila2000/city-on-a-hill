@@ -311,8 +311,17 @@
   animation: routeRedraw 420ms ease-out both;
 }
 
-.forecastTier2 {
+.forecastEntry {
+  border-style: solid;
+  background: rgba(68, 21, 21, 0.52);
+}
+
+.forecastRoute {
   border-style: dashed;
+  background: rgba(8, 10, 8, 0.34);
+}
+
+.forecastTier2 {
   color: #c8b8ee;
 }
 
