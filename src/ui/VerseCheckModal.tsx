@@ -2,13 +2,13 @@ import { FormEvent, useState } from "react";
 import { PIECE_STATS } from "../game/combat";
 import { useGame } from "../store/useGame";
 import binderImage from "../assets/characters/binder.webp";
-import destroyerImage from "../assets/characters/destroyer.webp";
+import destroyerCombatImage from "../assets/characters/destroyer-combat.gif";
 import looserImage from "../assets/characters/looser.webp";
-import enemyImage from "../assets/enemies/enemy.png";
+import enemyCombatImage from "../assets/enemies/enemy-combat.gif";
 import styles from "./VerseCheckModal.module.css";
 
 const servantImages = {
-  destroyer: destroyerImage,
+  destroyer: destroyerCombatImage,
   binder: binderImage,
   looser: looserImage
 } as const;
@@ -61,7 +61,7 @@ export default function VerseCheckModal() {
           <img className={styles.servant} src={servantImages[check.attackerId]} alt="" draggable={false} />
           <span className={`${styles.lightStrike} ${styles[check.attackerId]}`} aria-hidden="true" />
           <span className={styles.damageNumber} aria-hidden="true">{check.attackerOffense}</span>
-          <img className={styles.darkness} src={enemyImage} alt="" draggable={false} />
+          <img className={styles.darkness} src={enemyCombatImage} alt="" draggable={false} />
           <span className={styles.shadowImpact} aria-hidden="true" />
         </section>
 

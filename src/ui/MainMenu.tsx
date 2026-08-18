@@ -7,7 +7,7 @@ import destroyerImage from "../assets/characters/destroyer.webp";
 import looserImage from "../assets/characters/looser.webp";
 import protectorImage from "../assets/characters/protector.webp";
 import cmsLogoImage from "../assets/structures/cms-redux-logo.webp";
-import houseImage from "../assets/structures/house.webp";
+import homeBannerImage from "../assets/home-banner.jpeg";
 import styles from "./MainMenu.module.css";
 
 const helperNames: Record<HelperId, string> = {
@@ -200,24 +200,7 @@ export default function MainMenu({ onStart, onTutorial, onDemo, onServants, onLo
         </div>
 
         <div className={styles.scene}>
-          <div className={styles.skyline}>
-            <span className={styles.tower} />
-            <span className={styles.roof} />
-            <span className={styles.wall} />
-          </div>
-          <img className={styles.heroCharacter} src={protectorImage} alt="" />
-          <div className={styles.map}>
-            <div className={styles.lightBox} />
-            <div className={styles.lamp} />
-            <div className={styles.houses}>
-              <img src={houseImage} alt="" />
-              <img src={houseImage} alt="" />
-              <img src={houseImage} alt="" />
-            </div>
-            <span className={styles.edgeOne}>X</span>
-            <span className={styles.edgeTwo}>X</span>
-            <span className={styles.edgeThree}>?</span>
-          </div>
+          <img className={styles.homeBanner} src={homeBannerImage} alt="" />
           <div className={styles.copy}>
             <img className={styles.cmsLogo} src={cmsLogoImage} alt="CMS Redux" />
             <h1>City on a Hill</h1>

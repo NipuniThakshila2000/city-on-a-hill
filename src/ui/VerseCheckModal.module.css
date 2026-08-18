@@ -75,21 +75,16 @@
   min-height: 320px;
   overflow: hidden;
   border-bottom: 4px solid #b8ab8a;
-  background:
-    linear-gradient(180deg, rgba(151, 205, 208, 0.95) 0 35%, rgba(207, 226, 170, 0.92) 36% 52%, rgba(88, 153, 76, 0.96) 53%),
-    #96c5c7;
+  background: #96c5c7 url("../assets/attack-background.gif") center / cover no-repeat;
 }
 
 .meadow {
   position: absolute;
   inset: 0;
   background:
-    repeating-linear-gradient(0deg, transparent 0 13px, rgba(255, 255, 255, 0.08) 14px 16px),
-    radial-gradient(ellipse at 32% 49%, rgba(66, 115, 95, 0.36) 0 9%, transparent 10%),
-    radial-gradient(ellipse at 18% 54%, rgba(42, 93, 82, 0.32) 0 13%, transparent 14%),
-    radial-gradient(ellipse at 47% 52%, rgba(47, 98, 88, 0.24) 0 10%, transparent 11%),
-    repeating-linear-gradient(90deg, rgba(37, 120, 51, 0.28) 0 4px, rgba(142, 199, 80, 0.18) 5px 9px, transparent 10px 15px);
-  filter: saturate(0.9);
+    linear-gradient(90deg, rgba(5, 12, 8, 0.18), transparent 22%, transparent 78%, rgba(5, 12, 8, 0.18)),
+    linear-gradient(180deg, rgba(255, 255, 255, 0.16), transparent 38%, rgba(20, 44, 22, 0.14));
+  filter: saturate(1.05);
 }
 
 .servant,
@@ -104,17 +99,17 @@
 }
 
 .servant {
-  left: 11%;
-  width: min(26%, 230px);
-  max-height: 62%;
+  left: 7%;
+  width: min(35%, 330px);
+  max-height: 86%;
   transform-origin: 50% 100%;
   animation: servantStrike 1200ms ease-in-out infinite;
 }
 
 .darkness {
   right: 8%;
-  width: min(34%, 300px);
-  max-height: 75%;
+  width: min(32%, 300px);
+  max-height: 78%;
   filter: contrast(1.18) saturate(1.1) drop-shadow(0 0 12px rgba(68, 43, 104, 0.72));
   transform-origin: 50% 100%;
   animation: darknessRecoil 1200ms ease-in-out infinite;
@@ -345,13 +340,13 @@
   }
 
   .servant {
-    left: 6%;
-    width: 34%;
+    left: 2%;
+    width: 43%;
   }
 
   .darkness {
     right: 2%;
-    width: 44%;
+    width: 43%;
   }
 }
 
