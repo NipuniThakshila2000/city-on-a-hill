@@ -56,22 +56,34 @@ const PASSAGE_LINES: Record<PieceId, string[]> = {
   protector: [
     "He is my refuge and my fortress",
     "He shall give his angels charge over thee",
-    "Thou shalt not be afraid for the terror by night"
+    "Thou shalt not be afraid for the terror by night",
+    "He shall cover thee with his feathers",
+    "His truth shall be thy shield and buckler",
+    "Because thou hast made the Lord thy habitation"
   ],
   destroyer: [
     "Hold not thy peace O God of my praise",
     "Let his days be few and let another take his office",
-    "Let them be before the Lord continually"
+    "Let them be before the Lord continually",
+    "Set thou a wicked man over him",
+    "Let the adversary stand at his right hand",
+    "I will greatly praise the Lord with my mouth"
   ],
   binder: [
     "Whatsoever thou shalt bind on earth shall be bound in heaven",
     "Whatsoever thou shalt loose on earth shall be loosed in heaven",
-    "I will give unto thee the keys of the kingdom"
+    "I will give unto thee the keys of the kingdom",
+    "Thou art Peter and upon this rock I will build my church",
+    "The gates of hell shall not prevail against it",
+    "I will give unto thee the keys"
   ],
   looser: [
     "Who hath delivered us from the power of darkness",
     "And hath translated us into the kingdom of his dear Son",
-    "In whom we have redemption through his blood"
+    "In whom we have redemption through his blood",
+    "Giving thanks unto the Father",
+    "Made us meet to be partakers of the inheritance",
+    "The kingdom of his dear Son"
   ]
 };
 

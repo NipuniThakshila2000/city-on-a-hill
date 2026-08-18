@@ -11,6 +11,34 @@ export type HelperId =
 export type Phase = "player" | "enemy" | "upkeep" | "won" | "lost" | "failed";
 export type ViewMode = "now" | "coming";
 export type Soil = "good" | "poor";
+export type HelpTopicId =
+  | "level"
+  | "save"
+  | "now"
+  | "coming"
+  | "square"
+  | "cornerstone"
+  | "house"
+  | "checkpoint"
+  | "darkness"
+  | "servant"
+  | "protector"
+  | "binder"
+  | "looser"
+  | "destroyer"
+  | "bind"
+  | "release"
+  | "brace"
+  | "anchor"
+  | "free"
+  | "disperse"
+  | "watch"
+  | "stay"
+  | "scripture"
+  | "establish"
+  | "forecast"
+  | "order"
+  | "oil";
 export type SkillId =
   | "protector-shield-of-faith"
   | "protector-belt-of-truth"
@@ -154,6 +182,40 @@ export type CampaignSave = {
   oil: number;
   purchasedSkills: SkillId[];
 };
+export type GameSettings = {
+  contextualHelpEnabled: boolean;
+};
+export type SavedGame = {
+  version: 1;
+  savedAt: number;
+  state: Pick<
+    GameState,
+    | "level"
+    | "turn"
+    | "phase"
+    | "helper"
+    | "pieces"
+    | "moveTrails"
+    | "threats"
+    | "checkpoints"
+    | "houseProgress"
+    | "order"
+    | "protectorBraced"
+    | "preparedSoil"
+    | "templeHits"
+    | "destroyerCharges"
+    | "firstTryVersePasses"
+    | "looserSecondChanceUsed"
+    | "avoidableDestroysAtLevelStart"
+    | "campaign"
+    | "mode"
+    | "selectedPieceId"
+    | "selectedSquare"
+    | "message"
+    | "activityLog"
+    | "destroyerAutonomous"
+  >;
+};
 export type OilAwardLine = {
   label: string;
   amount: number;
@@ -189,6 +251,10 @@ export type GameState = {
   actionEffect?: ActionEffect;
   combatCheck?: CombatCheck;
   warningNotice?: WarningNotice;
+  contextualHelpEnabled: boolean;
+  activeHelpTopic?: HelpTopicId;
+  lastSavedAt?: number;
+  hasSavedGame: boolean;
   message: string;
   activityLog: ActivityLogEntry[];
   destroyerAutonomous: boolean;

@@ -1,0 +1,56 @@
+.hotspot {
+  position: absolute;
+  right: 4px;
+  top: 4px;
+  z-index: 12;
+  width: 20px;
+  height: 20px;
+  display: grid;
+  place-items: center;
+  border: 1px solid var(--c-lamp);
+  background: rgba(8, 10, 8, 0.88);
+  color: var(--c-lamp);
+  font-family: var(--font-console);
+  font-size: 13px;
+  line-height: 1;
+  opacity: 0;
+  transform: translateY(-4px);
+  pointer-events: auto;
+  transition: opacity 120ms ease-out, transform 120ms ease-out;
+}
+
+:global(button:hover) > .hotspot,
+:global(button:focus-visible) > .hotspot,
+:global(.helpReveal:hover) .hotspot,
+:global(.helpReveal:focus-within) .hotspot {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.hotspot:hover,
+.hotspot:focus-visible {
+  opacity: 1;
+  outline: 1px solid #fff4bf;
+  outline-offset: 1px;
+}
+
+.compact {
+  position: relative;
+  inset: auto;
+  display: inline-grid;
+  margin-left: 6px;
+  width: 17px;
+  height: 17px;
+  font-size: 11px;
+  opacity: 0.72;
+  transform: none;
+  vertical-align: middle;
+}
+
+@media (max-width: 520px) {
+  .hotspot {
+    width: 17px;
+    height: 17px;
+    font-size: 11px;
+  }
+}

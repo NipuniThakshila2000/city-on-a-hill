@@ -7,9 +7,9 @@ import { housesForLevel, isHouseLit, isLit } from "../game/light";
 import { canEstablishCheckpoint, canRelease, isBlockedForPiece, legalMoves, lockedSquares, occupiedByPiece } from "../game/rules";
 import { attackBonus, destroyerChargeLimit, hasSkill, maxHpBonus, skillAvailable, skillById } from "../game/skills";
 import { endTurn } from "../game/turnEngine";
-import type { ActivityLogEntry, GameState, HelperId, HouseProgress, Level, OilAward, PieceId, Pos, SkillId, ViewMode } from "../game/types";
+import type { ActivityLogEntry, GameState, HelperId, HelpTopicId, HouseProgress, Level, OilAward, PieceId, Pos, SavedGame, SkillId, ViewMode } from "../game/types";
 import { levels } from "../levels";
-import { loadCampaign, saveCampaign } from "./persist";
+import { hasSavedGame, loadCampaign, loadSavedGame, loadSettings, saveCampaign, saveGame, saveSettings } from "./persist";
 
 let actionEffectId = 0;
 let activityLogId = 0;
@@ -36,6 +36,11 @@ type GameStore = GameState & {
   submitVerseGuess: (guess: string) => void;
   cancelVerseCheck: () => void;
   clearWarningNotice: () => void;
+  openHelp: (topic: HelpTopicId) => void;
+  closeHelp: () => void;
+  toggleContextualHelp: () => void;
+  saveCurrentGame: () => void;
+  loadCurrentGame: () => void;
   endPlayerTurn: () => void;
   toggleMode: () => void;
   setMode: (mode: ViewMode) => void;
@@ -43,6 +48,7 @@ type GameStore = GameState & {
 
 const helpers: HelperId[] = ["counsel", "might", "knowledge", "understanding", "fear", "wisdom", "spirit"];
 const blankCampaign = loadCampaign();
+const initialSettings = loadSettings();
 
 const pieceName = (id: PieceId) => id === "looser" ? "Looser" : id[0].toUpperCase() + id.slice(1);
 
@@ -119,9 +125,40 @@ const makeState = (level: Level, helper: HelperId, campaign = loadCampaign()): G
   mode: "now",
   selectedPieceId: null,
   selectedSquare: TEMPLE,
+  contextualHelpEnabled: initialSettings.contextualHelpEnabled,
+  activeHelpTopic: undefined,
+  lastSavedAt: loadSavedGame()?.savedAt,
+  hasSavedGame: hasSavedGame(),
   message: "There is one Cornerstone. Carry its Light to the houses.",
   activityLog: [logEntry(1, "There is one Cornerstone. Carry its Light to the houses.")],
   destroyerAutonomous: campaign.avoidableDestroys >= 3
+});
+
+const savedStateFor = (state: GameState): SavedGame["state"] => ({
+  level: state.level,
+  turn: state.turn,
+  phase: state.phase,
+  helper: state.helper,
+  pieces: state.pieces,
+  moveTrails: state.moveTrails,
+  threats: state.threats,
+  checkpoints: state.checkpoints,
+  houseProgress: state.houseProgress,
+  order: state.order,
+  protectorBraced: state.protectorBraced,
+  preparedSoil: state.preparedSoil,
+  templeHits: state.templeHits,
+  destroyerCharges: state.destroyerCharges,
+  firstTryVersePasses: state.firstTryVersePasses,
+  looserSecondChanceUsed: state.looserSecondChanceUsed,
+  avoidableDestroysAtLevelStart: state.avoidableDestroysAtLevelStart,
+  campaign: state.campaign,
+  mode: state.mode,
+  selectedPieceId: state.selectedPieceId,
+  selectedSquare: state.selectedSquare,
+  message: state.message,
+  activityLog: state.activityLog,
+  destroyerAutonomous: state.destroyerAutonomous
 });
 
 const oilAwardFor = (state: GameState, avoidableDelta: number): OilAward => {
@@ -220,8 +257,13 @@ const resolveDestroyerAttack = (
 export const useGame = create<GameStore>((set, get) => ({
   ...makeState(levels[0], "counsel", blankCampaign),
   startLevel: (levelId, helper) => {
+    const current = get();
     const level = levels.find((l) => l.id === levelId) ?? levels[0];
-    set(makeState(level, helper));
+    set({
+      ...makeState(level, helper),
+      contextualHelpEnabled: current.contextualHelpEnabled,
+      activeHelpTopic: undefined
+    });
   },
   purchaseSkill: (skillId) => {
     const state = get();
@@ -570,6 +612,52 @@ export const useGame = create<GameStore>((set, get) => ({
   },
   cancelVerseCheck: () => set({ combatCheck: undefined }),
   clearWarningNotice: () => set({ warningNotice: undefined }),
+  openHelp: (topic) => {
+    const state = get();
+    if (!state.contextualHelpEnabled) return;
+    set({ activeHelpTopic: topic });
+  },
+  closeHelp: () => set({ activeHelpTopic: undefined }),
+  toggleContextualHelp: () => {
+    const state = get();
+    const contextualHelpEnabled = !state.contextualHelpEnabled;
+    saveSettings({ contextualHelpEnabled });
+    set({
+      contextualHelpEnabled,
+      activeHelpTopic: contextualHelpEnabled ? state.activeHelpTopic : undefined,
+      ...withLog(state, contextualHelpEnabled ? "Beginner help icons are on." : "Beginner help icons are off.")
+    });
+  },
+  saveCurrentGame: () => {
+    const state = get();
+    const savedAt = Date.now();
+    saveGame({ version: 1, savedAt, state: savedStateFor(state) });
+    set({
+      lastSavedAt: savedAt,
+      hasSavedGame: true,
+      ...withLog(state, `Game saved on turn ${state.turn}.`, "success")
+    });
+  },
+  loadCurrentGame: () => {
+    const state = get();
+    const saved = loadSavedGame();
+    if (!saved) {
+      set(withLog(state, "No saved game found."));
+      return;
+    }
+    set({
+      ...saved.state,
+      contextualHelpEnabled: state.contextualHelpEnabled,
+      activeHelpTopic: undefined,
+      lastSavedAt: saved.savedAt,
+      hasSavedGame: true,
+      actionEffect: undefined,
+      combatCheck: undefined,
+      warningNotice: undefined,
+      oilAward: undefined,
+      message: `Loaded saved game from turn ${saved.state.turn}.`
+    });
+  },
   endPlayerTurn: () => {
     const state = get();
     if (state.combatCheck) return;

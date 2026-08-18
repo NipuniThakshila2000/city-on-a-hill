@@ -4,6 +4,7 @@ import { dist, keyOf, samePos } from "../game/distance";
 import { housesForLevel, isHouseLit } from "../game/light";
 import { canEstablishCheckpoint, canRelease } from "../game/rules";
 import { useGame } from "../store/useGame";
+import HelpHotspot from "./HelpHotspot";
 import styles from "./ActionPanel.module.css";
 
 const names = {
@@ -57,39 +58,50 @@ export default function ActionPanel({ tutorialActions = [] }: ActionPanelProps) 
             <button className={actionClass(tutorialActions.includes("lock"), selected.id !== "binder" || selected.acted || !!selected.locked)} onClick={state.lockBinder}>
               {tutorialActions.includes("lock") && tutorialArrow}
               Bind
+              <HelpHotspot topic="bind" compact />
             </button>
             <button className={actionClass(tutorialActions.includes("unlock"), selected.id !== "binder" || selected.acted || !selected.locked)} onClick={state.unlockBinder}>
               {tutorialActions.includes("unlock") && tutorialArrow}
               Release bind
+              <HelpHotspot topic="release" compact />
             </button>
             <button className={actionClass(tutorialActions.includes("release"), !canRelease(state, selected))} onClick={state.releaseLock}>
               {tutorialActions.includes("release") && tutorialArrow}
               Release
+              <HelpHotspot topic="release" compact />
             </button>
             <button className={actionClass(false, selected.id !== "protector" || selected.acted)} onClick={state.braceProtector}>
               Brace
+              <HelpHotspot topic="brace" compact />
             </button>
             <button className={actionClass(false, selected.id !== "binder" || selected.acted || !adjacentSelectedThreat)} onClick={state.anchorThreat}>
               Anchor
+              <HelpHotspot topic="anchor" compact />
             </button>
             <button className={actionClass(false, selected.id !== "looser" || selected.acted || !suppressedNearby)} onClick={state.freeCheckpoint}>
               Free
+              <HelpHotspot topic="free" compact />
             </button>
             <button className={actionClass(false, selected.id !== "looser" || selected.acted || !adjacentSelectedThreat)} onClick={state.disperseThreat}>
               Disperse
+              <HelpHotspot topic="disperse" compact />
             </button>
             <button className={actionClass(false, selected.id !== "destroyer" || selected.acted || !selectedThreat)} onClick={state.watchThreat}>
               Watch
+              <HelpHotspot topic="watch" compact />
             </button>
             <button className={actionClass(false, selected.id !== "destroyer" || selected.acted)} onClick={state.stayThyHand}>
               Stay thy hand
+              <HelpHotspot topic="stay" compact />
             </button>
             <button className={actionClass(false, selected.acted || !scriptureHouseNearby)} onClick={state.tendHouseScripture}>
               Tend Scripture
+              <HelpHotspot topic="scripture" compact />
             </button>
             <button className={actionClass(tutorialActions.includes("checkpoint"), !canEstablishCheckpoint(state, selected))} onClick={state.establishCheckpoint}>
               {tutorialActions.includes("checkpoint") && tutorialArrow}
               Establish Checkpoint
+              <HelpHotspot topic="establish" compact />
             </button>
           </div>
           {selected.id === "destroyer" && (

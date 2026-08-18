@@ -93,9 +93,10 @@ type MainMenuProps = {
   onTutorial: () => void;
   onDemo: () => void;
   onServants: () => void;
+  onLoad: () => void;
 };
 
-export default function MainMenu({ onStart, onTutorial, onDemo, onServants }: MainMenuProps) {
+export default function MainMenu({ onStart, onTutorial, onDemo, onServants, onLoad }: MainMenuProps) {
   const [showTeaching, setShowTeaching] = useState(false);
   const {
     campaign,
@@ -108,7 +109,8 @@ export default function MainMenu({ onStart, onTutorial, onDemo, onServants }: Ma
     preparedSoil,
     templeHits,
     pieces,
-    destroyerCharges
+    destroyerCharges,
+    hasSavedGame
   } = useGame();
   const hasRunningGame =
     turn > 1 ||
@@ -231,6 +233,7 @@ export default function MainMenu({ onStart, onTutorial, onDemo, onServants }: Ma
                 Continue
               </button>
               <button onClick={startNewGame}>New Game</button>
+              <button onClick={onLoad} disabled={!hasSavedGame}>Load Saved Game</button>
               <button onClick={onTutorial}>How to play</button>
               <button onClick={onDemo}>Watch a demo</button>
               <button onClick={onServants}>Servants</button>

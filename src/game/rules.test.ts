@@ -78,6 +78,8 @@ const stateAtD6 = (overrides: Partial<GameState> = {}): GameState => {
     mode: "now",
     selectedPieceId: "protector",
     selectedSquare: { x: 3, y: 5 },
+    contextualHelpEnabled: true,
+    hasSavedGame: false,
     message: "",
     activityLog: [],
     destroyerAutonomous: false

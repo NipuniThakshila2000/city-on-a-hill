@@ -7,6 +7,8 @@ import ActionPanel from "./ui/ActionPanel";
 import ActivityToast from "./ui/ActivityToast";
 import Board from "./ui/Board";
 import DemoMode from "./ui/DemoMode";
+import HelpHotspot from "./ui/HelpHotspot";
+import HelpLightbox from "./ui/HelpLightbox";
 import LevelEnd from "./ui/LevelEnd";
 import MainMenu from "./ui/MainMenu";
 import ServantsScreen from "./ui/ServantsScreen";
@@ -61,6 +63,10 @@ export default function App() {
       <>
         <MainMenu
           onStart={() => setScreen("game")}
+          onLoad={() => {
+            state.loadCurrentGame();
+            setScreen("game");
+          }}
           onTutorial={() => setShowTutorial(true)}
           onDemo={() => {
             setShowTutorial(false);
@@ -99,6 +105,9 @@ export default function App() {
         <button onClick={() => setScreen("menu")}>Menu</button>
         <button onClick={() => setScreen("servants")}>Servants</button>
         <button onClick={() => setShowTutorial(true)}>Help</button>
+        <button onClick={state.saveCurrentGame}>Save <HelpHotspot topic="save" compact /></button>
+        <button onClick={state.loadCurrentGame} disabled={!state.hasSavedGame}>Load</button>
+        <button onClick={state.toggleContextualHelp}>{state.contextualHelpEnabled ? "Guide icons on" : "Guide icons off"}</button>
         {levels.map((level) => (
           <button key={level.id} onClick={() => state.startLevel(level.id, state.helper)} disabled={level.id > state.campaign.highestUnlockedLevel}>
             {level.id}
@@ -112,16 +121,29 @@ export default function App() {
           ))}
         </select>
       </nav>
+      <section className={`${styles.levelSign} helpReveal`} aria-label="Current level">
+        <div>
+          <span>Current Level</span>
+          <h1>Level {state.level.id}</h1>
+        </div>
+        <p>
+          {state.level.id === 1
+            ? "Prototype: establish a connected city of Light."
+            : `Turn ${state.turn} of ${state.level.turns}. Read Coming, preserve the Light Network, and hold the houses.`}
+        </p>
+        <strong>{state.phase === "player" ? "Player Phase" : state.phase}</strong>
+        <HelpHotspot topic="level" />
+      </section>
       <TurnBar />
       <section className={styles.table}>
         <ActivityToast />
         <div className={styles.desktopBoards} aria-label="Before and after board views">
           <section className={styles.boardFrame} aria-label="YESOD before board">
-            <h2>YESOD <span>Before</span></h2>
+            <h2>YESOD <span>Before <HelpHotspot topic="now" compact /></span></h2>
             <Board viewMode="now" />
           </section>
           <section className={styles.boardFrame} aria-label="MALKUT after board">
-            <h2>MALKUT <span>After</span></h2>
+            <h2>MALKUT <span>After <HelpHotspot topic="coming" compact /></span></h2>
             <Board viewMode="coming" interactive={false} />
           </section>
         </div>
@@ -147,6 +169,7 @@ export default function App() {
         </aside>
       )}
       <VerseCheckModal />
+      <HelpLightbox />
       <LevelEnd />
     </main>
   );

@@ -9,6 +9,7 @@ import type { Pos, ViewMode } from "../game/types";
 import { useGame } from "../store/useGame";
 import houseSrc from "../assets/structures/house.webp";
 import Darkness from "./Darkness";
+import HelpHotspot from "./HelpHotspot";
 import Piece from "./Piece";
 import styles from "./Square.module.css";
 
@@ -100,6 +101,14 @@ export default function Square({ pos, tutorialSquares = [], tutorialPrimarySquar
   const coord = pos.y === 0 ? String.fromCharCode(65 + pos.x) : pos.x === 0 ? String(pos.y + 1) : "";
   const tutorialHighlight = tutorialSquares.includes(squareKey);
   const tutorialPrimary = tutorialPrimarySquare === squareKey;
+  const helpTopic =
+    temple ? "cornerstone" :
+    !!threat ? "darkness" :
+    !!piece ? piece.id :
+    !!checkpoint ? "checkpoint" :
+    !!house ? "house" :
+    forecast.length > 0 ? "forecast" :
+    "square";
 
   const classes = [
     styles.square,
@@ -139,6 +148,7 @@ export default function Square({ pos, tutorialSquares = [], tutorialPrimarySquar
       title={squareKey}
     >
       <span className={styles.coordinateTooltip}>{squareKey}</span>
+      <HelpHotspot topic={helpTopic} />
       {tutorialPrimary && <span className={styles.tutorialArrow}>{"->"}</span>}
       {tutorialHighlight && !tutorialPrimary && <span className={styles.tutorialDot} />}
       {coord && <span className={styles.coord}>{coord}</span>}
