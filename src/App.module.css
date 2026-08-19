@@ -190,6 +190,59 @@
   transform: translateY(-1px);
 }
 
+.desktopStatus {
+  display: contents;
+}
+
+.mobileStatus {
+  display: none;
+  max-width: 1680px;
+  margin: 0 auto 12px;
+}
+
+.mobileStatus summary {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  min-height: 42px;
+  padding: 0 14px;
+  border: 1px solid rgba(238, 206, 105, 0.22);
+  border-radius: 12px;
+  background:
+    linear-gradient(180deg, rgba(46, 51, 38, 0.98), rgba(22, 27, 19, 0.98));
+  color: var(--c-grey-2);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  cursor: pointer;
+  list-style: none;
+  box-shadow:
+    inset 0 0 0 1px rgba(238, 206, 105, 0.05),
+    0 8px 18px rgba(0, 0, 0, 0.18);
+}
+
+.mobileStatus summary::-webkit-details-marker {
+  display: none;
+}
+
+.mobileStatus summary::after {
+  content: "\2304";
+  font-size: 18px;
+  line-height: 1;
+  color: var(--c-lamp);
+  transform: translateY(-1px);
+  transition: transform 140ms ease-out;
+}
+
+.mobileStatus[open] summary::after {
+  transform: translateY(2px) rotate(180deg);
+}
+
+.mobileStatusBody {
+  display: grid;
+  gap: 8px;
+  padding-top: 8px;
+}
+
 .levelSign {
   position: relative;
   max-width: 1680px;
@@ -300,6 +353,14 @@
     display: block;
   }
 
+  .desktopStatus {
+    display: none;
+  }
+
+  .mobileStatus {
+    display: block;
+  }
+
   .mobileControlsBody {
     grid-template-columns: repeat(4, minmax(0, 1fr));
   }
@@ -318,6 +379,10 @@
     min-height: 34px;
     padding: 0 10px;
     font-size: 14px;
+  }
+
+  .mobileStatus summary {
+    min-height: 44px;
   }
 }
 

@@ -48,6 +48,24 @@ export default function App() {
       </span>
     </>
   );
+  const statusContent = (
+    <>
+      <section className={`${styles.levelSign} helpReveal`} aria-label="Current level">
+        <div>
+          <span>Current Level</span>
+          <h1>Level {state.level.id}</h1>
+        </div>
+        <p>
+          {state.level.id === 1
+            ? "Prototype: establish a connected city of Light."
+            : `Turn ${state.turn} of ${state.level.turns}. Read Coming, preserve the Light Network, and hold the houses.`}
+        </p>
+        <strong>{state.phase === "player" ? "Player Phase" : state.phase}</strong>
+        <HelpHotspot topic="level" />
+      </section>
+      <TurnBar />
+    </>
+  );
 
   useEffect(() => {
     const onKey = (event: KeyboardEvent) => {
@@ -133,20 +151,11 @@ export default function App() {
         <summary>Controls</summary>
         <div className={styles.mobileControlsBody}>{gameControls}</div>
       </details>
-      <section className={`${styles.levelSign} helpReveal`} aria-label="Current level">
-        <div>
-          <span>Current Level</span>
-          <h1>Level {state.level.id}</h1>
-        </div>
-        <p>
-          {state.level.id === 1
-            ? "Prototype: establish a connected city of Light."
-            : `Turn ${state.turn} of ${state.level.turns}. Read Coming, preserve the Light Network, and hold the houses.`}
-        </p>
-        <strong>{state.phase === "player" ? "Player Phase" : state.phase}</strong>
-        <HelpHotspot topic="level" />
-      </section>
-      <TurnBar />
+      <div className={styles.desktopStatus}>{statusContent}</div>
+      <details className={styles.mobileStatus}>
+        <summary>Status</summary>
+        <div className={styles.mobileStatusBody}>{statusContent}</div>
+      </details>
       <section className={styles.table}>
         <ActivityToast />
         <div className={styles.desktopBoards} aria-label="Before and after board views">
