@@ -134,6 +134,7 @@ export default function Square({ pos, tutorialSquares = [], tutorialPrimarySquar
   return (
     <button
       className={classes}
+      data-help-topic={helpTopic}
       onClick={() => {
         if (!interactive) return;
         state.selectSquare(pos);

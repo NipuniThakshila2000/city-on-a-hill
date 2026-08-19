@@ -1,7 +1,8 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { BOARD_SIZE } from "./game/constants";
 import { inBounds } from "./game/distance";
 import { levels } from "./levels";
+import type { HelpTopicId } from "./game/types";
 import { availableHelpers, useGame } from "./store/useGame";
 import ActionPanel from "./ui/ActionPanel";
 import ActivityToast from "./ui/ActivityToast";
@@ -23,20 +24,85 @@ export default function App() {
   const state = useGame();
   const warningNotice = useGame((store) => store.warningNotice);
   const clearWarningNotice = useGame((store) => store.clearWarningNotice);
+  const longPressTarget = useRef<HTMLElement | null>(null);
+  const longPressTimer = useRef<number | null>(null);
+
+  useEffect(() => {
+    const clearLongPress = () => {
+      if (longPressTimer.current !== null) {
+        window.clearTimeout(longPressTimer.current);
+        longPressTimer.current = null;
+      }
+      longPressTarget.current = null;
+    };
+
+    const onPointerDown = (event: PointerEvent) => {
+      if (event.pointerType === "mouse") return;
+      const target = (event.target as HTMLElement | null)?.closest<HTMLElement>("[data-help-topic]");
+      const topic = target?.dataset.helpTopic;
+      if (!target || !topic) return;
+      clearLongPress();
+      longPressTarget.current = target;
+      longPressTimer.current = window.setTimeout(() => {
+        longPressTimer.current = null;
+        state.openHelp(topic as HelpTopicId);
+      }, 450);
+    };
+
+    const onPointerUp = () => {
+      if (longPressTimer.current === null) return;
+      window.clearTimeout(longPressTimer.current);
+      longPressTimer.current = null;
+      longPressTarget.current = null;
+    };
+
+    const onClickCapture = (event: MouseEvent) => {
+      if (!longPressTarget.current) return;
+      const target = (event.target as HTMLElement | null)?.closest<HTMLElement>("[data-help-topic]");
+      if (target !== longPressTarget.current) return;
+      event.preventDefault();
+      event.stopPropagation();
+      longPressTarget.current = null;
+    };
+
+    const onContextMenu = (event: MouseEvent) => {
+      const target = (event.target as HTMLElement | null)?.closest<HTMLElement>("[data-help-topic]");
+      if (!target) return;
+      event.preventDefault();
+    };
+
+    document.addEventListener("pointerdown", onPointerDown, true);
+    document.addEventListener("pointerup", onPointerUp, true);
+    document.addEventListener("pointercancel", onPointerUp, true);
+    document.addEventListener("click", onClickCapture, true);
+    document.addEventListener("contextmenu", onContextMenu, true);
+
+    return () => {
+      document.removeEventListener("pointerdown", onPointerDown, true);
+      document.removeEventListener("pointerup", onPointerUp, true);
+      document.removeEventListener("pointercancel", onPointerUp, true);
+      document.removeEventListener("click", onClickCapture, true);
+      document.removeEventListener("contextmenu", onContextMenu, true);
+      if (longPressTimer.current !== null) {
+        window.clearTimeout(longPressTimer.current);
+      }
+    };
+  }, [state.openHelp]);
+
   const gameControls = (
     <>
-      <button onClick={() => setScreen("menu")}>Menu <HelpHotspot topic="level" compact /></button>
-      <button onClick={() => setScreen("servants")}>Servants <HelpHotspot topic="servant" compact /></button>
-      <button onClick={() => setShowTutorial(true)}>Help <HelpHotspot topic="scripture" compact /></button>
-      <button onClick={state.saveCurrentGame}>Save <HelpHotspot topic="save" compact /></button>
-      <button onClick={state.loadCurrentGame} disabled={!state.hasSavedGame}>Load <HelpHotspot topic="save" compact /></button>
-      <button onClick={state.toggleContextualHelp}>{state.contextualHelpEnabled ? "Guide icons on" : "Guide icons off"} <HelpHotspot topic="level" compact /></button>
+      <button data-help-topic="level" onClick={() => setScreen("menu")}>Menu <HelpHotspot topic="level" compact /></button>
+      <button data-help-topic="servant" onClick={() => setScreen("servants")}>Servants <HelpHotspot topic="servant" compact /></button>
+      <button data-help-topic="scripture" onClick={() => setShowTutorial(true)}>Help <HelpHotspot topic="scripture" compact /></button>
+      <button data-help-topic="save" onClick={state.saveCurrentGame}>Save <HelpHotspot topic="save" compact /></button>
+      <button data-help-topic="save" onClick={state.loadCurrentGame} disabled={!state.hasSavedGame}>Load <HelpHotspot topic="save" compact /></button>
+      <button data-help-topic="level" onClick={state.toggleContextualHelp}>{state.contextualHelpEnabled ? "Guide icons on" : "Guide icons off"} <HelpHotspot topic="level" compact /></button>
       {levels.map((level) => (
-        <button key={level.id} onClick={() => state.startLevel(level.id, state.helper)} disabled={level.id > state.campaign.highestUnlockedLevel}>
+        <button key={level.id} data-help-topic="level" onClick={() => state.startLevel(level.id, state.helper)} disabled={level.id > state.campaign.highestUnlockedLevel}>
           {level.id} <HelpHotspot topic="level" compact />
         </button>
       ))}
-      <span className="helpReveal" style={{ position: "relative", display: "inline-flex", alignItems: "center" }}>
+      <span className="helpReveal" data-help-topic="servant" style={{ position: "relative", display: "inline-flex", alignItems: "center" }}>
         <select value={state.helper} onChange={(e) => state.startLevel(state.level.id, e.target.value as (typeof availableHelpers)[number])}>
           {availableHelpers.map((helper) => (
             <option key={helper} value={helper} disabled={!["counsel", "might", "knowledge"].includes(helper)}>
@@ -50,7 +116,7 @@ export default function App() {
   );
   const statusContent = (
     <>
-      <section className={`${styles.levelSign} helpReveal`} aria-label="Current level">
+      <section className={`${styles.levelSign} helpReveal`} data-help-topic="level" aria-label="Current level">
         <div>
           <span>Current Level</span>
           <h1>Level {state.level.id}</h1>
@@ -160,7 +226,7 @@ export default function App() {
         <ActivityToast />
         <div className={styles.desktopBoards} aria-label="Before and after board views">
           <section className={styles.boardFrame} aria-label="YESOD before board">
-            <h2 className="helpReveal">YESOD <span>Before <HelpHotspot topic="now" compact /></span></h2>
+            <h2 className="helpReveal" data-help-topic="now">YESOD <span>Before <HelpHotspot topic="now" compact /></span></h2>
             <Board viewMode="now" />
           </section>
           <section className={styles.boardFrame} aria-label="MALKUT after board">
