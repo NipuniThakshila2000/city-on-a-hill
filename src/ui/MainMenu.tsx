@@ -228,10 +228,6 @@ export default function MainMenu({ onStart, onTutorial, onDemo, onServants, onLo
             <nav className={styles.menuList} aria-label="Main commands">
               {commandButtons}
             </nav>
-            <details className={styles.mobileMenu}>
-              <summary>Menu</summary>
-              <div className={styles.mobileMenuBody}>{commandButtons}</div>
-            </details>
           </div>
         </div>
       </section>

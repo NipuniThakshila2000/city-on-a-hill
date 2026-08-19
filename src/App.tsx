@@ -26,6 +26,7 @@ export default function App() {
   const clearWarningNotice = useGame((store) => store.clearWarningNotice);
   const longPressTarget = useRef<HTMLElement | null>(null);
   const longPressTimer = useRef<number | null>(null);
+  const longPressOpened = useRef(false);
 
   useEffect(() => {
     const clearLongPress = () => {
@@ -34,6 +35,7 @@ export default function App() {
         longPressTimer.current = null;
       }
       longPressTarget.current = null;
+      longPressOpened.current = false;
     };
 
     const onPointerDown = (event: PointerEvent) => {
@@ -43,26 +45,33 @@ export default function App() {
       if (!target || !topic) return;
       clearLongPress();
       longPressTarget.current = target;
+      longPressOpened.current = false;
       longPressTimer.current = window.setTimeout(() => {
         longPressTimer.current = null;
+        longPressOpened.current = true;
         state.openHelp(topic as HelpTopicId);
       }, 450);
     };
 
     const onPointerUp = () => {
-      if (longPressTimer.current === null) return;
-      window.clearTimeout(longPressTimer.current);
-      longPressTimer.current = null;
-      longPressTarget.current = null;
+      if (longPressTimer.current !== null) {
+        window.clearTimeout(longPressTimer.current);
+        longPressTimer.current = null;
+        longPressTarget.current = null;
+        longPressOpened.current = false;
+      }
     };
 
     const onClickCapture = (event: MouseEvent) => {
       if (!longPressTarget.current) return;
       const target = (event.target as HTMLElement | null)?.closest<HTMLElement>("[data-help-topic]");
       if (target !== longPressTarget.current) return;
-      event.preventDefault();
-      event.stopPropagation();
+      if (longPressOpened.current) {
+        event.preventDefault();
+        event.stopPropagation();
+      }
       longPressTarget.current = null;
+      longPressOpened.current = false;
     };
 
     const onContextMenu = (event: MouseEvent) => {
@@ -86,6 +95,8 @@ export default function App() {
       if (longPressTimer.current !== null) {
         window.clearTimeout(longPressTimer.current);
       }
+      longPressTarget.current = null;
+      longPressOpened.current = false;
     };
   }, [state.openHelp]);
 

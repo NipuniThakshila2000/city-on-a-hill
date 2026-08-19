@@ -154,80 +154,12 @@
 }
 
 .menuList {
-  flex-direction: column;
-  align-items: stretch;
-  width: min(300px, 88vw);
-  margin-top: auto;
-  padding-top: 2px;
-}
-
-.mobileMenu {
-  display: none;
-  width: min(420px, 100%);
-  margin-top: auto;
-}
-
-.mobileMenu summary {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  min-height: 42px;
-  padding: 0 14px;
-  border: 1px solid rgba(238, 206, 105, 0.22);
-  border-radius: 12px;
-  background:
-    linear-gradient(180deg, rgba(46, 51, 38, 0.98), rgba(22, 27, 19, 0.98));
-  color: var(--c-grey-2);
-  text-transform: uppercase;
-  letter-spacing: 0.04em;
-  cursor: pointer;
-  list-style: none;
-  box-shadow:
-    inset 0 0 0 1px rgba(238, 206, 105, 0.05),
-    0 8px 18px rgba(0, 0, 0, 0.18);
-}
-
-.mobileMenu summary::-webkit-details-marker {
-  display: none;
-}
-
-.mobileMenu summary::after {
-  content: "\2304";
-  font-size: 18px;
-  line-height: 1;
-  color: var(--c-lamp);
-  transform: translateY(-1px);
-  transition: transform 140ms ease-out;
-}
-
-.mobileMenu[open] summary::after {
-  transform: translateY(2px) rotate(180deg);
-}
-
-.mobileMenuBody {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 8px;
-  padding-top: 8px;
-}
-.mobileMenuBody button,
-.mobileMenuBody select {
-  min-height: 42px;
-  border: 1px solid rgba(238, 206, 105, 0.16);
-  border-radius: 12px;
-  background:
-    linear-gradient(180deg, rgba(43, 48, 36, 0.98), rgba(18, 22, 16, 0.98));
-  color: var(--c-grey-2);
-  box-shadow:
-    inset 0 0 0 1px rgba(238, 206, 105, 0.04),
-    0 8px 16px rgba(0, 0, 0, 0.14);
-}
-
-.mobileMenuBody button:not(:disabled):hover,
-.mobileMenuBody select:hover {
-  border-color: rgba(238, 206, 105, 0.38);
-  color: var(--c-lamp);
-  transform: translateY(-1px);
+  align-items: stretch;
+  width: min(520px, 92vw);
+  margin-top: auto;
+  padding-top: 2px;
 }
 
 .menuList button,
@@ -643,14 +575,6 @@ button:disabled {
   }
 
   .menuList {
-    display: none;
-  }
-
-  .mobileMenu {
-    display: block;
-  }
-
-  .mobileMenuBody {
     width: min(100%, 420px);
   }
 }
@@ -709,7 +633,7 @@ button:disabled {
     max-height: 220px;
   }
 
-  .mobileMenuBody {
+  .menuList {
     grid-template-columns: 1fr;
   }
 }

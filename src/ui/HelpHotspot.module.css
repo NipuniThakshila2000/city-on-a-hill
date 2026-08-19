@@ -18,6 +18,10 @@
   opacity: 0;
   transform: translateY(-4px);
   pointer-events: auto;
+  touch-action: manipulation;
+  user-select: none;
+  -webkit-user-select: none;
+  -webkit-touch-callout: none;
   transition: opacity 120ms ease-out, transform 120ms ease-out;
 }
 
@@ -52,6 +56,17 @@
 @media (max-width: 520px), (hover: none) and (pointer: coarse) {
   .hotspot,
   .compact {
-    display: none;
+    opacity: 1;
+    transform: none;
+  }
+
+  .hotspot {
+    width: 24px;
+    height: 24px;
+  }
+
+  .compact {
+    width: 19px;
+    height: 19px;
   }
 }
