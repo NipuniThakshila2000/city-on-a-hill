@@ -63,7 +63,6 @@ export default function App() {
         <strong>{state.phase === "player" ? "Player Phase" : state.phase}</strong>
         <HelpHotspot topic="level" />
       </section>
-      <TurnBar />
     </>
   );
 
@@ -156,6 +155,7 @@ export default function App() {
         <summary>Status</summary>
         <div className={styles.mobileStatusBody}>{statusContent}</div>
       </details>
+      <TurnBar />
       <section className={styles.table}>
         <ActivityToast />
         <div className={styles.desktopBoards} aria-label="Before and after board views">
