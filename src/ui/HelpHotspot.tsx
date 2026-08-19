@@ -34,7 +34,7 @@ export default function HelpHotspot({ topic, compact = false }: HelpHotspotProps
         }
       }}
     >
-      ?
+      i
     </span>
   );
 }
