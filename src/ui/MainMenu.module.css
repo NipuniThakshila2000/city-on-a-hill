@@ -135,7 +135,7 @@
 .logLine {
   font-size: clamp(14px, 2.1vh, 18px);
   color: #000 !important;
-  font-weight: 700;
+  font-weight: 300;
   text-shadow: none;
 }
 
