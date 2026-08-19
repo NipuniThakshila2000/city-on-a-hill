@@ -51,6 +51,14 @@
 
 @media (max-width: 520px) {
   .hotspot {
-    display: none;
+    opacity: 0.78;
+    transform: none;
+  }
+}
+
+@media (hover: none) and (pointer: coarse) {
+  .hotspot {
+    opacity: 0.78;
+    transform: none;
   }
 }
