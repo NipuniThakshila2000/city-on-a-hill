@@ -56,17 +56,6 @@
 @media (max-width: 520px), (hover: none) and (pointer: coarse) {
   .hotspot,
   .compact {
-    opacity: 1;
-    transform: none;
-  }
-
-  .hotspot {
-    width: 24px;
-    height: 24px;
-  }
-
-  .compact {
-    width: 19px;
-    height: 19px;
+    display: none;
   }
 }
