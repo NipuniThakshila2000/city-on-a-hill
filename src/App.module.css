@@ -131,9 +131,10 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  min-height: 38px;
-  padding: 0 12px;
-  border: 1px solid var(--c-grid-2);
+  min-height: 42px;
+  padding: 0 14px;
+  border: 1px solid rgba(238, 206, 105, 0.22);
+  border-radius: 12px;
   background:
     linear-gradient(180deg, rgba(46, 51, 38, 0.98), rgba(22, 27, 19, 0.98));
   color: var(--c-grey-2);
@@ -141,7 +142,9 @@
   letter-spacing: 0.04em;
   cursor: pointer;
   list-style: none;
-  box-shadow: inset 0 0 0 1px rgba(238, 206, 105, 0.05);
+  box-shadow:
+    inset 0 0 0 1px rgba(238, 206, 105, 0.05),
+    0 8px 18px rgba(0, 0, 0, 0.18);
 }
 
 .mobileControls summary::-webkit-details-marker {
@@ -149,7 +152,7 @@
 }
 
 .mobileControls summary::after {
-  content: "⌄";
+  content: "\2304";
   font-size: 18px;
   line-height: 1;
   color: var(--c-lamp);
@@ -166,6 +169,25 @@
   grid-template-columns: repeat(4, minmax(0, 1fr));
   gap: 6px;
   padding-top: 8px;
+}
+.mobileControlsBody button,
+.mobileControlsBody select {
+  min-height: 42px;
+  border: 1px solid rgba(238, 206, 105, 0.16);
+  border-radius: 12px;
+  background:
+    linear-gradient(180deg, rgba(43, 48, 36, 0.98), rgba(18, 22, 16, 0.98));
+  color: var(--c-grey-2);
+  box-shadow:
+    inset 0 0 0 1px rgba(238, 206, 105, 0.04),
+    0 8px 16px rgba(0, 0, 0, 0.14);
+}
+
+.mobileControlsBody button:not(:disabled):hover,
+.mobileControlsBody select:hover {
+  border-color: rgba(238, 206, 105, 0.38);
+  color: var(--c-lamp);
+  transform: translateY(-1px);
 }
 
 .levelSign {
