@@ -161,6 +161,37 @@
   padding-top: 2px;
 }
 
+.mobileMenu {
+  display: none;
+  width: min(420px, 100%);
+  margin-top: auto;
+}
+
+.mobileMenu summary {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  min-height: 40px;
+  padding: 0 12px;
+  border: 1px solid var(--c-grid-2);
+  background: var(--c-panel);
+  color: var(--c-grey-2);
+  text-transform: uppercase;
+  cursor: pointer;
+  list-style: none;
+}
+
+.mobileMenu summary::-webkit-details-marker {
+  display: none;
+}
+
+.mobileMenuBody {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 8px;
+  padding-top: 8px;
+}
+
 .menuList button,
 .levels button,
 .helpers button {
@@ -541,7 +572,7 @@ button:disabled {
   .scene {
     min-height: 0;
     height: auto;
-    padding-top: 136%;
+    min-height: clamp(470px, 64svh, 560px);
     clip-path: polygon(0 0, 100% 0, 100% 98%, 70% 99%, 50% 100%, 28% 99%, 0 98%);
   }
 
@@ -572,6 +603,18 @@ button:disabled {
   .setup {
     margin-top: 18px;
   }
+
+  .menuList {
+    display: none;
+  }
+
+  .mobileMenu {
+    display: block;
+  }
+
+  .mobileMenuBody {
+    width: min(100%, 420px);
+  }
 }
 
 @media (max-width: 460px) {
@@ -595,10 +638,6 @@ button:disabled {
   .logLine {
     font-size: 14px;
     max-width: 280px;
-  }
-
-  .scene {
-    padding-top: max(640px, 172%);
   }
 
   .copy {
@@ -630,6 +669,10 @@ button:disabled {
 
   .characterBreakdown img {
     max-height: 220px;
+  }
+
+  .mobileMenuBody {
+    grid-template-columns: 1fr;
   }
 }
 

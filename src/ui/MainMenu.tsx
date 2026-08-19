@@ -134,6 +134,25 @@ export default function MainMenu({ onStart, onTutorial, onDemo, onServants, onLo
     startLevel(1, helper);
     onStart();
   };
+  const commandButtons = (
+    <>
+      <button
+        className={hasRunningGame ? styles.primary : ""}
+        onClick={onStart}
+        disabled={!hasRunningGame}
+        title={hasRunningGame ? "Continue the current run" : "Start a new game first"}
+      >
+        Continue
+      </button>
+      <button onClick={startNewGame}>New Game</button>
+      <button onClick={onLoad} disabled={!hasSavedGame}>Load Saved Game</button>
+      <button onClick={onTutorial}>How to play</button>
+      <button onClick={onDemo}>Watch a demo</button>
+      <button onClick={onServants}>Servants</button>
+      <button onClick={() => setShowTeaching(true)}>Teaching</button>
+      <button onClick={onStart} disabled={!hasRunningGame}>Level {level.id}</button>
+    </>
+  );
 
   if (showTeaching) {
     return (
@@ -207,22 +226,12 @@ export default function MainMenu({ onStart, onTutorial, onDemo, onServants, onLo
             <p className={styles.logLine}>A scripture strategy game about keeping the lamp lit and carrying light to the houses.</p>
             <p className={styles.disclaimer}>Exclusively for Deep Dive participants. Do not share with others.</p>
             <nav className={styles.menuList} aria-label="Main commands">
-              <button
-                className={hasRunningGame ? styles.primary : ""}
-                onClick={onStart}
-                disabled={!hasRunningGame}
-                title={hasRunningGame ? "Continue the current run" : "Start a new game first"}
-              >
-                Continue
-              </button>
-              <button onClick={startNewGame}>New Game</button>
-              <button onClick={onLoad} disabled={!hasSavedGame}>Load Saved Game</button>
-              <button onClick={onTutorial}>How to play</button>
-              <button onClick={onDemo}>Watch a demo</button>
-              <button onClick={onServants}>Servants</button>
-              <button onClick={() => setShowTeaching(true)}>Teaching</button>
-              <button onClick={onStart} disabled={!hasRunningGame}>Level {level.id}</button>
+              {commandButtons}
             </nav>
+            <details className={styles.mobileMenu}>
+              <summary>Menu</summary>
+              <div className={styles.mobileMenuBody}>{commandButtons}</div>
+            </details>
           </div>
         </div>
       </section>

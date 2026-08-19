@@ -121,6 +121,37 @@
   border-radius: 0;
 }
 
+.mobileControls {
+  display: none;
+  max-width: 1680px;
+  margin: 0 auto 12px;
+}
+
+.mobileControls summary {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  min-height: 38px;
+  padding: 0 12px;
+  border: 1px solid var(--c-grid-2);
+  background: var(--c-panel-2);
+  color: var(--c-grey-2);
+  text-transform: uppercase;
+  cursor: pointer;
+  list-style: none;
+}
+
+.mobileControls summary::-webkit-details-marker {
+  display: none;
+}
+
+.mobileControlsBody {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 6px;
+  padding-top: 8px;
+}
+
 .levelSign {
   position: relative;
   max-width: 1680px;
@@ -223,6 +254,18 @@
     gap: 6px;
   }
 
+  .levels {
+    display: none;
+  }
+
+  .mobileControls {
+    display: block;
+  }
+
+  .mobileControlsBody {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+
   .levelSign {
     grid-template-columns: 1fr;
     gap: 8px;
@@ -245,20 +288,21 @@
     padding: 8px;
   }
 
-  .levels {
+  .mobileControls {
     margin-bottom: 8px;
   }
 
-  .levels button {
+  .mobileControlsBody button,
+  .mobileControlsBody select {
     min-width: 34px;
     padding: 0 8px;
   }
 
-  .levels select {
+  .mobileControlsBody select {
     width: 100%;
   }
 
-  .levels button,
+  .mobileControlsBody button,
   .start {
     flex: 1 1 auto;
   }

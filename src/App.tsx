@@ -23,6 +23,31 @@ export default function App() {
   const state = useGame();
   const warningNotice = useGame((store) => store.warningNotice);
   const clearWarningNotice = useGame((store) => store.clearWarningNotice);
+  const gameControls = (
+    <>
+      <button onClick={() => setScreen("menu")}>Menu <HelpHotspot topic="level" compact /></button>
+      <button onClick={() => setScreen("servants")}>Servants <HelpHotspot topic="servant" compact /></button>
+      <button onClick={() => setShowTutorial(true)}>Help <HelpHotspot topic="scripture" compact /></button>
+      <button onClick={state.saveCurrentGame}>Save <HelpHotspot topic="save" compact /></button>
+      <button onClick={state.loadCurrentGame} disabled={!state.hasSavedGame}>Load <HelpHotspot topic="save" compact /></button>
+      <button onClick={state.toggleContextualHelp}>{state.contextualHelpEnabled ? "Guide icons on" : "Guide icons off"} <HelpHotspot topic="level" compact /></button>
+      {levels.map((level) => (
+        <button key={level.id} onClick={() => state.startLevel(level.id, state.helper)} disabled={level.id > state.campaign.highestUnlockedLevel}>
+          {level.id} <HelpHotspot topic="level" compact />
+        </button>
+      ))}
+      <span className="helpReveal" style={{ position: "relative", display: "inline-flex", alignItems: "center" }}>
+        <select value={state.helper} onChange={(e) => state.startLevel(state.level.id, e.target.value as (typeof availableHelpers)[number])}>
+          {availableHelpers.map((helper) => (
+            <option key={helper} value={helper} disabled={!["counsel", "might", "knowledge"].includes(helper)}>
+              {helper}
+            </option>
+          ))}
+        </select>
+        <HelpHotspot topic="servant" compact />
+      </span>
+    </>
+  );
 
   useEffect(() => {
     const onKey = (event: KeyboardEvent) => {
@@ -102,28 +127,12 @@ export default function App() {
       }}
     >
       <nav className={styles.levels} aria-label="Levels">
-        <button onClick={() => setScreen("menu")}>Menu <HelpHotspot topic="level" compact /></button>
-        <button onClick={() => setScreen("servants")}>Servants <HelpHotspot topic="servant" compact /></button>
-        <button onClick={() => setShowTutorial(true)}>Help <HelpHotspot topic="scripture" compact /></button>
-        <button onClick={state.saveCurrentGame}>Save <HelpHotspot topic="save" compact /></button>
-        <button onClick={state.loadCurrentGame} disabled={!state.hasSavedGame}>Load <HelpHotspot topic="save" compact /></button>
-        <button onClick={state.toggleContextualHelp}>{state.contextualHelpEnabled ? "Guide icons on" : "Guide icons off"} <HelpHotspot topic="level" compact /></button>
-        {levels.map((level) => (
-          <button key={level.id} onClick={() => state.startLevel(level.id, state.helper)} disabled={level.id > state.campaign.highestUnlockedLevel}>
-            {level.id} <HelpHotspot topic="level" compact />
-          </button>
-        ))}
-        <span className="helpReveal" style={{ position: "relative", display: "inline-flex", alignItems: "center" }}>
-          <select value={state.helper} onChange={(e) => state.startLevel(state.level.id, e.target.value as (typeof availableHelpers)[number])}>
-            {availableHelpers.map((helper) => (
-              <option key={helper} value={helper} disabled={!["counsel", "might", "knowledge"].includes(helper)}>
-                {helper}
-              </option>
-            ))}
-          </select>
-          <HelpHotspot topic="servant" compact />
-        </span>
+        {gameControls}
       </nav>
+      <details className={styles.mobileControls}>
+        <summary>Controls</summary>
+        <div className={styles.mobileControlsBody}>{gameControls}</div>
+      </details>
       <section className={`${styles.levelSign} helpReveal`} aria-label="Current level">
         <div>
           <span>Current Level</span>
