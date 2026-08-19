@@ -51,8 +51,6 @@
 
 @media (max-width: 520px) {
   .hotspot {
-    width: 17px;
-    height: 17px;
-    font-size: 11px;
+    display: none;
   }
 }
