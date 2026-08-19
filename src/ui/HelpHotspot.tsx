@@ -1,4 +1,4 @@
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import type { MouseEvent, PointerEvent as ReactPointerEvent } from "react";
 import type { HelpTopicId } from "../game/types";
 import { useGame } from "../store/useGame";
@@ -14,7 +14,20 @@ export default function HelpHotspot({ topic, compact = false }: HelpHotspotProps
   const openHelp = useGame((state) => state.openHelp);
   const pressTimer = useRef<number | null>(null);
   const longPressTriggered = useRef(false);
-  if (!enabled) return null;
+  const [isMobile, setIsMobile] = useState(() =>
+    typeof window !== "undefined" &&
+    window.matchMedia("(max-width: 520px), (hover: none) and (pointer: coarse)").matches
+  );
+
+  useEffect(() => {
+    const media = window.matchMedia("(max-width: 520px), (hover: none) and (pointer: coarse)");
+    const sync = () => setIsMobile(media.matches);
+    sync();
+    media.addEventListener("change", sync);
+    return () => media.removeEventListener("change", sync);
+  }, []);
+
+  if (!enabled || isMobile) return null;
 
   const clearPressTimer = () => {
     if (pressTimer.current !== null) {
