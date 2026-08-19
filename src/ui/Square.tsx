@@ -148,7 +148,7 @@ export default function Square({ pos, tutorialSquares = [], tutorialPrimarySquar
       title={squareKey}
     >
       <span className={styles.coordinateTooltip}>{squareKey}</span>
-      <HelpHotspot topic={helpTopic} />
+      {displayMode !== "coming" && <HelpHotspot topic={helpTopic} />}
       {tutorialPrimary && <span className={styles.tutorialArrow}>{"->"}</span>}
       {tutorialHighlight && !tutorialPrimary && <span className={styles.tutorialDot} />}
       {coord && <span className={styles.coord}>{coord}</span>}

@@ -132,7 +132,7 @@
   text-shadow: 0 2px 0 var(--c-shadow);
 }
 
-.logLine {
+.copy .logLine {
   font-size: clamp(14px, 2.1vh, 18px);
   color: #000 !important;
   font-weight: 300;
