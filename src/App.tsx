@@ -142,11 +142,11 @@ export default function App() {
         <ActivityToast />
         <div className={styles.desktopBoards} aria-label="Before and after board views">
           <section className={styles.boardFrame} aria-label="YESOD before board">
-            <h2>YESOD <span>Before <HelpHotspot topic="now" compact /></span></h2>
+            <h2 className="helpReveal">YESOD <span>Before <HelpHotspot topic="now" compact /></span></h2>
             <Board viewMode="now" />
           </section>
           <section className={styles.boardFrame} aria-label="MALKUT after board">
-            <h2>MALKUT <span>After <HelpHotspot topic="coming" compact /></span></h2>
+            <h2 className="helpReveal">MALKUT <span>After <HelpHotspot topic="coming" compact /></span></h2>
             <Board viewMode="coming" interactive={false} />
           </section>
         </div>

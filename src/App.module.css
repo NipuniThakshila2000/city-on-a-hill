@@ -41,6 +41,7 @@
 }
 
 .boardFrame h2 {
+  position: relative;
   margin: 0;
   display: flex;
   justify-content: space-between;
@@ -49,7 +50,7 @@
   border-bottom: 1px solid rgba(238, 206, 105, 0.3);
   background: transparent;
   color: var(--c-lamp);
-  padding: 0 0 8px;
+  padding: 0 24px 8px 0;
   font-size: clamp(15px, 1.3vw, 18px);
   line-height: 1.1;
 }
