@@ -136,7 +136,7 @@
   font-size: clamp(14px, 2.1vh, 18px);
   color: #000 !important;
   font-weight: 700;
-  text-shadow: 0 1px 0 rgba(255, 227, 107, 0.78);
+  text-shadow: none;
 }
 
 .disclaimer {

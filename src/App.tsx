@@ -146,7 +146,7 @@ export default function App() {
             <Board viewMode="now" />
           </section>
           <section className={styles.boardFrame} aria-label="MALKUT after board">
-            <h2 className="helpReveal">MALKUT <span>After <HelpHotspot topic="coming" compact /></span></h2>
+            <h2>MALKUT <span>After</span></h2>
             <Board viewMode="coming" interactive={false} />
           </section>
         </div>
