@@ -100,14 +100,16 @@ export default function App() {
     };
   }, [state.openHelp]);
 
-  const gameControls = (
+  const renderGameControls = (showGuideToggle = true) => (
     <>
       <button data-help-topic="level" onClick={() => setScreen("menu")}>Menu <HelpHotspot topic="level" compact /></button>
       <button data-help-topic="servant" onClick={() => setScreen("servants")}>Servants <HelpHotspot topic="servant" compact /></button>
       <button data-help-topic="scripture" onClick={() => setShowTutorial(true)}>Help <HelpHotspot topic="scripture" compact /></button>
       <button data-help-topic="save" onClick={state.saveCurrentGame}>Save <HelpHotspot topic="save" compact /></button>
       <button data-help-topic="save" onClick={state.loadCurrentGame} disabled={!state.hasSavedGame}>Load <HelpHotspot topic="save" compact /></button>
-      <button data-help-topic="level" onClick={state.toggleContextualHelp}>{state.contextualHelpEnabled ? "Guide icons on" : "Guide icons off"} <HelpHotspot topic="level" compact /></button>
+      {showGuideToggle && (
+        <button data-help-topic="level" onClick={state.toggleContextualHelp}>{state.contextualHelpEnabled ? "Guide icons on" : "Guide icons off"} <HelpHotspot topic="level" compact /></button>
+      )}
       {levels.map((level) => (
         <button key={level.id} data-help-topic="level" onClick={() => state.startLevel(level.id, state.helper)} disabled={level.id > state.campaign.highestUnlockedLevel}>
           {level.id} <HelpHotspot topic="level" compact />
@@ -125,6 +127,7 @@ export default function App() {
       </span>
     </>
   );
+  const gameControls = renderGameControls();
   const statusContent = (
     <>
       <section className={`${styles.levelSign} helpReveal`} data-help-topic="level" aria-label="Current level">
@@ -225,7 +228,7 @@ export default function App() {
       </nav>
       <details className={styles.mobileControls}>
         <summary>Controls</summary>
-        <div className={styles.mobileControlsBody}>{gameControls}</div>
+        <div className={styles.mobileControlsBody}>{renderGameControls(false)}</div>
       </details>
       <div className={styles.desktopStatus}>{statusContent}</div>
       <details className={styles.mobileStatus}>
