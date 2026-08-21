@@ -490,6 +490,35 @@
   height: 40px;
 }
 
+.levelSelect {
+  display: grid;
+  gap: 8px;
+}
+
+.levelSelect span {
+  color: var(--c-grey);
+  font-size: 12px;
+  text-transform: uppercase;
+}
+
+.levelSelect select {
+  width: 100%;
+  min-height: 42px;
+  border: 1px solid var(--c-grid-2);
+  border-radius: 0;
+  background: var(--c-panel-2);
+  color: var(--c-grey-2);
+  padding: 0 12px;
+}
+
+.levelSelect select:hover,
+.levelSelect select:focus {
+  border-color: var(--c-lamp);
+  color: var(--c-lamp);
+  outline: none;
+  box-shadow: 0 10px 18px rgba(0, 0, 0, 0.26), 0 0 14px rgba(238, 206, 105, 0.16);
+}
+
 .helpers {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));

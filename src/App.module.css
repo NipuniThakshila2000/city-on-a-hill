@@ -109,6 +109,12 @@
   max-width: 100%;
 }
 
+.levelSelect {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+}
+
 .levels button,
 .levels select,
 .start {
@@ -119,6 +125,11 @@
   min-height: 38px;
   padding: 0 12px;
   border-radius: 0;
+}
+
+.levelSelect select {
+  min-width: 132px;
+  padding-right: 32px;
 }
 
 .mobileControls {
@@ -399,6 +410,15 @@
   .mobileControlsBody select {
     min-width: 34px;
     padding: 0 8px;
+  }
+
+  .levelSelect {
+    width: 100%;
+  }
+
+  .levelSelect select {
+    min-width: 0;
+    width: 100%;
   }
 
   .mobileControlsBody select {

@@ -248,18 +248,20 @@ export default function MainMenu({ onStart, onTutorial, onDemo, onServants, onLo
       <section className={styles.setup} aria-label="Level and helper setup">
         <div>
           <h2>Level</h2>
-          <div className={styles.levels}>
-            {levels.map((candidate) => (
-              <button
-                key={candidate.id}
-                className={candidate.id === level.id ? styles.selected : ""}
-                disabled={candidate.id > campaign.highestUnlockedLevel}
-                onClick={() => startLevel(candidate.id, helper)}
-              >
-                {candidate.id}
-              </button>
-            ))}
-          </div>
+          <label className={styles.levelSelect}>
+            <span>Choose level</span>
+            <select value={level.id} onChange={(event) => startLevel(Number(event.target.value), helper)}>
+              {levels.map((candidate) => (
+                <option
+                  key={candidate.id}
+                  value={candidate.id}
+                  disabled={candidate.id > campaign.highestUnlockedLevel}
+                >
+                  Level {candidate.id}{candidate.id > campaign.highestUnlockedLevel ? " - locked" : ""}
+                </option>
+              ))}
+            </select>
+          </label>
         </div>
 
         <div>

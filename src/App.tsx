@@ -110,11 +110,20 @@ export default function App() {
       {showGuideToggle && (
         <button data-help-topic="level" onClick={state.toggleContextualHelp}>{state.contextualHelpEnabled ? "Guide icons on" : "Guide icons off"} <HelpHotspot topic="level" compact /></button>
       )}
-      {levels.map((level) => (
-        <button key={level.id} data-help-topic="level" onClick={() => state.startLevel(level.id, state.helper)} disabled={level.id > state.campaign.highestUnlockedLevel}>
-          {level.id} <HelpHotspot topic="level" compact />
-        </button>
-      ))}
+      <span className={`${styles.levelSelect} helpReveal`} data-help-topic="level">
+        <select
+          aria-label="Select level"
+          value={state.level.id}
+          onChange={(e) => state.startLevel(Number(e.target.value), state.helper)}
+        >
+          {levels.map((level) => (
+            <option key={level.id} value={level.id} disabled={level.id > state.campaign.highestUnlockedLevel}>
+              Level {level.id}{level.id > state.campaign.highestUnlockedLevel ? " - locked" : ""}
+            </option>
+          ))}
+        </select>
+        <HelpHotspot topic="level" compact />
+      </span>
       <span className="helpReveal" data-help-topic="servant" style={{ position: "relative", display: "inline-flex", alignItems: "center" }}>
         <select value={state.helper} onChange={(e) => state.startLevel(state.level.id, e.target.value as (typeof availableHelpers)[number])}>
           {availableHelpers.map((helper) => (
