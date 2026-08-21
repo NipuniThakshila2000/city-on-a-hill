@@ -59,7 +59,13 @@ const PASSAGE_LINES: Record<PieceId, string[]> = {
     "Thou shalt not be afraid for the terror by night",
     "He shall cover thee with his feathers",
     "His truth shall be thy shield and buckler",
-    "Because thou hast made the Lord thy habitation"
+    "Because thou hast made the Lord thy habitation",
+    "I will say of the Lord He is my refuge",
+    "Surely he shall deliver thee from the snare",
+    "A thousand shall fall at thy side",
+    "There shall no evil befall thee",
+    "With long life will I satisfy him",
+    "I will be with him in trouble"
   ],
   destroyer: [
     "Hold not thy peace O God of my praise",
@@ -67,7 +73,13 @@ const PASSAGE_LINES: Record<PieceId, string[]> = {
     "Let them be before the Lord continually",
     "Set thou a wicked man over him",
     "Let the adversary stand at his right hand",
-    "I will greatly praise the Lord with my mouth"
+    "I will greatly praise the Lord with my mouth",
+    "For the mouth of the wicked is opened",
+    "They have spoken against me with a lying tongue",
+    "They fought against me without a cause",
+    "But I give myself unto prayer",
+    "Help me O Lord my God",
+    "Save me according to thy mercy"
   ],
   binder: [
     "Whatsoever thou shalt bind on earth shall be bound in heaven",
@@ -75,7 +87,13 @@ const PASSAGE_LINES: Record<PieceId, string[]> = {
     "I will give unto thee the keys of the kingdom",
     "Thou art Peter and upon this rock I will build my church",
     "The gates of hell shall not prevail against it",
-    "I will give unto thee the keys"
+    "I will give unto thee the keys",
+    "Whom do men say that I the Son of man am",
+    "Thou art the Christ the Son of the living God",
+    "Flesh and blood hath not revealed it unto thee",
+    "Blessed art thou Simon Barjona",
+    "Upon this rock I will build my church",
+    "The gates of hell shall not prevail"
   ],
   looser: [
     "Who hath delivered us from the power of darkness",
@@ -83,7 +101,13 @@ const PASSAGE_LINES: Record<PieceId, string[]> = {
     "In whom we have redemption through his blood",
     "Giving thanks unto the Father",
     "Made us meet to be partakers of the inheritance",
-    "The kingdom of his dear Son"
+    "The kingdom of his dear Son",
+    "Giving thanks unto the Father which hath made us meet",
+    "Partakers of the inheritance of the saints in light",
+    "Through his blood even the forgiveness of sins",
+    "The image of the invisible God",
+    "By him were all things created",
+    "By him all things consist"
   ]
 };
 

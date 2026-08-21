@@ -4,8 +4,13 @@ import { join } from "node:path";
 const MAX_VERSE_CHECKS = 6;
 const levelDir = join(process.cwd(), "src", "levels");
 const files = readdirSync(levelDir)
-  .filter((file) => /^level\d+\.ts$/.test(file))
+  .filter((file) => file.endsWith(".ts") && !["index.ts", "schema.ts"].includes(file))
   .sort();
+
+const levelCount = files.reduce((count, file) => {
+  const source = readFileSync(join(levelDir, file), "utf8");
+  return count + (source.match(/^\s*id:\s*\d+,/gm) ?? []).length;
+}, 0);
 
 const failures = files
   .map((file) => {
@@ -24,4 +29,4 @@ if (failures.length > 0) {
   process.exit(1);
 }
 
-console.log(`Validated ${files.length} levels: no level exceeds ${MAX_VERSE_CHECKS} verse checks.`);
+console.log(`Validated ${levelCount} levels: no level exceeds ${MAX_VERSE_CHECKS} verse checks.`);
